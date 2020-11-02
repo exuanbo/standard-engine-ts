@@ -10,7 +10,7 @@ const getRootPath = (): string =>
       const hasPkgJson = findUp.sync.exists(
         path.join(directory, 'package.json')
       )
-      return (hasPkgJson && directory) as string
+      return (hasPkgJson && directory) || undefined
     },
     { type: 'directory' }
   ) as string
@@ -57,13 +57,11 @@ export const getCacheLocation = (version: string, cmd: string): string => {
     cmd,
     majorVersion ? `v${majorVersion}/` : ''
   )
-
   return cacheLocation
 }
 
 export const getHelp = ({ cmd, eslintOptions }: LinterOptions): string => {
-  const extensions = eslintOptions.extensions
-  const extPatterns = extensions.map(ext => '*' + ext).join(', ')
+  const extPatterns = eslintOptions.extensions.map(ext => '*' + ext).join(', ')
 
   return `
 Usage:
