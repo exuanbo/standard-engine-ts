@@ -17,11 +17,11 @@ export class Linter {
     cb?: LintCallback | string,
     filePath?: string
   ): Promise<void | ESLint.LintResult[]> {
-    try {
-      if (typeof cb === 'string') {
-        return this.lintText(code, undefined, cb)
-      }
+    if (typeof cb === 'string') {
+      return this.lintText(code, undefined, cb)
+    }
 
+    try {
       const results = await new this.eslint.ESLint(
         this.options.eslintOptions
       ).lintText(code, {
