@@ -1,7 +1,7 @@
 {
   "name": "standard-engine-ts",
   "version": "0.0.0",
-  "description": "",
+  "description": "Yet another ESLint wrapper written in TypeScript.",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
@@ -21,7 +21,13 @@
     "type": "git",
     "url": "git+https://github.com/exuanbo/standard-engine-ts.git"
   },
-  "keywords": [],
+  "keywords": [
+    "standard-engine",
+    "standard",
+    "eslint",
+    "lint",
+    "typescript"
+  ],
   "author": "exuanbo",
   "license": "MIT",
   "bugs": {
