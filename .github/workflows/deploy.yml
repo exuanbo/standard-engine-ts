@@ -20,7 +20,7 @@ jobs:
 
     - run: yarn && yarn build
 
-    - uses: exuanbo/actions-deploy-gist@master
+    - uses: exuanbo/actions-deploy-gist@v1.0.3
       with:
         token: ${{ secrets.TOKEN }}
         gist_id: 79d6fcd2c617f03ec530106bfe46d7a4
