@@ -38,7 +38,6 @@ export interface LinterOptions {
 
 export interface ProvidedOptions extends Partial<LinterOptions> {
   eslint?: typeof eslint
-  eslintOptions?: ESLintOptions
 
   // File enumeration
   cwd?: string
