@@ -1,17 +1,18 @@
 import os from 'os'
 import xdgBasedir from 'xdg-basedir'
+import { name, version, description, homepage, bugs } from '../package.json'
 
-export const DEFAULT_CMD = 'standard-engine-ts'
+export const DEFAULT_CMD = name
 
-export const DEFAULT_VERSION = '0.0.0'
+export const DEFAULT_VERSION = version
 
-export const DEFAULT_TAGLINE = 'TypeScript Standard Style'
+export const DEFAULT_TAGLINE = description
 
-export const DEFAULT_HOMEPAGE = 'https://github.com/exuanbo/standard-engine-ts'
+export const DEFAULT_HOMEPAGE = homepage
 
-export const DEFAULT_BUGS = `${DEFAULT_HOMEPAGE}/issues`
+export const DEFAULT_BUGS = bugs.url
 
-export const DEFAULT_EXTENSIONS = ['.js', '.jsx', '.mjs', '.cjs', '.ts', '.tsx']
+export const DEFAULT_EXTENSIONS = ['.js', '.jsx', '.mjs', '.cjs']
 
 export const MAJORVERSION_REGEX = /^(\d+)\./
 
