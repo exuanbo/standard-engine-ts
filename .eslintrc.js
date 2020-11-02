@@ -5,6 +5,7 @@ module.exports = {
   rules: {
     'prettier/prettier': ['error', require('./.prettierrc.js')]
   },
+  ignorePatterns: ['dist'],
   overrides: [
     {
       files: ['**/*.ts'],
