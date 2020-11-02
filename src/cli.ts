@@ -149,10 +149,10 @@ export const cli = (opts: ProvidedOptions): void => {
               isLast,
               '  %s:%d:%d: %s%s',
               filePath,
-              line || 0,
-              column || 0,
+              line,
+              column,
               message,
-              argv.verbose ? ` (${ruleId})` : ''
+              argv.verbose && ruleId ? ` (${ruleId})` : ''
             )
           }
         )
