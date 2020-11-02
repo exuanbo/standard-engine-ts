@@ -1,6 +1,7 @@
+import typescript from '@rollup/plugin-typescript'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
-import typescript from '@rollup/plugin-typescript'
+import json from '@rollup/plugin-json'
 import dts from 'rollup-plugin-dts'
 import pkg from './package.json'
 
@@ -17,12 +18,12 @@ export default [
         format: 'es'
       }
     ],
-    plugins: [typescript(), nodeResolve(), commonjs()],
+    plugins: [typescript(), nodeResolve(), commonjs(), json({ compact: true })],
     // Bundle devDependencies "find-up", "get-stdin", "xdg-basedir"
     external: ['fs', 'os', 'path', 'util', ...Object.keys(pkg.dependencies)]
   },
   {
-    input: '.cache/index.d.ts',
+    input: '.cache/src/index.d.ts',
     output: {
       file: pkg.types,
       format: 'es'
