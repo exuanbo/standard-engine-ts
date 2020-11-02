@@ -60,6 +60,12 @@ export const getCacheLocation = (version: string, cmd: string): string => {
   return cacheLocation
 }
 
+export const getHeadline = ({
+  cmd,
+  tagline,
+  homepage
+}: LinterOptions): string => `${cmd}: ${tagline} (${homepage})`
+
 export const getHelp = ({ cmd, eslintOptions }: LinterOptions): string => {
   const extPatterns = eslintOptions.extensions.map(ext => '*' + ext).join(', ')
 

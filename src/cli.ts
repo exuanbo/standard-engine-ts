@@ -1,9 +1,9 @@
 import minimist, { ParsedArgs } from 'minimist'
 import getStdin from 'get-stdin'
-import { ESLint } from 'eslint'
+import { ESLint, Linter as ESLinter } from 'eslint'
 import { Linter } from './linter'
 import { ESLintOptions, LinterOptions, ProvidedOptions } from './options'
-import { getHelp } from './utils'
+import { getHeadline, getHelp } from './utils'
 
 export const cli = (opts: ProvidedOptions): void => {
   const linter = new Linter(opts)
@@ -30,13 +30,13 @@ export const cli = (opts: ProvidedOptions): void => {
   }
 
   if (argv.help) {
-    console.log(`${options.cmd}: ${options.tagline} (${options.homepage})`)
+    console.log(getHeadline(options))
     console.log(getHelp(options))
     return
   }
 
   if (argv.version) {
-    console.log(options.version)
+    console.log(`${options.cmd}: v${options.version}`)
     return
   }
 
@@ -125,7 +125,7 @@ export const cli = (opts: ProvidedOptions): void => {
       return
     }
 
-    console.log(`${options.cmd}: ${options.tagline} (${options.homepage})`)
+    console.log(`${getHeadline(options)}\n`)
 
     const isFixable = lintResults.some(res =>
       res.messages.some(msg => Boolean(msg.fix))
@@ -133,7 +133,7 @@ export const cli = (opts: ProvidedOptions): void => {
 
     if (isFixable) {
       console.error(
-        `${options.cmd}: Run \`${options.cmd} --fix\` to automatically fix some problems.`
+        `  Run \`${options.cmd} --fix\` to automatically fix some problems.\n`
       )
     }
 
@@ -142,25 +142,32 @@ export const cli = (opts: ProvidedOptions): void => {
         messages,
         filePath
       }: Pick<ESLint.LintResult, 'messages' | 'filePath'>) =>
-        messages.forEach(({ line, column, message, ruleId }) =>
-          log(
-            '  %s:%d:%d: %s%s',
-            filePath,
-            line || 0,
-            column || 0,
-            message,
-            argv.verbose ? ` (${ruleId})` : ''
-          )
+        messages.forEach(
+          ({ line, column, message, ruleId }: ESLinter.LintMessage, index) => {
+            const isLast = index === messages.length - 1
+            log(
+              isLast,
+              '  %s:%d:%d: %s%s',
+              filePath,
+              line || 0,
+              column || 0,
+              message,
+              argv.verbose ? ` (${ruleId})` : ''
+            )
+          }
         )
     )
 
     process.exitCode = errorCount ? 1 : 0
   }
 
-  function log(...args: [string, string, number, number, string, string]) {
+  function log(
+    isLast: boolean,
+    ...args: [string, string, number, number, string, string]
+  ) {
     if (argv.stdin && argv.fix) {
       args[0] = `${options.cmd}: ${args[0]}`
     }
-    console.error(...args)
+    console.error(...args, isLast ? '\n' : '')
   }
 }
