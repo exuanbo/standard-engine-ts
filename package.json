@@ -1,28 +1,33 @@
 {
-  "name": "node-ts-boilerplate",
+  "name": "standard-engine-ts",
   "version": "0.0.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "types": "dist/types/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "rimraf dist && rollup -c && tsc -d --emitDeclarationOnly --declarationDir dist/types",
+    "clean": "rimraf dist",
+    "dts": "tsc -d --emitDeclarationOnly --declarationDir dist/types",
+    "bundle": "rollup -c",
+    "build": "yarn clean && yarn dts && yarn bundle",
     "lint": "./test/cmd.js",
     "lint:fix": "./test/cmd.js --fix",
     "test": "yarn build && yarn lint"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/exuanbo/node-ts-boilerplate.git"
+    "url": "git+https://github.com/exuanbo/standard-engine-ts.git"
   },
   "keywords": [],
   "author": "exuanbo",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/exuanbo/node-ts-boilerplate/issues"
+    "url": "https://github.com/exuanbo/standard-engine-ts/issues"
   },
-  "homepage": "https://github.com/exuanbo/node-ts-boilerplate#readme",
+  "homepage": "https://github.com/exuanbo/standard-engine-ts#readme",
   "dependencies": {
     "@types/eslint": "7.2.4",
     "eslint": "7.12.1",
