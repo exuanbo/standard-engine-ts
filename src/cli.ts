@@ -45,7 +45,7 @@ export const cli = (opts: ProvidedOptions): void => {
   if (argv.stdin) {
     getStdin().then(text => {
       stdinText = text
-      linter.lintText(text)
+      linter.lintText(text, onFinish)
     })
   } else {
     linter.lintFiles(argv._.length ? argv._ : ['.'], onFinish)
