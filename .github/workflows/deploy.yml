@@ -1,0 +1,28 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+    - main
+    paths-ignore:
+    - '*.md'
+
+jobs:
+  gist:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-node@v2-beta
+      with:
+        node-version: '14'
+
+    - run: yarn && yarn build
+
+    - uses: exuanbo/actions-deploy-gist@master
+      with:
+        token: ${{ secrets.TOKEN }}
+        gist_id: 79d6fcd2c617f03ec530106bfe46d7a4
+        gist_file_name: standard-engine-ts.d.ts
+        file_path: ./dist/index.d.ts
