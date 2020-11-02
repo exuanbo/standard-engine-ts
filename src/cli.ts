@@ -7,7 +7,7 @@ import { getHeadline, getHelp } from './utils'
 
 export const cli = (opts: ProvidedOptions): void => {
   const linter = new Linter(opts)
-  const options = linter.options
+  const { options } = linter
 
   const argv = minimist(process.argv.slice(2), {
     alias: {
@@ -106,7 +106,7 @@ export const cli = (opts: ProvidedOptions): void => {
 
   function onResult(lintResults: ESLint.LintResult[]): void {
     if (argv.stdin && argv.fix) {
-      const output = lintResults[0].output
+      const [{ output }] = lintResults
       process.stdout.write(output || stdinText)
       return
     }
