@@ -6,6 +6,8 @@
 [![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/standard-engine-ts?style=flat-square)](https://libraries.io/npm/standard-engine-ts)
 [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen?style=flat-square)](https://renovatebot.com/)
 
+Refactored from [standard-engine](https://github.com/standard/standard-engine).
+
 ## Install
 
 ```sh
