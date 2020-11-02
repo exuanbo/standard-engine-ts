@@ -4,13 +4,13 @@
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
-  "types": "dist/types/index.d.ts",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "clean": "rimraf dist",
-    "dts": "tsc -d --emitDeclarationOnly --declarationDir dist/types",
+    "clean": "rimraf dist .cache",
+    "dts": "tsc -d --emitDeclarationOnly --declarationDir .cache",
     "bundle": "rollup -c",
     "build": "yarn clean && yarn dts && yarn bundle",
     "lint": "./test/cmd.js",
