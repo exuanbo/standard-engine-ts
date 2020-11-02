@@ -1,21 +1,32 @@
-const { nodeResolve } = require('@rollup/plugin-node-resolve')
-const commonjs = require('@rollup/plugin-commonjs')
-const typescript = require('@rollup/plugin-typescript')
-const pkg = require('./package.json')
+import { nodeResolve } from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs'
+import typescript from '@rollup/plugin-typescript'
+import dts from 'rollup-plugin-dts'
+import pkg from './package.json'
 
-module.exports = {
-  input: 'src/index.ts',
-  output: [
-    {
-      file: pkg.main,
-      format: 'cjs'
-    },
-    {
-      file: pkg.module,
+export default [
+  {
+    input: 'src/index.ts',
+    output: [
+      {
+        file: pkg.main,
+        format: 'cjs'
+      },
+      {
+        file: pkg.module,
+        format: 'es'
+      }
+    ],
+    plugins: [typescript(), nodeResolve(), commonjs()],
+    // Bundle devDependencies "find-up", "get-stdin", "xdg-basedir"
+    external: ['fs', 'os', 'path', 'util', ...Object.keys(pkg.dependencies)]
+  },
+  {
+    input: '.cache/index.d.ts',
+    output: {
+      file: pkg.types,
       format: 'es'
-    }
-  ],
-  plugins: [typescript(), nodeResolve(), commonjs()],
-  // Bundle devDependencies "find-up", "get-stdin", "xdg-basedir"
-  external: ['fs', 'os', 'path', 'util', ...Object.keys(pkg.dependencies)]
-}
+    },
+    plugins: [dts()]
+  }
+]
