@@ -24,8 +24,9 @@ const getReadFileFn = () => {
   const rootPath = getRootPath()
 
   return (file: string): string | null => {
+    const filePath = path.isAbsolute(file) ? file : path.join(rootPath, file)
     try {
-      return fs.readFileSync(path.join(rootPath, file), 'utf-8')
+      return fs.readFileSync(filePath, 'utf-8')
     } catch {
       return null
     }
