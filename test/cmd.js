@@ -1,4 +1,4 @@
 #!/usr/bin/env node
 
 const { cli } = require('..')
-cli({ extensions: ['ts'], configFile: './.eslintrc.js', useGitIgnore: true })
+cli({ extensions: ['.ts'], configFile: './.eslintrc.js', useGitIgnore: true })
