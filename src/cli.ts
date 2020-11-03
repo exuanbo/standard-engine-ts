@@ -15,7 +15,7 @@ export const cli = (opts: ProvidedOptions): void => {
       plugins: 'plugin',
       env: 'envs',
       help: 'h',
-      verbose: 'v'
+      version: 'v'
     },
     boolean: ['fix', 'help', 'stdin', 'verbose', 'version'],
     string: ['globals', 'plugins', 'parser', 'ext', 'env']
