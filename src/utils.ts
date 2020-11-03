@@ -67,32 +67,30 @@ export const getHeadline = ({
 }: LinterOptions): string => `${cmd}: ${tagline} (${homepage})`
 
 export const getHelp = ({ cmd, eslintOptions }: LinterOptions): string => {
-  const extPatterns = eslintOptions.extensions.map(ext => '*' + ext).join(', ')
+  const extPatterns = eslintOptions.extensions.map(ext => `*${ext}`).join(', ')
+  const pathPatterns = DEFAULT_IGNORE.join(', ')
 
   return `
-Usage:
-    ${cmd} <flags> [FILES...]
+usage: ${cmd} <flags> [FILES...]
 
-    If FILES is omitted, all source files (${extPatterns})
-    in the current working directory will be checked recursively.
+  If FILES is omitted, all source files (${extPatterns})
+  in the current working directory will be checked recursively.
 
-    Certain paths (node_modules/, coverage/, vendor/, *.min.js, and
-    files/folders that begin with '.' like .git/) are automatically ignored.
+  Certain paths ${pathPatterns}, files/folders that begin with '.'
+  like .git/ and paths in the project's root .gitignore are ignored by default.
 
-    Paths in a project's root .gitignore file are also automatically ignored.
+Basic:
+  --fix          Automatically fix problems
+  --verbose      Show rule names for errors (to ignore specific rules)
+  -v, --version  Show current version
+  -h, --help     Show usage information
 
-Flags:
-        --fix       Automatically fix problems
-    -v, --verbose   Show rule names for errors (to ignore specific rules)
-        --version   Show current version
-    -h, --help      Show usage information
-
-Flags (advanced):
-        --stdin     Read file text from stdin
-        --ext       Specify JavaScript file extensions
-        --global    Declare global variable
-        --plugin    Use custom eslint plugin
-        --env       Use custom eslint environment
-        --parser    Use custom js parser (e.g. babel-eslint)
+Advanced:
+  --stdin        Read file text from stdin
+  --ext          Specify JavaScript file extensions
+  --global       Declare global variable
+  --plugin       Use custom eslint plugin
+  --env          Use custom eslint environment
+  --parser       Use custom js parser (e.g. babel-eslint)
 `
 }
