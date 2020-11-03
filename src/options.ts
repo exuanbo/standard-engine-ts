@@ -37,7 +37,7 @@ export interface LinterOptions {
 }
 
 export interface ProvidedOptions extends Partial<LinterOptions> {
-  eslint?: typeof eslint
+  eslint: typeof eslint
 
   cwd?: string
   extensions?: string[]

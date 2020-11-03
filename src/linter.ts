@@ -1,14 +1,14 @@
-import eslint, { ESLint } from 'eslint'
+import { ESLint } from 'eslint'
 import { Options, LinterOptions, ProvidedOptions } from './options'
 
 type LintCallback = (err: Error | null, result?: ESLint.LintResult[]) => void
 
 export class Linter {
-  eslint: typeof eslint
+  eslint: ProvidedOptions['eslint']
   options: LinterOptions
 
   constructor(opts: ProvidedOptions) {
-    this.eslint = opts.eslint || eslint
+    this.eslint = opts.eslint
     this.options = new Options(opts)
   }
 
