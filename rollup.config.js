@@ -7,7 +7,10 @@ import pkg from './package.json'
 
 export default [
   {
+    // Bundle devDependencies "find-up", "get-stdin", "xdg-basedir"
+    external: ['fs', 'os', 'path', 'util', ...Object.keys(pkg.dependencies)],
     input: 'src/index.ts',
+    plugins: [typescript(), nodeResolve(), commonjs(), json({ compact: true })],
     output: [
       {
         file: pkg.main,
@@ -17,10 +20,7 @@ export default [
         file: pkg.module,
         format: 'es'
       }
-    ],
-    plugins: [typescript(), nodeResolve(), commonjs(), json({ compact: true })],
-    // Bundle devDependencies "find-up", "get-stdin", "xdg-basedir"
-    external: ['fs', 'os', 'path', 'util', ...Object.keys(pkg.dependencies)]
+    ]
   },
   {
     input: '.cache/src/index.d.ts',

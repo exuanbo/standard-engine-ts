@@ -39,14 +39,11 @@ export interface LinterOptions {
 export interface ProvidedOptions extends Partial<LinterOptions> {
   eslint?: typeof eslint
 
-  // File enumeration
   cwd?: string
   extensions?: string[]
 
-  // Linting
   configFile?: string
 
-  // Autofix
   fix?: boolean
 
   parserOpts?: ESLinter.Config['parserOptions']
@@ -75,19 +72,15 @@ export class Options implements LinterOptions {
     const cwd = opts.cwd || process.cwd()
 
     this.eslintOptions = {
-      // File enumeration
       cwd,
       extensions: DEFAULT_EXTENSIONS.concat(opts.extensions || []),
 
-      // Linting
       resolvePluginsRelativeTo:
         (opts.configFile && path.dirname(path.resolve(opts.configFile))) || cwd,
       useEslintrc: Boolean(opts.configFile),
 
-      // Autofix
       fix: opts.fix || false,
 
-      // Cache-related
       cache: true,
       cacheLocation: getCacheLocation(this.version, this.cmd),
 

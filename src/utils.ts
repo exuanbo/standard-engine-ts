@@ -51,7 +51,7 @@ export const getCacheLocation = (version: string, cmd: string): string => {
   const versionMatch = version.match(MAJORVERSION_REGEX)
   const majorVersion = versionMatch && `${versionMatch[1]}`
 
-  // Example cache location: ~/.cache/ts-standardx/v1/
+  // Example: ~/.cache/standard-engine-ts/v0/
   const cacheLocation = path.join(
     CACHE_HOME,
     cmd,
