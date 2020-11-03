@@ -18,9 +18,4 @@ export const MAJORVERSION_REGEX = /^(\d+)\./
 
 export const CACHE_HOME = xdgBasedir.cache || os.tmpdir()
 
-export const DEFAULT_IGNORE = [
-  '**/*.min.js',
-  'coverage/**',
-  'node_modules/**',
-  'vendor/**'
-]
+export const DEFAULT_IGNORE = ['dist/', 'coverage/']
