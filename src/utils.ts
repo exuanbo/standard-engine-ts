@@ -4,13 +4,18 @@ import findUp from 'find-up'
 import { LinterOptions, ProvidedOptions } from './options'
 import { MAJORVERSION_REGEX, CACHE_HOME, DEFAULT_IGNORE } from './constants'
 
+const isDirHas = (dir: string, name: string) =>
+  fs.existsSync(path.join(dir, name))
+
 const getRootPath = (): string =>
   findUp.sync(
     directory => {
-      const hasPkgJson = findUp.sync.exists(
-        path.join(directory, 'package.json')
+      const hasPkgJson = isDirHas(directory, 'package.json')
+      const isSubModule = isDirHas(
+        path.join(directory, '../..'),
+        'node_modules'
       )
-      return (hasPkgJson && directory) || undefined
+      return (hasPkgJson && !isSubModule && directory) || undefined
     },
     { type: 'directory' }
   ) as string
