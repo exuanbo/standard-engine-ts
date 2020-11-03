@@ -69,27 +69,29 @@ export class Options implements LinterOptions {
     this.homepage = opts.homepage || DEFAULT_HOMEPAGE
     this.bugs = opts.bugs || DEFAULT_BUGS
 
+    const { eslintOptions } = opts
     const cwd = opts.cwd || process.cwd()
+    const { configFile } = opts
 
     this.eslintOptions = {
       cwd,
       extensions: DEFAULT_EXTENSIONS.concat(opts.extensions || []),
 
-      resolvePluginsRelativeTo:
-        (opts.configFile && path.dirname(path.resolve(opts.configFile))) || cwd,
-      useEslintrc: Boolean(opts.configFile),
+      overrideConfigFile: configFile,
+      resolvePluginsRelativeTo: (configFile && path.dirname(configFile)) || cwd,
+      useEslintrc: Boolean(configFile),
 
       fix: opts.fix || false,
 
       cache: true,
       cacheLocation: getCacheLocation(this.version, this.cmd),
 
-      ...(opts.eslintOptions || {}),
+      ...(eslintOptions || {}),
 
       baseConfig: {
         parserOptions: opts.parserOpts,
         ignorePatterns: getIgnore(opts),
-        ...(opts.eslintOptions?.baseConfig || {})
+        ...(eslintOptions?.baseConfig || {})
       }
     }
   }
