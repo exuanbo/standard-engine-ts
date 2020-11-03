@@ -34,7 +34,7 @@ const getReadFileFn = () => {
 }
 
 export const getIgnore = ({
-  ignore,
+  ignore = DEFAULT_IGNORE,
   useGitIgnore,
   gitIgnoreFiles = []
 }: ProvidedOptions): string[] => {
@@ -48,9 +48,10 @@ export const getIgnore = ({
         .filter((Boolean as any) as ExcludesNull)
         .map(text => text.split(/\r?\n/))
         .flat()
+        .filter(filePath => !filePath.startsWith('#'))
     : []
 
-  return [...DEFAULT_IGNORE, ...(ignore || []), ...gitignore]
+  return [...ignore, ...gitignore]
 }
 
 export const getCacheLocation = (version: string, cmd: string): string => {
