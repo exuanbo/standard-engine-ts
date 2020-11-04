@@ -1,7 +1,11 @@
 import { ESLint } from 'eslint'
 import { Options, LinterOptions, ProvidedOptions } from './options'
 
-type LintCallback = (err: Error | null, result?: ESLint.LintResult[]) => void
+type LintCallback = <T extends Error | null>(
+  err: T,
+  result: T extends Error ? null : ESLint.LintResult[],
+  code?: string
+) => void
 
 export class Linter {
   eslint: ProvidedOptions['eslint']
@@ -12,11 +16,11 @@ export class Linter {
     this.options = new Options(opts)
   }
 
-  async lintText(
+  lintText = async (
     code: string,
     cb?: LintCallback | string,
     filePath?: string
-  ): Promise<void | ESLint.LintResult[]> {
+  ): Promise<void | ESLint.LintResult[]> => {
     if (typeof cb === 'string') {
       return this.lintText(code, undefined, cb)
     }
@@ -29,21 +33,21 @@ export class Linter {
       })
 
       if (cb) {
-        return cb(null, results)
+        return cb(null, results, code)
       }
       return results
     } catch (err) {
       if (cb && typeof cb === 'function') {
-        return cb(err)
+        return cb(err, null)
       }
       throw err
     }
   }
 
-  async lintFiles(
+  lintFiles = async (
     files: string | string[],
     cb?: LintCallback
-  ): Promise<void | ESLint.LintResult[]> {
+  ): Promise<void | ESLint.LintResult[]> => {
     try {
       const results = await new this.eslint.ESLint(
         this.options.eslintOptions
@@ -59,7 +63,7 @@ export class Linter {
       return results
     } catch (err) {
       if (cb) {
-        return cb(err)
+        return cb(err, null)
       }
       throw err
     }

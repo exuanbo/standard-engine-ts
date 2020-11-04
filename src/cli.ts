@@ -40,28 +40,23 @@ export const cli = (opts: ProvidedOptions): void => {
     return
   }
 
-  let stdinText: string
-
   if (argv.stdin) {
-    getStdin().then(text => {
-      stdinText = text
-      linter.lintText(text, onFinish)
-    })
-  } else {
-    linter.lintFiles(argv._.length ? argv._ : ['.'], onFinish)
+    getStdin().then(text => linter.lintText(text, onFinish))
+    return
   }
+
+  linter.lintFiles(argv._.length ? argv._ : ['.'], onFinish)
 
   function onFinish(
     err: Error | null,
-    lintResults?: ESLint.LintResult[]
+    lintResults: ESLint.LintResult[] | null,
+    code?: string
   ): void {
     if (err) {
       onError(err)
       return
     }
-    if (lintResults) {
-      onResult(lintResults)
-    }
+    onResult(lintResults as ESLint.LintResult[], code)
   }
 
   function onError(err: Error): void {
@@ -73,10 +68,10 @@ export const cli = (opts: ProvidedOptions): void => {
     process.exitCode = 1
   }
 
-  function onResult(lintResults: ESLint.LintResult[]): void {
-    if (argv.stdin && argv.fix) {
+  function onResult(lintResults: ESLint.LintResult[], code?: string): void {
+    if (argv.stdin && argv.fix && code) {
       const [{ output }] = lintResults
-      process.stdout.write(output || stdinText)
+      process.stdout.write(output || code)
       return
     }
 
