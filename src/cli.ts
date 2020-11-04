@@ -1,10 +1,9 @@
-import minimist, { ParsedArgs } from 'minimist'
+import minimist from 'minimist'
 import getStdin from 'get-stdin'
 import { ESLint, Linter as ESLinter } from 'eslint'
-import mergeWith from 'lodash.mergewith'
 import { Linter } from './linter'
-import { ESLintOptions, LinterOptions, ProvidedOptions } from './options'
-import { customizeArrayMerge, getHeadline, getHelp } from './utils'
+import { ProvidedOptions } from './options'
+import { mergeESLintOpsFromArgv, getHeadline, getHelp } from './utils'
 
 export const cli = (opts: ProvidedOptions): void => {
   const linter = new Linter(opts)
@@ -22,7 +21,7 @@ export const cli = (opts: ProvidedOptions): void => {
     string: ['env', 'globals', 'plugins', 'parser', 'ext']
   })
 
-  options.eslintOptions = mergeESLintOps(options, argv)
+  options.eslintOptions = mergeESLintOpsFromArgv(options, argv)
 
   // Unix convention: Command line argument `-` is a shorthand for `--stdin`
   if (argv._[0] === '-') {
@@ -50,30 +49,6 @@ export const cli = (opts: ProvidedOptions): void => {
     })
   } else {
     linter.lintFiles(argv._.length ? argv._ : ['.'], onFinish)
-  }
-
-  function mergeESLintOps(
-    { eslintOptions }: LinterOptions,
-    {
-      ext = [],
-      env = {},
-      globals = {},
-      parser = '',
-      plugins = [],
-      fix = false
-    }: ParsedArgs
-  ): ESLintOptions {
-    const optionsFromArgs: Partial<LinterOptions['eslintOptions']> = {
-      extensions: ext,
-      baseConfig: {
-        env,
-        globals,
-        parser,
-        plugins
-      },
-      fix
-    }
-    return mergeWith(eslintOptions, optionsFromArgs, customizeArrayMerge)
   }
 
   function onFinish(

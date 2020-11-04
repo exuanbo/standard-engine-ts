@@ -1,7 +1,9 @@
 import fs from 'fs'
 import path from 'path'
 import findUp from 'find-up'
-import { LinterOptions, ProvidedOptions } from './options'
+import { ParsedArgs } from 'minimist'
+import mergeWith from 'lodash.mergewith'
+import { ESLintOptions, LinterOptions, ProvidedOptions } from './options'
 import { MAJORVERSION_REGEX, CACHE_HOME, DEFAULT_IGNORE } from './constants'
 
 const isDirHas = (dir: string, name: string) =>
@@ -61,6 +63,30 @@ export const customizeArrayMerge = (
   if (Array.isArray(obj)) {
     return obj.concat(src)
   }
+}
+
+export const mergeESLintOpsFromArgv = (
+  { eslintOptions }: LinterOptions,
+  {
+    ext = [],
+    env = {},
+    globals = {},
+    parser = '',
+    plugins = [],
+    fix = false
+  }: ParsedArgs
+): ESLintOptions => {
+  const optionsFromArgs: Partial<LinterOptions['eslintOptions']> = {
+    extensions: ext,
+    baseConfig: {
+      env,
+      globals,
+      parser,
+      plugins
+    },
+    fix
+  }
+  return mergeWith(eslintOptions, optionsFromArgs, customizeArrayMerge)
 }
 
 export const getCacheLocation = (version: string, cmd: string): string => {
