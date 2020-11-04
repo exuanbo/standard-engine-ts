@@ -1,7 +1,8 @@
 import path from 'path'
-import eslint, { ESLint, Linter as ESLinter } from 'eslint'
+import eslint, { ESLint } from 'eslint'
 import { Assign } from 'utility-types'
-import { getIgnore, getCacheLocation } from './utils'
+import mergeWith from 'lodash.mergewith'
+import { getIgnore, customizeArrayMerge, getCacheLocation } from './utils'
 import {
   DEFAULT_CMD,
   DEFAULT_VERSION,
@@ -16,12 +17,11 @@ type NonNullableESLintOptions = Required<
     ESLint.Options,
     | 'cwd'
     | 'extensions'
-    | 'resolvePluginsRelativeTo'
+    | 'baseConfig'
     | 'useEslintrc'
     | 'fix'
     | 'cache'
     | 'cacheLocation'
-    | 'baseConfig'
   >
 >
 
@@ -41,16 +41,13 @@ export interface ProvidedOptions extends Partial<LinterOptions> {
 
   cwd?: string
   extensions?: string[]
+  ignore?: string[]
+  useGitIgnore?: boolean
+  gitIgnoreFiles?: string[]
 
   configFile?: string
 
   fix?: boolean
-
-  parserOpts?: ESLinter.Config['parserOptions']
-
-  ignore?: string[]
-  useGitIgnore?: boolean
-  gitIgnoreFiles?: string[]
 }
 
 export class Options implements LinterOptions {
@@ -69,7 +66,6 @@ export class Options implements LinterOptions {
     this.homepage = opts.homepage || DEFAULT_HOMEPAGE
     this.bugs = opts.bugs || DEFAULT_BUGS
 
-    const { eslintOptions } = opts
     const cwd = opts.cwd || process.cwd()
     const { configFile } = opts
 
@@ -77,22 +73,21 @@ export class Options implements LinterOptions {
       cwd,
       extensions: DEFAULT_EXTENSIONS.concat(opts.extensions || []),
 
-      overrideConfigFile: configFile,
-      resolvePluginsRelativeTo: (configFile && path.dirname(configFile)) || cwd,
+      baseConfig: mergeWith(
+        (configFile && require(configFile)) || {},
+        opts.eslintOptions?.baseConfig || {},
+        {
+          ignorePatterns: getIgnore(opts)
+        },
+        customizeArrayMerge
+      ),
+      resolvePluginsRelativeTo: configFile && path.dirname(configFile),
       useEslintrc: Boolean(configFile),
 
       fix: opts.fix || false,
 
       cache: true,
-      cacheLocation: getCacheLocation(this.version, this.cmd),
-
-      ...(eslintOptions || {}),
-
-      baseConfig: {
-        parserOptions: opts.parserOpts,
-        ignorePatterns: getIgnore(opts),
-        ...(eslintOptions?.baseConfig || {})
-      }
+      cacheLocation: getCacheLocation(this.version, this.cmd)
     }
   }
 }
