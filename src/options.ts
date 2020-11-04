@@ -1,8 +1,7 @@
 import path from 'path'
 import eslint, { ESLint } from 'eslint'
 import { Assign } from 'utility-types'
-import mergeWith from 'lodash.mergewith'
-import { getIgnore, customizeArrayMerge, getCacheLocation } from './utils'
+import { getIgnore, customizedMergeWith, getCacheLocation } from './utils'
 import {
   DEFAULT_CMD,
   DEFAULT_VERSION,
@@ -67,27 +66,29 @@ export class Options implements LinterOptions {
     this.bugs = opts.bugs || DEFAULT_BUGS
 
     const cwd = opts.cwd || process.cwd()
-    const { configFile } = opts
+    const { eslintOptions, configFile } = opts
 
-    this.eslintOptions = {
-      cwd,
-      extensions: DEFAULT_EXTENSIONS.concat(opts.extensions || []),
+    this.eslintOptions = customizedMergeWith<ESLintOptions>(
+      {
+        cwd,
+        extensions: DEFAULT_EXTENSIONS.concat(opts.extensions || []),
 
-      baseConfig: mergeWith(
-        (configFile && require(configFile)) || {},
-        opts.eslintOptions?.baseConfig || {},
-        {
-          ignorePatterns: getIgnore(opts)
-        },
-        customizeArrayMerge
-      ),
-      resolvePluginsRelativeTo: configFile && path.dirname(configFile),
-      useEslintrc: Boolean(configFile),
+        baseConfig: customizedMergeWith<ESLint.Options['baseConfig']>(
+          (configFile && require(configFile)) || {},
+          eslintOptions?.baseConfig || {},
+          {
+            ignorePatterns: getIgnore(opts)
+          }
+        ),
+        resolvePluginsRelativeTo: configFile && path.dirname(configFile),
+        useEslintrc: Boolean(configFile),
 
-      fix: opts.fix || false,
+        fix: opts.fix || false,
 
-      cache: true,
-      cacheLocation: getCacheLocation(this.version, this.cmd)
-    }
+        cache: true,
+        cacheLocation: getCacheLocation(this.version, this.cmd)
+      },
+      eslintOptions
+    )
   }
 }

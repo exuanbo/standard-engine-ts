@@ -56,7 +56,7 @@ export const getIgnore = ({
   return [...ignore, ...gitignore]
 }
 
-export const customizeArrayMerge = (
+const customizeArrayMerge = (
   obj: unknown,
   src: unknown
 ): unknown[] | undefined => {
@@ -64,6 +64,11 @@ export const customizeArrayMerge = (
     return obj.concat(src)
   }
 }
+
+export const customizedMergeWith = <T, K = Partial<T>>(
+  obj: K,
+  ...otherArgs: Array<K | undefined>
+): T => mergeWith(obj, ...otherArgs, customizeArrayMerge)
 
 export const mergeESLintOpsFromArgv = (
   { eslintOptions }: LinterOptions,
