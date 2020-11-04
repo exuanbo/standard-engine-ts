@@ -1,9 +1,10 @@
 import minimist, { ParsedArgs } from 'minimist'
 import getStdin from 'get-stdin'
 import { ESLint, Linter as ESLinter } from 'eslint'
+import mergeWith from 'lodash.mergewith'
 import { Linter } from './linter'
 import { ESLintOptions, LinterOptions, ProvidedOptions } from './options'
-import { getHeadline, getHelp } from './utils'
+import { customizeArrayMerge, getHeadline, getHelp } from './utils'
 
 export const cli = (opts: ProvidedOptions): void => {
   const linter = new Linter(opts)
@@ -11,14 +12,14 @@ export const cli = (opts: ProvidedOptions): void => {
 
   const argv = minimist(process.argv.slice(2), {
     alias: {
+      env: 'envs',
       globals: 'global',
       plugins: 'plugin',
-      env: 'envs',
       help: 'h',
       version: 'v'
     },
-    boolean: ['fix', 'help', 'stdin', 'verbose', 'version'],
-    string: ['globals', 'plugins', 'parser', 'ext', 'env']
+    boolean: ['fix', 'verbose', 'version', 'help', 'stdin'],
+    string: ['env', 'globals', 'plugins', 'parser', 'ext']
   })
 
   options.eslintOptions = mergeESLintOps(options, argv)
@@ -51,35 +52,28 @@ export const cli = (opts: ProvidedOptions): void => {
     linter.lintFiles(argv._.length ? argv._ : ['.'], onFinish)
   }
 
-  /* ------------------------------------------------------------------------ */
-  /*                                Functions                                 */
-  /* ------------------------------------------------------------------------ */
-
   function mergeESLintOps(
     { eslintOptions }: LinterOptions,
-    { ext, plugin, fix, env, globals, parser }: ParsedArgs
+    {
+      ext = [],
+      env = {},
+      globals = {},
+      parser = '',
+      plugins = [],
+      fix = false
+    }: ParsedArgs
   ): ESLintOptions {
-    const merged = {
-      ...eslintOptions,
-      extensions: eslintOptions.extensions.concat(ext || []),
-      plugins: eslintOptions.plugins?.concat(plugin || []) || plugin,
-      fix: fix || eslintOptions.fix,
-
+    const optionsFromArgs: Partial<LinterOptions['eslintOptions']> = {
+      extensions: ext,
       baseConfig: {
-        ...eslintOptions.baseConfig,
-        env: {
-          ...eslintOptions.baseConfig?.env,
-          ...((env && { [env]: true }) || {})
-        },
-        globals: {
-          ...eslintOptions.baseConfig?.globals,
-          ...((globals && { [globals]: true }) || {})
-        },
-        parser: parser || eslintOptions.baseConfig.parser
-      }
+        env,
+        globals,
+        parser,
+        plugins
+      },
+      fix
     }
-
-    return merged
+    return mergeWith(eslintOptions, optionsFromArgs, customizeArrayMerge)
   }
 
   function onFinish(
