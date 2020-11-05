@@ -15,13 +15,7 @@ import {
 type NonNullableESLintOptions = Required<
   Pick<
     ESLint.Options,
-    | 'cwd'
-    | 'extensions'
-    | 'baseConfig'
-    | 'useEslintrc'
-    | 'fix'
-    | 'cache'
-    | 'cacheLocation'
+    'extensions' | 'baseConfig' | 'useEslintrc' | 'cache' | 'cacheLocation'
   >
 >
 
@@ -65,11 +59,11 @@ export class Options implements LinterOptions {
     tagline = DEFAULT_TAGLINE,
     homepage = DEFAULT_HOMEPAGE,
     bugs = DEFAULT_BUGS,
-    cwd = process.cwd(),
+    cwd,
     extensions = [],
     eslintOptions,
     configFile,
-    fix = false,
+    fix,
     ignore = DEFAULT_IGNORE,
     useGitIgnore = false,
     gitIgnoreFiles = []
@@ -85,7 +79,7 @@ export class Options implements LinterOptions {
         cwd,
         extensions: DEFAULT_EXTENSIONS.concat(extensions),
 
-        baseConfig: customizedMergeWith<ESLint.Options['baseConfig']>(
+        baseConfig: customizedMergeWith<ESLintOptions['baseConfig']>(
           (configFile && require(configFile)) || {},
           eslintOptions?.baseConfig || {},
           {

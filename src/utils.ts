@@ -83,7 +83,7 @@ export const mergeESLintOpsFromArgv = (
     fix = false
   }: ParsedArgs
 ): ESLintOptions => {
-  const optionsFromArgs: Partial<LinterOptions['eslintOptions']> = {
+  const optionsFromArgs: Partial<ESLintOptions> = {
     extensions: ext,
     baseConfig: {
       env,

@@ -42,7 +42,7 @@ export class CLI extends CLIEngine<ParsedArgs> {
       string: ['env', 'globals', 'plugins', 'parser', 'ext']
     })
 
-    options.eslintOptions = mergeESLintOpsFromArgv(options, argv)
+    mergeESLintOpsFromArgv(options, argv)
 
     super(options, argv)
 
