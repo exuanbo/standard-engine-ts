@@ -18,6 +18,43 @@ npm install standard-engine-ts
 
 See bundled [index.d.ts](https://gist.github.com/exuanbo/79d6fcd2c617f03ec530106bfe46d7a4).
 
+### Example
+
+```js
+#!/usr/bin/env node
+'use strict'
+
+const path = require('path')
+const eslint = require('eslint')
+const { run } = require('standard-engine-ts')
+const {
+  name,
+  version,
+  description,
+  homepage,
+  bugs
+} = require('../package.json')
+
+run({
+  cmd: name,
+  version: version,
+  tagline: description,
+  homepage,
+  bugs: bugs.url,
+  eslint,
+  eslintOptions: {
+    baseConfig: {
+      env: {
+        browser: true
+      }
+    }
+  },
+  extensions: ['.ts'],
+  useGitIgnore: true,
+  configFile: path.join(__dirname, '..', '.eslintrc.js')
+})
+```
+
 ## Todo
 
 - [ ] Unit testing
