@@ -60,8 +60,9 @@ export const getIgnore = ({
 export type Obj = Record<string, unknown>
 
 export const mergeObj = <T>(obj: Obj, ...args: Array<Obj | undefined>): T => {
-  args.forEach(src => {
-    src &&
+  args.forEach(
+    src =>
+      src &&
       Object.entries(src).forEach(([srcKey, srcVal]) => {
         const objVal = obj[srcKey]
         if (Array.isArray(objVal) && Array.isArray(srcVal)) {
@@ -71,13 +72,17 @@ export const mergeObj = <T>(obj: Obj, ...args: Array<Obj | undefined>): T => {
           obj[srcKey] = objVal.concat(filteredArr)
           return
         }
-        if (typeof objVal === 'object' && objVal !== null) {
+        if (
+          typeof objVal === 'object' &&
+          typeof srcVal === 'object' &&
+          objVal !== null
+        ) {
           mergeObj(objVal as Obj, srcVal as Obj)
           return
         }
         obj[srcKey] = srcVal
       })
-  })
+  )
   return obj as T
 }
 
