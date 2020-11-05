@@ -55,17 +55,20 @@ export class CLI extends CLIEngine<ParsedArgs> {
   }
 
   protected onError(err: Error): void {
+    const { cmd, bugs } = this.options
     const { stack, message } = err
 
-    console.error(`${this.options.cmd}: Unexpected linter output:\n`)
+    console.error(`${cmd}: Unexpected linter output:\n`)
     console.error(stack || message)
     console.error(
-      `\nIf you think this is a bug in \`${this.options.cmd}\`, open an issue: ${this.options.bugs}`
+      `\nIf you think this is a bug in \`${cmd}\`, open an issue: ${bugs}`
     )
     process.exitCode = 1
   }
 
   protected onResult(lintResults: ESLint.LintResult[], code?: string): void {
+    const { cmd, tagline, homepage } = this.options
+
     if (this.argv.stdin && this.argv.fix && code) {
       const [{ output }] = lintResults
       process.stdout.write(output || code)
@@ -86,14 +89,14 @@ export class CLI extends CLIEngine<ParsedArgs> {
       return
     }
 
-    console.log(`${getHeadline(this.options)}\n`)
+    console.log(`${getHeadline(cmd, tagline, homepage)}\n`)
 
     const isFixable = lintResults.some(res =>
       res.messages.some(msg => Boolean(msg.fix))
     )
     if (isFixable) {
       console.error(
-        `  Run \`${this.options.cmd} --fix\` to automatically fix some problems.\n`
+        `  Run \`${cmd} --fix\` to automatically fix some problems.\n`
       )
     }
 
@@ -135,6 +138,7 @@ export class CLI extends CLIEngine<ParsedArgs> {
 export const run = (opts: ProvidedOptions): void => {
   const cli = new CLI(opts)
   const { options, argv, linter, onFinish } = cli
+  const { cmd, tagline, homepage, eslintOptions } = options
 
   // Unix convention: Command line argument `-` is a shorthand for `--stdin`
   if (argv._[0] === '-') {
@@ -143,8 +147,8 @@ export const run = (opts: ProvidedOptions): void => {
   }
 
   if (argv.help) {
-    console.log(getHeadline(options))
-    console.log(getHelp(options))
+    console.log(getHeadline(cmd, tagline, homepage))
+    console.log(getHelp(cmd, eslintOptions.extensions))
     return
   }
 
