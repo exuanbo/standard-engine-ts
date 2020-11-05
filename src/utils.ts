@@ -109,15 +109,12 @@ export const getCacheLocation = (version: string, cmd: string): string => {
 }
 
 export const getHeadline = (
-  cmd: LinterOptions['cmd'],
-  tagline: LinterOptions['tagline'],
-  homepage: LinterOptions['homepage']
+  cmd: string,
+  tagline: string,
+  homepage: string
 ): string => `${cmd}: ${tagline} (${homepage})`
 
-export const getHelp = (
-  cmd: LinterOptions['cmd'],
-  extensions: LinterOptions['eslintOptions']['extensions']
-): string => {
+export const getHelp = (cmd: string, extensions: string[]): string => {
   const extPatterns = extensions.map(ext => `*${ext}`).join(', ')
   const pathPatterns = DEFAULT_IGNORE.join(', ')
 
