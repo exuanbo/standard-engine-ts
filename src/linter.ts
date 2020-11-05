@@ -1,7 +1,7 @@
 import { ESLint } from 'eslint'
 import { Options, LinterOptions, ProvidedOptions } from './options'
 
-type LintCallback = <T extends Error | null>(
+export type LintCallback = <T extends Error | null>(
   err: T,
   result: T extends Error ? null : ESLint.LintResult[],
   code?: string
