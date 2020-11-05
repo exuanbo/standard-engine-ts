@@ -1,4 +1,4 @@
-import minimist, { ParsedArgs } from 'minimist'
+import minimist from 'minimist'
 import getStdin from 'get-stdin'
 import { ESLint, Linter as ESLinter } from 'eslint'
 import { LintCallback, Linter } from './linter'
@@ -14,6 +14,12 @@ export abstract class CLIEngine<T> {
   protected abstract report(...args: unknown[]): void
 
   constructor(public options: LinterOptions, public argv: T) {}
+}
+
+interface ParsedArgs {
+  [arg: string]: unknown
+  '--'?: string[]
+  _: string[]
 }
 
 export class CLI extends CLIEngine<ParsedArgs> {
