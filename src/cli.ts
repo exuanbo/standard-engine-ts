@@ -60,10 +60,13 @@ export const cli = (opts: ProvidedOptions): void => {
   }
 
   function onError(err: Error): void {
-    console.error(`${options.cmd}: Unexpected linter output:\n`)
-    console.error(err.stack || err.message || err)
+    const { cmd, bugs } = options
+    const { stack, message } = err
+
+    console.error(`${cmd}: Unexpected linter output:\n`)
+    console.error(stack || message)
     console.error(
-      `\nIf you think this is a bug in \`${options.cmd}\`, open an issue: ${options.bugs}`
+      `\nIf you think this is a bug in \`${cmd}\`, open an issue: ${bugs}`
     )
     process.exitCode = 1
   }
