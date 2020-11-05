@@ -16,7 +16,7 @@ npm install standard-engine-ts
 
 ## API
 
-See [index.d.ts](https://gist.github.com/exuanbo/79d6fcd2c617f03ec530106bfe46d7a4).
+See bundled [index.d.ts](https://gist.github.com/exuanbo/79d6fcd2c617f03ec530106bfe46d7a4).
 
 ## Todo
 
