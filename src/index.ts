@@ -1,3 +1,3 @@
-export { Options } from './options'
-export { Linter } from './linter'
-export { CLIEngine, CLI, run } from './cli'
+export * from './options'
+export * from './linter'
+export * from './cli'
