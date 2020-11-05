@@ -22,7 +22,7 @@ See bundled [index.d.ts](https://gist.github.com/exuanbo/79d6fcd2c617f03ec530106
 
 - [ ] Unit testing
 - [ ] Documentation
-- [ ] Remove lodash.mergewith to reduce bundle size
+- [x] Remove lodash.mergewith to reduce bundle size
 
 ## License
 

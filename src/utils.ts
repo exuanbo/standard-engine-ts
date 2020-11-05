@@ -2,7 +2,6 @@ import fs from 'fs'
 import path from 'path'
 import findUp from 'find-up'
 import { ParsedArgs } from 'minimist'
-import mergeWith from 'lodash.mergewith'
 import { ESLintOptions, LinterOptions, ProvidedOptions } from './options'
 import { MAJORVERSION_REGEX, CACHE_HOME, DEFAULT_IGNORE } from './constants'
 
@@ -58,19 +57,29 @@ export const getIgnore = ({
   return [...ignore, ...gitignore]
 }
 
-const customizeArrayMerge = (
-  obj: unknown,
-  src: unknown
-): unknown[] | undefined => {
-  if (Array.isArray(obj)) {
-    return obj.concat(src)
-  }
-}
+export type Obj = Record<string, unknown>
 
-export const customizedMergeWith = <T, K = Partial<T>>(
-  obj: K,
-  ...otherArgs: Array<K | undefined>
-): T => mergeWith(obj, ...otherArgs, customizeArrayMerge)
+export const mergeObj = <T>(obj: Obj, ...args: Array<Obj | undefined>): T => {
+  args.forEach(src => {
+    src &&
+      Object.entries(src).forEach(([srcKey, srcVal]) => {
+        const objVal = obj[srcKey]
+        if (Array.isArray(objVal) && Array.isArray(srcVal)) {
+          const filteredArr = srcVal.filter(
+            (val: unknown) => !objVal.some(item => item === val)
+          )
+          obj[srcKey] = objVal.concat(filteredArr)
+          return
+        }
+        if (typeof objVal === 'object' && objVal !== null) {
+          mergeObj(objVal as Obj, srcVal as Obj)
+          return
+        }
+        obj[srcKey] = srcVal
+      })
+  })
+  return obj as T
+}
 
 export const mergeESLintOpsFromArgv = (
   { eslintOptions }: LinterOptions,
@@ -93,7 +102,7 @@ export const mergeESLintOpsFromArgv = (
     },
     fix
   }
-  return customizedMergeWith(eslintOptions, optionsFromArgs)
+  return mergeObj(eslintOptions, optionsFromArgs)
 }
 
 export const getCacheLocation = (version: string, cmd: string): string => {

@@ -1,7 +1,7 @@
 import path from 'path'
 import eslint, { ESLint } from 'eslint'
 import { Assign } from 'utility-types'
-import { getIgnore, customizedMergeWith, getCacheLocation } from './utils'
+import { getIgnore, Obj, mergeObj, getCacheLocation } from './utils'
 import {
   DEFAULT_CMD,
   DEFAULT_VERSION,
@@ -74,14 +74,14 @@ export class Options implements LinterOptions {
     this.homepage = homepage
     this.bugs = bugs
 
-    this.eslintOptions = customizedMergeWith<ESLintOptions>(
+    this.eslintOptions = mergeObj(
       {
         cwd,
         extensions: DEFAULT_EXTENSIONS.concat(extensions),
 
-        baseConfig: customizedMergeWith<ESLintOptions['baseConfig']>(
+        baseConfig: mergeObj(
           (configFile && require(configFile)) || {},
-          eslintOptions?.baseConfig || {},
+          eslintOptions?.baseConfig as Obj,
           {
             ignorePatterns: getIgnore({ ignore, useGitIgnore, gitIgnoreFiles })
           }
