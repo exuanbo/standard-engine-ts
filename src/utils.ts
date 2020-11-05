@@ -36,10 +36,12 @@ const getReadFileFn = () => {
 }
 
 export const getIgnore = ({
-  ignore = DEFAULT_IGNORE,
+  ignore,
   useGitIgnore,
-  gitIgnoreFiles = []
-}: ProvidedOptions): string[] => {
+  gitIgnoreFiles
+}: Required<
+  Pick<ProvidedOptions, 'ignore' | 'useGitIgnore' | 'gitIgnoreFiles'>
+>): string[] => {
   const readFile = getReadFileFn()
   type ExcludesNull = <T>(s: T | null) => s is T
 

@@ -8,7 +8,8 @@ import {
   DEFAULT_TAGLINE,
   DEFAULT_HOMEPAGE,
   DEFAULT_BUGS,
-  DEFAULT_EXTENSIONS
+  DEFAULT_EXTENSIONS,
+  DEFAULT_IGNORE
 } from './constants'
 
 type NonNullableESLintOptions = Required<
@@ -58,35 +59,46 @@ export class Options implements LinterOptions {
 
   eslintOptions: ESLintOptions
 
-  constructor(opts: ProvidedOptions) {
-    this.cmd = opts.cmd || DEFAULT_CMD
-    this.version = opts.version || DEFAULT_VERSION
-    this.tagline = opts.tagline || DEFAULT_TAGLINE
-    this.homepage = opts.homepage || DEFAULT_HOMEPAGE
-    this.bugs = opts.bugs || DEFAULT_BUGS
-
-    const cwd = opts.cwd || process.cwd()
-    const { eslintOptions, configFile } = opts
+  constructor({
+    cmd = DEFAULT_CMD,
+    version = DEFAULT_VERSION,
+    tagline = DEFAULT_TAGLINE,
+    homepage = DEFAULT_HOMEPAGE,
+    bugs = DEFAULT_BUGS,
+    cwd = process.cwd(),
+    extensions = [],
+    eslintOptions,
+    configFile,
+    fix = false,
+    ignore = DEFAULT_IGNORE,
+    useGitIgnore = false,
+    gitIgnoreFiles = []
+  }: ProvidedOptions) {
+    this.cmd = cmd
+    this.version = version
+    this.tagline = tagline
+    this.homepage = homepage
+    this.bugs = bugs
 
     this.eslintOptions = customizedMergeWith<ESLintOptions>(
       {
         cwd,
-        extensions: DEFAULT_EXTENSIONS.concat(opts.extensions || []),
+        extensions: DEFAULT_EXTENSIONS.concat(extensions),
 
         baseConfig: customizedMergeWith<ESLint.Options['baseConfig']>(
           (configFile && require(configFile)) || {},
           eslintOptions?.baseConfig || {},
           {
-            ignorePatterns: getIgnore(opts)
+            ignorePatterns: getIgnore({ ignore, useGitIgnore, gitIgnoreFiles })
           }
         ),
         resolvePluginsRelativeTo: configFile && path.dirname(configFile),
         useEslintrc: Boolean(configFile),
 
-        fix: opts.fix || false,
+        fix,
 
         cache: true,
-        cacheLocation: getCacheLocation(this.version, this.cmd)
+        cacheLocation: getCacheLocation(version, cmd)
       },
       eslintOptions
     )
