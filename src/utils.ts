@@ -93,7 +93,7 @@ export const mergeESLintOpsFromArgv = (
     },
     fix
   }
-  return mergeWith(eslintOptions, optionsFromArgs, customizeArrayMerge)
+  return customizedMergeWith(eslintOptions, optionsFromArgs)
 }
 
 export const getCacheLocation = (version: string, cmd: string): string => {
