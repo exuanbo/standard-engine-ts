@@ -8,7 +8,7 @@ import { MAJORVERSION_REGEX, CACHE_HOME, DEFAULT_IGNORE } from './constants'
 const isDirHas = (dir: string, name: string) =>
   fs.existsSync(path.join(dir, name))
 
-const getRootPath = (): string =>
+export const getRootPath = (): string =>
   findUp.sync(
     directory => {
       const hasPkgJson = isDirHas(directory, 'package.json')
@@ -21,7 +21,7 @@ const getRootPath = (): string =>
     { type: 'directory' }
   ) as string
 
-const getReadFileFn = () => {
+export const getReadFileFromRootFn = (): ((file: string) => string | null) => {
   const rootPath = getRootPath()
 
   return (file: string): string | null => {
@@ -41,7 +41,7 @@ export const getIgnore = ({
 }: Required<
   Pick<ProvidedOptions, 'ignore' | 'useGitIgnore' | 'gitIgnoreFiles'>
 >): string[] => {
-  const readFile = getReadFileFn()
+  const readFile = getReadFileFromRootFn()
   type ExcludesNull = <T>(s: T | null) => s is T
 
   const gitignore = useGitIgnore
