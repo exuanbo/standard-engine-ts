@@ -15,7 +15,7 @@
     "build": "yarn clean && yarn dts && yarn bundle",
     "lint": "./test/cmd.js",
     "lint:fix": "./test/cmd.js --fix",
-    "test": "yarn build && yarn lint"
+    "test": "yarn build && yarn lint && jest"
   },
   "repository": {
     "type": "git",
