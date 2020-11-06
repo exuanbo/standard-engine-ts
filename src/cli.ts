@@ -101,7 +101,7 @@ export class CLI extends CLIEngine<ParsedArgs> {
       res.messages.some(msg => Boolean(msg.fix))
     )
     if (isFixable) {
-      console.error(
+      console.log(
         `  Run \`${cmd} --fix\` to automatically fix some problems.\n`
       )
     }
