@@ -51,7 +51,7 @@ export const getIgnore = ({
         .filter((Boolean as any) as ExcludesNull)
         .map(text => text.split(/\r?\n/))
         .flat()
-        .filter(filePath => !filePath.startsWith('#'))
+        .filter(filePath => !filePath.startsWith('#') && filePath !== '')
     : []
 
   return [...ignore, ...gitignore]
