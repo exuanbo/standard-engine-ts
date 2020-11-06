@@ -5,7 +5,7 @@ import { ParsedArgs } from 'minimist'
 import { ESLintOptions, LinterOptions, ProvidedOptions } from './options'
 import { MAJORVERSION_REGEX, CACHE_HOME, DEFAULT_IGNORE } from './constants'
 
-const isDirHas = (dir: string, name: string): boolean =>
+export const isDirHas = (dir: string, name: string): boolean =>
   fs.existsSync(path.join(dir, name))
 
 export const getRootPath = (): string =>
