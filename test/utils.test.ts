@@ -40,9 +40,9 @@ describe('utils', () => {
     expect(readFile('LICENSE')).toBe(licenseContents)
   })
 
-  it('should return null if no such file exists', () => {
+  it('should return undefined if no such file exists', () => {
     const readFile = getReadFileFromRootFn()
-    expect(readFile('foo_bar')).toEqual(null)
+    expect(readFile('foo_bar')).toEqual(undefined)
   })
 
   it('should return an array of ignored files if `useGitIgnore` is true', () => {

@@ -21,15 +21,17 @@ export const getRootPath = (): string =>
     { type: 'directory' }
   ) as string
 
-export const getReadFileFromRootFn = (): ((file: string) => string | null) => {
+export const getReadFileFromRootFn = (): ((
+  file: string
+) => string | undefined) => {
   const rootPath = getRootPath()
 
-  return (file: string): string | null => {
+  return file => {
     const filePath = path.isAbsolute(file) ? file : path.join(rootPath, file)
     try {
       return fs.readFileSync(filePath, 'utf-8')
     } catch {
-      return null
+      return undefined
     }
   }
 }
@@ -42,13 +44,12 @@ export const getIgnore = ({
   Pick<ProvidedOptions, 'ignore' | 'useGitIgnore' | 'gitIgnoreFiles'>
 >): string[] => {
   const readFile = getReadFileFromRootFn()
-  type ExcludesNull = <T>(s: T | null) => s is T
+  type ExcludesUndefined = <T>(s: T | undefined) => s is T
 
   const gitignore = useGitIgnore
     ? ['.gitignore', '.git/info/exclude', ...gitIgnoreFiles]
         .map(file => readFile(file))
-        // eslint-disable-next-line
-        .filter((Boolean as any) as ExcludesNull)
+        .filter((Boolean as unknown) as ExcludesUndefined)
         .map(text => text.split(/\r?\n/))
         .flat()
         .filter(filePath => !filePath.startsWith('#') && filePath !== '')
