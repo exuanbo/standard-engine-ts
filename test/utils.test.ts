@@ -3,7 +3,7 @@ import path from 'path'
 import eslint from 'eslint'
 import { Options } from '../src/options'
 import {
-  isDirHas,
+  dirHasFile,
   getRootPath,
   getReadFileFromRootFn,
   getIgnore,
@@ -24,7 +24,7 @@ import {
 
 describe('utils', () => {
   it('should return true if dir has file', () => {
-    expect(isDirHas('.', 'package.json')).toBe(true)
+    expect(dirHasFile('.', 'package.json')).toBe(true)
   })
 
   it('should return the repository root path', () => {

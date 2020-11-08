@@ -1,25 +1,22 @@
 import fs from 'fs'
 import path from 'path'
-import findUp from 'find-up'
+import { lookItUpSync } from 'look-it-up'
 import { ParsedArgs } from 'minimist'
 import { ESLintOptions, LinterOptions, ProvidedOptions } from './options'
 import { MAJORVERSION_REGEX, CACHE_HOME, DEFAULT_IGNORE } from './constants'
 
-export const isDirHas = (dir: string, name: string): boolean =>
-  fs.existsSync(path.join(dir, name))
+export const dirHasFile = (dir: string, file: string): boolean =>
+  fs.existsSync(path.join(dir, file))
 
 export const getRootPath = (): string =>
-  findUp.sync(
-    directory => {
-      const hasPkgJson = isDirHas(directory, 'package.json')
-      const isSubModule = isDirHas(
-        path.join(directory, '../..'),
-        'node_modules'
-      )
-      return (hasPkgJson && !isSubModule && directory) || undefined
-    },
-    { type: 'directory' }
-  ) as string
+  lookItUpSync(directory => {
+    const hasPkgJson = dirHasFile(directory, 'package.json')
+    const isSubModule = dirHasFile(
+      path.join(directory, '../..'),
+      'node_modules'
+    )
+    return (hasPkgJson && !isSubModule && directory) || undefined
+  }) as string
 
 export const getReadFileFromRootFn = (): ((
   file: string
