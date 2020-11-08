@@ -22,21 +22,24 @@ import {
   CACHE_HOME
 } from '../src/constants'
 
+const cwd = process.cwd()
+
 describe('utils', () => {
   it('should return true if dir has file', () => {
     expect(dirHasFile('.', 'package.json')).toBe(true)
   })
 
+  it('should return false if dir does not have file', () => {
+    expect(dirHasFile('.', 'package-log.json')).toBe(false)
+  })
+
   it('should return the repository root path', () => {
-    expect(getRootPath()).toBe(process.cwd())
+    expect(getRootPath()).toBe(cwd)
   })
 
   it('should read files from the repository root path', () => {
     const readFile = getReadFileFromRootFn()
-    const licenseContents = fs.readFileSync(
-      path.join(process.cwd(), 'LICENSE'),
-      'utf-8'
-    )
+    const licenseContents = fs.readFileSync(path.join(cwd, 'LICENSE'), 'utf-8')
     expect(readFile('LICENSE')).toBe(licenseContents)
   })
 
