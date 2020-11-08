@@ -21,17 +21,21 @@ type NonNullableESLintOptions = Required<
 
 export type ESLintOptions = Assign<ESLint.Options, NonNullableESLintOptions>
 
-export interface LinterOptions {
+interface SharedOptions {
   cmd: string
   version: string
   tagline: string
   homepage: string
   bugs: string
+}
+
+export interface LinterOptions extends SharedOptions {
   eslintOptions: ESLintOptions
 }
 
-export interface ProvidedOptions extends Partial<LinterOptions> {
+export interface ProvidedOptions extends Partial<SharedOptions> {
   eslint: typeof eslint
+  eslintOptions?: Partial<ESLint.Options>
 
   cwd?: string
   extensions?: string[]
