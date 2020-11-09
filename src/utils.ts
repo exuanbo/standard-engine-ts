@@ -33,6 +33,8 @@ export const getReadFileFromRootFn = (): ((
   }
 }
 
+type ExcludesUndefined = <T>(s: T | undefined) => s is T
+
 export const getIgnore = ({
   ignore,
   useGitIgnore,
@@ -41,7 +43,6 @@ export const getIgnore = ({
   Pick<ProvidedOptions, 'ignore' | 'useGitIgnore' | 'gitIgnoreFiles'>
 >): string[] => {
   const readFile = getReadFileFromRootFn()
-  type ExcludesUndefined = <T>(s: T | undefined) => s is T
 
   const gitignore = useGitIgnore
     ? ['.gitignore', '.git/info/exclude', ...gitIgnoreFiles]
