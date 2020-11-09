@@ -83,9 +83,12 @@ export class Options implements LinterOptions {
         cwd,
         extensions: DEFAULT_EXTENSIONS.concat(extensions),
 
-        baseConfig: mergeObj((configFile && require(configFile)) || {}, {
-          ignorePatterns: getIgnore({ ignore, useGitIgnore, gitIgnoreFiles })
-        }),
+        baseConfig: mergeObj(
+          (configFile !== undefined && require(configFile)) || {},
+          {
+            ignorePatterns: getIgnore({ ignore, useGitIgnore, gitIgnoreFiles })
+          }
+        ),
         resolvePluginsRelativeTo: configFile && path.dirname(configFile),
         useEslintrc: Boolean(configFile),
 
