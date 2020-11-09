@@ -52,7 +52,7 @@ export class CLI extends CLIEngine<ParsedArgs> {
       lintResults: ESLint.LintResult[] | null,
       code?: string
     ): void => {
-      if (err) {
+      if (err !== null) {
         this.onError(err)
         return
       }
@@ -75,7 +75,7 @@ export class CLI extends CLIEngine<ParsedArgs> {
   protected onResult(lintResults: ESLint.LintResult[], code?: string): void {
     const { cmd, tagline, homepage } = this.options
 
-    if (this.argv.stdin && this.argv.fix && code) {
+    if (this.argv.stdin && this.argv.fix && code !== undefined) {
       const [{ output }] = lintResults
       process.stdout.write(output ?? code)
       return
@@ -121,13 +121,13 @@ export class CLI extends CLIEngine<ParsedArgs> {
               line,
               column,
               message,
-              this.argv.verbose && ruleId ? ` (${ruleId})` : ''
+              this.argv.verbose && ruleId !== null ? ` (${ruleId})` : ''
             )
           }
         )
     )
 
-    process.exitCode = errorCount ? 1 : 0
+    process.exitCode = errorCount > 0 ? 1 : 0
   }
 
   protected report(

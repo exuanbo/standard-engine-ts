@@ -60,7 +60,7 @@ type Obj = Record<string, unknown>
 export const mergeObj = <T>(obj: Obj, ...args: Array<Obj | undefined>): T => {
   args.forEach(
     src =>
-      src &&
+      src !== undefined &&
       Object.entries(src).forEach(([srcKey, srcVal]) => {
         const objVal = obj[srcKey]
         if (Array.isArray(objVal) && Array.isArray(srcVal)) {
@@ -110,12 +110,13 @@ export const mergeESLintOpsFromArgv = (
 
 export const getCacheLocation = (version: string, cmd: string): string => {
   const versionMatch = version.match(MAJORVERSION_REGEX)
-  const majorVersion = versionMatch && `${versionMatch[1]}`
+  const majorVersion =
+    (versionMatch !== null && `${versionMatch[1]}`) || undefined
 
   const cacheLocation = path.join(
     CACHE_HOME,
     cmd,
-    majorVersion ? `v${majorVersion}/` : ''
+    majorVersion !== undefined ? `v${majorVersion}/` : ''
   )
   return cacheLocation
 }

@@ -53,7 +53,7 @@ export class Linter {
         this.options.eslintOptions
       ).lintFiles(files)
 
-      if (this.options.eslintOptions.fix) {
+      if (this.options.eslintOptions.fix !== undefined) {
         await this.eslint.ESLint.outputFixes(results)
       }
 
