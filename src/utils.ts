@@ -55,7 +55,7 @@ export const getIgnore = ({
   return [...ignore, ...gitignore]
 }
 
-export type Obj = Record<string, unknown>
+type Obj = Record<string, unknown>
 
 export const mergeObj = <T>(obj: Obj, ...args: Array<Obj | undefined>): T => {
   args.forEach(
