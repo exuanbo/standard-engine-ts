@@ -71,22 +71,21 @@ describe('utils', () => {
       cwd: '.',
       extensions: ['.js'],
       baseConfig: {
-        ignorePatterns: ['dist/'],
+        ignorePatterns: [],
         env: { jest: false },
         noInlineConfig: true,
-        settings: { semi: ['error'] }
-      },
-      useEslintrc: false
+        settings: {}
+      }
     }
 
     const src = {
       cwd: '..',
       extensions: ['.ts'],
       baseConfig: {
-        ignorePatterns: ['coverage/'],
+        ignorePatterns: ['dist/'],
         env: { jest: true },
         noInlineConfig: false,
-        settings: { semi: ['error', 'always'] }
+        settings: { semi: ['error'] }
       },
       useEslintrc: true
     }
@@ -95,10 +94,10 @@ describe('utils', () => {
       cwd: '..',
       extensions: ['.js', '.ts'],
       baseConfig: {
-        ignorePatterns: ['dist/', 'coverage/'],
+        ignorePatterns: ['dist/'],
         env: { jest: true },
         noInlineConfig: false,
-        settings: { semi: ['error', 'always'] }
+        settings: { semi: ['error'] }
       },
       useEslintrc: true
     })
