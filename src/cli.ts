@@ -65,7 +65,7 @@ export class CLI extends CLIEngine<ParsedArgs> {
     const { stack, message } = err
 
     console.error(`${cmd}: Unexpected linter output:\n`)
-    console.error(stack || message)
+    console.error(stack ?? message)
     console.error(
       `\nIf you think this is a bug in \`${cmd}\`, open an issue: ${bugs}`
     )
@@ -77,7 +77,7 @@ export class CLI extends CLIEngine<ParsedArgs> {
 
     if (this.argv.stdin && this.argv.fix && code) {
       const [{ output }] = lintResults
-      process.stdout.write(output || code)
+      process.stdout.write(output ?? code)
       return
     }
 
