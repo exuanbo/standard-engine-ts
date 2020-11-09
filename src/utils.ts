@@ -63,6 +63,9 @@ export const mergeObj = <T>(obj: Obj, ...args: Array<Obj | undefined>): T => {
     src =>
       src !== undefined &&
       Object.entries(src).forEach(([srcKey, srcVal]) => {
+        if (srcVal === undefined) {
+          return
+        }
         const objVal = obj[srcKey]
         if (Array.isArray(objVal) && Array.isArray(srcVal)) {
           const filteredArr = srcVal.filter(

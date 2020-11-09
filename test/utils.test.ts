@@ -84,7 +84,7 @@ describe('utils', () => {
       baseConfig: {
         ignorePatterns: ['dist/'],
         env: { jest: true },
-        noInlineConfig: false,
+        noInlineConfig: undefined,
         settings: { semi: ['error'] }
       },
       useEslintrc: true
@@ -96,7 +96,7 @@ describe('utils', () => {
       baseConfig: {
         ignorePatterns: ['dist/'],
         env: { jest: true },
-        noInlineConfig: false,
+        noInlineConfig: true,
         settings: { semi: ['error'] }
       },
       useEslintrc: true
