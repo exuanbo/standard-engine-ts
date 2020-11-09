@@ -89,7 +89,8 @@ export class Options implements LinterOptions {
             ignorePatterns: getIgnore({ ignore, useGitIgnore, gitIgnoreFiles })
           }
         ),
-        resolvePluginsRelativeTo: configFile && path.dirname(configFile),
+        resolvePluginsRelativeTo:
+          (configFile !== undefined && path.dirname(configFile)) || cwd,
         useEslintrc: Boolean(configFile),
 
         fix,
