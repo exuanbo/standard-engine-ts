@@ -20,9 +20,9 @@ export class Linter {
     code: string,
     cb?: LintCallback | string,
     filePath?: string
-  ): Promise<void | ESLint.LintResult[]> => {
+  ): Promise<ESLint.LintResult[] | undefined> => {
     if (typeof cb === 'string') {
-      return this.lintText(code, undefined, cb)
+      return await this.lintText(code, undefined, cb)
     }
 
     try {
@@ -32,13 +32,15 @@ export class Linter {
         filePath
       })
 
-      if (cb) {
-        return cb(null, results, code)
+      if (cb !== undefined) {
+        cb(null, results, code)
+        return undefined
       }
       return results
     } catch (err) {
-      if (cb && typeof cb === 'function') {
-        return cb(err, null)
+      if (cb !== undefined && typeof cb === 'function') {
+        cb(err, null)
+        return undefined
       }
       throw err
     }
@@ -47,7 +49,7 @@ export class Linter {
   lintFiles = async (
     files: string | string[],
     cb?: LintCallback
-  ): Promise<void | ESLint.LintResult[]> => {
+  ): Promise<ESLint.LintResult[] | undefined> => {
     try {
       const results = await new this.eslint.ESLint(
         this.options.eslintOptions
@@ -57,13 +59,15 @@ export class Linter {
         await this.eslint.ESLint.outputFixes(results)
       }
 
-      if (cb) {
-        return cb(null, results)
+      if (cb !== undefined) {
+        cb(null, results)
+        return undefined
       }
       return results
     } catch (err) {
-      if (cb) {
-        return cb(err, null)
+      if (cb !== undefined) {
+        cb(err, null)
+        return undefined
       }
       throw err
     }

@@ -164,10 +164,12 @@ export const run = (opts: ProvidedOptions): void => {
     return
   }
 
+  /* eslint no-void: ["error", { "allowAsStatement": true }] */
+
   if (argv.stdin) {
-    getStdin().then(text => linter.lintText(text, onFinish))
+    void getStdin().then(async text => await linter.lintText(text, onFinish))
     return
   }
 
-  linter.lintFiles(argv._.length ? argv._ : ['.'], onFinish)
+  void linter.lintFiles(argv._.length > 0 ? argv._ : ['.'], onFinish)
 }
