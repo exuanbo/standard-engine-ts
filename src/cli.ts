@@ -3,7 +3,12 @@ import getStdin from 'get-stdin'
 import { ESLint, Linter as ESLinter } from 'eslint'
 import { LintCallback, Linter } from './linter'
 import { LinterOptions, ProvidedOptions } from './options'
-import { mergeESLintOpsFromArgv, getHeadline, getHelp } from './utils'
+import {
+  ParsedArgs,
+  mergeESLintOpsFromArgv,
+  getHeadline,
+  getHelp
+} from './utils'
 
 export abstract class CLIEngine<T> {
   abstract linter: Linter
@@ -16,13 +21,7 @@ export abstract class CLIEngine<T> {
   constructor(public options: LinterOptions, public argv: T) {}
 }
 
-interface ParsedArgs {
-  [arg: string]: unknown
-  '--'?: string[]
-  _: string[]
-}
-
-export class CLI extends CLIEngine<ParsedArgs> {
+export class CLI extends CLIEngine<Required<ParsedArgs>> {
   linter: Linter
   onFinish: LintCallback
 
@@ -30,7 +29,7 @@ export class CLI extends CLIEngine<ParsedArgs> {
     const linter = new Linter(opts)
     const { options } = linter
 
-    const argv = minimist(process.argv.slice(2), {
+    const minimistOpts = {
       alias: {
         env: 'envs',
         globals: 'global',
@@ -40,11 +39,13 @@ export class CLI extends CLIEngine<ParsedArgs> {
       },
       boolean: ['fix', 'verbose', 'version', 'help', 'stdin'],
       string: ['env', 'globals', 'plugins', 'parser', 'ext']
-    })
+    }
+
+    const argv = minimist(process.argv.slice(2), minimistOpts)
 
     mergeESLintOpsFromArgv(options, argv)
 
-    super(options, argv)
+    super(options, argv as Required<ParsedArgs>)
 
     this.linter = linter
     this.onFinish = (

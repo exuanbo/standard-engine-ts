@@ -104,7 +104,7 @@ describe('utils', () => {
   })
 
   it('should merge eslintOptions from parsed argv', () => {
-    const options = new Options({ eslint, fix: false })
+    const options = new Options({ eslint })
     const { eslintOptions } = options
 
     const copy = Object.assign({}, eslintOptions)
@@ -112,9 +112,9 @@ describe('utils', () => {
     copy.extensions = copy.extensions.concat('.ts')
 
     mergeESLintOpsFromArgv(options, {
-      _: [],
-      ext: ['.ts'],
-      globals: { jest: true }
+      ext: '.ts',
+      globals: 'jest',
+      _: []
     })
     expect(options.eslintOptions).toEqual(copy)
   })

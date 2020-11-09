@@ -1,8 +1,8 @@
 import fs from 'fs'
 import path from 'path'
+import { ESLint } from 'eslint'
 import { lookItUpSync } from 'look-it-up'
-import { ParsedArgs } from 'minimist'
-import { ESLintOptions, LinterOptions, ProvidedOptions } from './options'
+import { LinterOptions, ProvidedOptions } from './options'
 import { MAJORVERSION_REGEX, CACHE_HOME, DEFAULT_IGNORE } from './constants'
 
 export const dirHasFile = (dir: string, file: string): boolean =>
@@ -84,28 +84,37 @@ export const mergeObj = <T>(obj: Obj, ...args: Array<Obj | undefined>): T => {
   return obj as T
 }
 
+export interface ParsedArgs {
+  [arg: string]: boolean | string | string[] | undefined
+  fix?: boolean
+  verbose?: boolean
+  version?: boolean
+  help?: boolean
+  stdin?: boolean
+  ext?: string
+  env?: string
+  globals?: string
+  parser?: string
+  plugins?: string
+  '--'?: string[]
+  _: string[]
+}
+
 export const mergeESLintOpsFromArgv = (
   { eslintOptions }: LinterOptions,
-  {
-    ext = [],
-    env = {},
-    globals = {},
-    parser = '',
-    plugins = [],
-    fix = false
-  }: ParsedArgs
-): ESLintOptions => {
-  const optionsFromArgs: Partial<ESLintOptions> = {
-    extensions: ext,
+  { ext, env, globals, parser, plugins, fix }: ParsedArgs
+): void => {
+  const optionsFromArgs: Partial<ESLint.Options> = {
+    extensions: (ext !== undefined && [ext]) || [],
     baseConfig: {
-      env,
-      globals,
+      env: (env !== undefined && { [env]: true }) || undefined,
+      globals: (globals !== undefined && { [globals]: true }) || undefined,
       parser,
-      plugins
+      plugins: (plugins !== undefined && [plugins]) || undefined
     },
     fix
   }
-  return mergeObj(eslintOptions, optionsFromArgs)
+  mergeObj(eslintOptions, optionsFromArgs)
 }
 
 export const getCacheLocation = (version: string, cmd: string): string => {
