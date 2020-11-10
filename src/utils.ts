@@ -3,7 +3,12 @@ import path from 'path'
 import { ESLint } from 'eslint'
 import { lookItUpSync } from 'look-it-up'
 import { LinterOptions, ProvidedOptions } from './options'
-import { MAJORVERSION_REGEX, CACHE_HOME, DEFAULT_IGNORE } from './constants'
+import {
+  MAJORVERSION_REGEX,
+  CACHE_HOME,
+  DEFAULT_IGNORE,
+  DEFAULT_GITIGNORE
+} from './constants'
 
 export const dirHasFile = (dir: string, file: string): boolean =>
   fs.existsSync(path.join(dir, file))
@@ -46,9 +51,7 @@ export const getIgnore = ({
 
   const ignoreFromFiles = [
     '.eslintignore',
-    ...(useGitIgnore
-      ? ['.gitignore', '.git/info/exclude', ...gitIgnoreFiles]
-      : [])
+    ...(useGitIgnore ? [...DEFAULT_GITIGNORE, ...gitIgnoreFiles] : [])
   ]
     .map(file => readFile(file))
     .filter((Boolean as unknown) as ExcludesUndefined)
