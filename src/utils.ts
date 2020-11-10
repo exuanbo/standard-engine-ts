@@ -44,16 +44,19 @@ export const getIgnore = ({
 >): string[] => {
   const readFile = getReadFileFromRootFn()
 
-  const gitignore = useGitIgnore
-    ? ['.gitignore', '.git/info/exclude', ...gitIgnoreFiles]
-        .map(file => readFile(file))
-        .filter((Boolean as unknown) as ExcludesUndefined)
-        .map(text => text.split(/\r?\n/))
-        .flat()
-        .filter(filePath => !filePath.startsWith('#') && filePath !== '')
-    : []
+  const ignoreFromFiles = [
+    '.eslintignore',
+    ...(useGitIgnore
+      ? ['.gitignore', '.git/info/exclude', ...gitIgnoreFiles]
+      : [])
+  ]
+    .map(file => readFile(file))
+    .filter((Boolean as unknown) as ExcludesUndefined)
+    .map(text => text.split(/\r?\n/))
+    .flat()
+    .filter(filePath => !filePath.startsWith('#') && filePath !== '')
 
-  return [...ignore, ...gitignore]
+  return [...ignore, ...ignoreFromFiles]
 }
 
 type Obj = Record<string, unknown>

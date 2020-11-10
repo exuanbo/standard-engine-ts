@@ -66,6 +66,20 @@ describe('utils', () => {
     expect(files).toEqual(['public/'])
   })
 
+  it('should return an array of ignored files if `.eslintignore` exists', () => {
+    const eslintignorePath = path.join(cwd, '.eslintignore')
+    fs.writeFileSync(eslintignorePath, 'coverage/\ndist/')
+
+    const files = getIgnore({
+      ignore: [],
+      useGitIgnore: false,
+      gitIgnoreFiles: []
+    })
+    expect(files).toEqual(['coverage/', 'dist/'])
+
+    fs.writeFileSync(eslintignorePath, '')
+  })
+
   it('should merge objects recursively', () => {
     const obj = {
       cwd: '.',
