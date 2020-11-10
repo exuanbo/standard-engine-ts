@@ -34,13 +34,13 @@ export class Linter {
 
       if (cb !== undefined) {
         cb(null, results, code)
-        return undefined
+        return
       }
       return results
     } catch (err) {
       if (cb !== undefined && typeof cb === 'function') {
         cb(err, null)
-        return undefined
+        return
       }
       throw err
     }
@@ -61,13 +61,13 @@ export class Linter {
 
       if (cb !== undefined) {
         cb(null, results)
-        return undefined
+        return
       }
       return results
     } catch (err) {
       if (cb !== undefined) {
         cb(err, null)
-        return undefined
+        return
       }
       throw err
     }
