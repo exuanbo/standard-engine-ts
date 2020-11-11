@@ -13,15 +13,19 @@ import {
 export const dirHasFile = (dir: string, file: string): boolean =>
   fs.existsSync(path.join(dir, file))
 
-export const getRootPath = (): string =>
-  lookItUpSync(directory => {
-    const hasPkgJson = dirHasFile(directory, 'package.json')
-    const isSubModule = dirHasFile(
-      path.join(directory, '../..'),
-      'node_modules'
-    )
-    return (hasPkgJson && !isSubModule && directory) || undefined
-  }) as string
+export const isRoot = (dir: string): string | undefined => {
+  const hasPkgJson = dirHasFile(dir, 'package.json')
+  const isSubModule = dirHasFile(path.join(dir, '../..'), 'node_modules')
+  return (hasPkgJson && !isSubModule && dir) || undefined
+}
+
+export const getRootPath = (): string => {
+  const cwd = process.cwd()
+  if (isRoot(cwd) === cwd) {
+    return cwd
+  }
+  return lookItUpSync(isRoot, cwd) as string
+}
 
 export const getReadFileFromRootFn = (): ((
   file: string

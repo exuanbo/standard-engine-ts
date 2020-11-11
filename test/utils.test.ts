@@ -4,6 +4,7 @@ import eslint from 'eslint'
 import { Options } from '../src/options'
 import {
   dirHasFile,
+  isRoot,
   getRootPath,
   getReadFileFromRootFn,
   getIgnore,
@@ -31,6 +32,14 @@ describe('utils', () => {
 
   it('should return false if dir does not have file', () => {
     expect(dirHasFile('.', 'package-log.json')).toBe(false)
+  })
+
+  it('should return cwd as matcher result', () => {
+    expect(isRoot(cwd)).toBe(cwd)
+  })
+
+  it('should return undefined as matcher result', () => {
+    expect(isRoot(path.dirname(cwd))).toBe(undefined)
   })
 
   it('should return the repository root path', () => {
