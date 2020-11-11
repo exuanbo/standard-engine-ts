@@ -24,7 +24,7 @@ export const getRootPath = (): string => {
   if (isRoot(cwd) === cwd) {
     return cwd
   }
-  return lookItUpSync(isRoot, cwd) as string
+  return lookItUpSync(isRoot, path.dirname(cwd)) as string
 }
 
 export const getReadFileFromRootFn = (): ((
