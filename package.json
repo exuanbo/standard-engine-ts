@@ -60,7 +60,7 @@
     "eslint-plugin-standard": "4.1.0",
     "get-stdin": "8.0.0",
     "jest": "26.6.3",
-    "look-it-up": "1.1.1",
+    "look-it-up": "1.1.2",
     "prettier": "2.1.2",
     "rimraf": "3.0.2",
     "rollup": "2.33.1",

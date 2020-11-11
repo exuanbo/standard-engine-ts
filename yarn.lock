@@ -3220,10 +3220,10 @@ lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
   integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
 
-look-it-up@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/look-it-up/-/look-it-up-1.1.1.tgz#6da8d507837d04272647c4ceb15a8f148f4c015b"
-  integrity sha512-mvURXK+RLDoM+wfGlzQTRsbkmZlZ0PqqQH1o3+dpgIm8uAoRC7JmEcnudYh7unWZzWa7SJP+ADsR7ZKGgMn94w==
+look-it-up@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/look-it-up/-/look-it-up-1.1.2.tgz#82e066affa195f3e2ea3f1a984451ae0b9a4cf0d"
+  integrity sha512-oE09c6WKnaGSzodqspAozC9AJg+91/F60yKZ0vCxw+PY6sjAHBoI/rxVpRbvd3jcAr+glHRVrrPnmQIkRlis4w==
 
 magic-string@^0.25.7:
   version "0.25.7"
