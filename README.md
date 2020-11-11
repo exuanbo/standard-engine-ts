@@ -42,13 +42,6 @@ run({
   homepage,
   bugs: bugs.url,
   eslint,
-  eslintOptions: {
-    baseConfig: {
-      env: {
-        browser: true
-      }
-    }
-  },
   extensions: ['.ts'],
   useGitIgnore: true,
   configFile: path.join(__dirname, '..', '.eslintrc.js')
