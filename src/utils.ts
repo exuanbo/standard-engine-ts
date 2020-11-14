@@ -42,7 +42,7 @@ export const getReadFileFromRootFn = (): ((
   }
 }
 
-type ExcludesUndefined = <T>(s: T | undefined) => s is T
+const excludeUndefined = <T>(item: T | undefined): item is T => Boolean(item)
 
 export const getIgnore = ({
   ignore,
@@ -58,7 +58,7 @@ export const getIgnore = ({
     ...(useGitIgnore ? [...DEFAULT_GITIGNORE, ...gitIgnoreFiles] : [])
   ]
     .map(file => readFile(file))
-    .filter((Boolean as unknown) as ExcludesUndefined)
+    .filter(excludeUndefined)
     .map(text => text.split(/\r?\n/))
     .flat()
     .filter(filePath => !filePath.startsWith('#') && filePath !== '')
