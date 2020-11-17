@@ -79,7 +79,8 @@ export const mergeObj = <T>(obj: Obj, ...args: Array<Obj | undefined>): T => {
         const objVal = obj[srcKey]
         if (Array.isArray(objVal) && Array.isArray(srcVal)) {
           const filteredArr = srcVal.filter(
-            (val: unknown) => !objVal.some(item => item === val)
+            (val: unknown) =>
+              !objVal.some(item => JSON.stringify(item) === JSON.stringify(val))
           )
           obj[srcKey] = objVal.concat(filteredArr)
           return
