@@ -43,7 +43,7 @@ export class CLI extends CLIEngine<Required<ParsedArgs>> {
 
     const argv = minimist(process.argv.slice(2), minimistOpts)
 
-    mergeESLintOpsFromArgv(options, argv)
+    options.eslintOptions = mergeESLintOpsFromArgv(options, argv)
 
     super(options, argv as Required<ParsedArgs>)
 

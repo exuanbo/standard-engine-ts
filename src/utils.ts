@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { ESLint } from 'eslint'
 import { lookItUpSync } from 'look-it-up'
-import { LinterOptions, ProvidedOptions } from './options'
+import { ESLintOptions, LinterOptions, ProvidedOptions } from './options'
 import {
   MAJORVERSION_REGEX,
   CACHE_HOME,
@@ -69,6 +69,7 @@ export const getIgnore = ({
 type Obj = Record<string, unknown>
 
 export const mergeObj = <T>(obj: Obj, ...args: Array<Obj | undefined>): T => {
+  const objCopy = Object.assign({}, obj)
   args.forEach(
     src =>
       src !== undefined &&
@@ -76,13 +77,13 @@ export const mergeObj = <T>(obj: Obj, ...args: Array<Obj | undefined>): T => {
         if (srcVal === undefined) {
           return
         }
-        const objVal = obj[srcKey]
+        const objVal = objCopy[srcKey]
         if (Array.isArray(objVal) && Array.isArray(srcVal)) {
           const filteredArr = srcVal.filter(
-            (val: unknown) =>
+            val =>
               !objVal.some(item => JSON.stringify(item) === JSON.stringify(val))
           )
-          obj[srcKey] = objVal.concat(filteredArr)
+          objCopy[srcKey] = objVal.concat(filteredArr)
           return
         }
         if (
@@ -90,13 +91,13 @@ export const mergeObj = <T>(obj: Obj, ...args: Array<Obj | undefined>): T => {
           typeof srcVal === 'object' &&
           objVal !== null
         ) {
-          mergeObj(objVal as Obj, srcVal as Obj)
+          objCopy[srcKey] = mergeObj(objVal as Obj, srcVal as Obj)
           return
         }
-        obj[srcKey] = srcVal
+        objCopy[srcKey] = srcVal
       })
   )
-  return obj as T
+  return objCopy as T
 }
 
 export interface ParsedArgs {
@@ -118,7 +119,7 @@ export interface ParsedArgs {
 export const mergeESLintOpsFromArgv = (
   { eslintOptions }: LinterOptions,
   { ext, env, globals, parser, plugins, fix }: ParsedArgs
-): void => {
+): ESLintOptions => {
   const optionsFromArgs: Partial<ESLint.Options> = {
     extensions: (ext !== undefined && [ext]) || [],
     baseConfig: {
@@ -129,7 +130,7 @@ export const mergeESLintOpsFromArgv = (
     },
     fix
   }
-  mergeObj(eslintOptions, optionsFromArgs)
+  return mergeObj(eslintOptions, optionsFromArgs)
 }
 
 export const getCacheLocation = (version: string, cmd: string): string => {

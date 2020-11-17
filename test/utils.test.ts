@@ -54,7 +54,7 @@ describe('utils', () => {
 
   it('should return undefined if no such file exists', () => {
     const readFile = getReadFileFromRootFn()
-    expect(readFile('foo_bar')).toEqual(undefined)
+    expect(readFile('foo_bar')).toStrictEqual(undefined)
   })
 
   it('should return an array of ignored files if `useGitIgnore` is true', () => {
@@ -63,7 +63,7 @@ describe('utils', () => {
       useGitIgnore: true,
       gitIgnoreFiles: []
     })
-    expect(files).toEqual(['.cache', '*.tgz', 'coverage/', 'dist/'])
+    expect(files).toStrictEqual(['.cache', '*.tgz', 'coverage/', 'dist/'])
   })
 
   it('should return an array of ignored files if `ignore` is provided', () => {
@@ -72,7 +72,7 @@ describe('utils', () => {
       useGitIgnore: false,
       gitIgnoreFiles: []
     })
-    expect(files).toEqual(['public/'])
+    expect(files).toStrictEqual(['public/'])
   })
 
   it('should return an array of ignored files if `.eslintignore` exists', () => {
@@ -84,7 +84,7 @@ describe('utils', () => {
       useGitIgnore: false,
       gitIgnoreFiles: []
     })
-    expect(files).toEqual(['coverage/', 'dist/'])
+    expect(files).toStrictEqual(['coverage/', 'dist/'])
 
     fs.writeFileSync(eslintignorePath, '')
   })
@@ -113,7 +113,7 @@ describe('utils', () => {
       useEslintrc: true
     }
 
-    expect(mergeObj(obj, src)).toEqual({
+    expect(mergeObj(obj, src)).toStrictEqual({
       cwd: '..',
       extensions: ['.js', '.ts'],
       baseConfig: {
@@ -126,20 +126,38 @@ describe('utils', () => {
     })
   })
 
+  it('should merge objects recursively with empty obj', () => {
+    const obj = {}
+
+    const src = {
+      cwd: '..',
+      extensions: ['.ts'],
+      baseConfig: {
+        ignorePatterns: ['dist/'],
+        env: { jest: true },
+        noInlineConfig: undefined,
+        settings: { semi: ['error'] }
+      },
+      useEslintrc: true
+    }
+
+    expect(mergeObj(obj, src)).toStrictEqual(src)
+  })
+
   it('should merge eslintOptions from parsed argv', () => {
     const options = new Options({ eslint })
     const { eslintOptions } = options
 
-    const copy = Object.assign({}, eslintOptions)
-    copy.baseConfig.globals = { jest: true }
-    copy.extensions = copy.extensions.concat('.ts')
+    const eslintOptionsCopy = Object.assign({}, eslintOptions)
+    eslintOptionsCopy.baseConfig.globals = { jest: true }
+    eslintOptionsCopy.extensions = eslintOptionsCopy.extensions.concat('.ts')
 
-    mergeESLintOpsFromArgv(options, {
+    const mergedOptions = mergeESLintOpsFromArgv(options, {
       ext: '.ts',
       globals: 'jest',
       _: []
     })
-    expect(options.eslintOptions).toEqual(copy)
+    expect(mergedOptions).toStrictEqual(eslintOptionsCopy)
   })
 
   it('should return cache location string', () => {
@@ -158,6 +176,8 @@ describe('utils', () => {
 
   it('should return help message', () => {
     const help = getHelp(DEFAULT_CMD, DEFAULT_EXTENSIONS)
-    expect(help).toEqual(expect.stringMatching(/^usage: standard-engine-ts/m))
+    expect(help).toStrictEqual(
+      expect.stringMatching(/^usage: standard-engine-ts/m)
+    )
   })
 })
