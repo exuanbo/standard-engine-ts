@@ -1,4 +1,4 @@
-# standard-engine-ts [WIP]
+# standard-engine-ts
 
 > Yet another ESLint wrapper written in TypeScript.
 
@@ -37,14 +37,14 @@ const {
 
 run({
   cmd: name,
-  version: version,
+  version,
   tagline: description,
   homepage,
   bugs: bugs.url,
   eslint,
   extensions: ['.ts'],
-  useGitIgnore: true,
-  configFile: path.join(__dirname, '..', '.eslintrc.js')
+  configFile: path.join(__dirname, '../.eslintrc.js'),
+  useGitIgnore: true
 })
 ```
 
@@ -52,7 +52,6 @@ run({
 
 - [ ] Unit testing
 - [ ] Documentation
-- [x] Remove lodash.mergewith to reduce bundle size
 
 ## License
 
