@@ -8,6 +8,7 @@ import {
   getRootPath,
   getReadFileFromRootFn,
   getIgnore,
+  compare,
   mergeObj,
   mergeESLintOpsFromArgv,
   getCacheLocation,
@@ -25,7 +26,7 @@ import {
 
 const cwd = process.cwd()
 
-describe('utils', () => {
+describe('dirHasFile', () => {
   it('should return true if dir has file', () => {
     expect(dirHasFile('.', 'package.json')).toBe(true)
   })
@@ -33,7 +34,9 @@ describe('utils', () => {
   it('should return false if dir does not have file', () => {
     expect(dirHasFile('.', 'package-log.json')).toBe(false)
   })
+})
 
+describe('isRoot', () => {
   it('should return cwd as matcher result', () => {
     expect(isRoot(cwd)).toBe(cwd)
   })
@@ -41,11 +44,15 @@ describe('utils', () => {
   it('should return undefined as matcher result', () => {
     expect(isRoot(path.dirname(cwd))).toBe(undefined)
   })
+})
 
+describe('getRootPath', () => {
   it('should return the repository root path', () => {
     expect(getRootPath()).toBe(cwd)
   })
+})
 
+describe('getReadFileFromRootFn', () => {
   it('should read files from the repository root path', () => {
     const readFile = getReadFileFromRootFn()
     const licenseContents = fs.readFileSync(path.join(cwd, 'LICENSE'), 'utf-8')
@@ -54,9 +61,11 @@ describe('utils', () => {
 
   it('should return undefined if no such file exists', () => {
     const readFile = getReadFileFromRootFn()
-    expect(readFile('foo_bar')).toStrictEqual(undefined)
+    expect(readFile('foo_bar')).toBe(undefined)
   })
+})
 
+describe('getIgnore', () => {
   it('should return an array of ignored files if `useGitIgnore` is true', () => {
     const files = getIgnore({
       ignore: [],
@@ -88,7 +97,23 @@ describe('utils', () => {
 
     fs.writeFileSync(eslintignorePath, '')
   })
+})
 
+describe('compare', () => {
+  it('should compare deeply', () => {
+    const obj = {
+      0: [1, { a: [1, 2], b: [2, 1], c: { d: [3, 4] } }],
+      1: { e: [5, 6] }
+    }
+    const src = {
+      1: { e: [6, 5] },
+      0: [{ c: { d: [4, 3] }, b: [1, 2], a: [2, 1] }, 1]
+    }
+    expect(compare(obj, src)).toBe(true)
+  })
+})
+
+describe('mergeObj', () => {
   it('should merge objects recursively', () => {
     const obj = {
       cwd: '.',
@@ -100,7 +125,6 @@ describe('utils', () => {
         settings: {}
       }
     }
-
     const src = {
       cwd: '..',
       extensions: ['.ts'],
@@ -112,7 +136,6 @@ describe('utils', () => {
       },
       useEslintrc: true
     }
-
     expect(mergeObj(obj, src)).toStrictEqual({
       cwd: '..',
       extensions: ['.js', '.ts'],
@@ -128,7 +151,6 @@ describe('utils', () => {
 
   it('should merge objects recursively with empty obj', () => {
     const obj = {}
-
     const src = {
       cwd: '..',
       extensions: ['.ts'],
@@ -140,10 +162,11 @@ describe('utils', () => {
       },
       useEslintrc: true
     }
-
     expect(mergeObj(obj, src)).toStrictEqual(src)
   })
+})
 
+describe('mergeESLintOpsFromArgv', () => {
   it('should merge eslintOptions from parsed argv', () => {
     const options = new Options({ eslint })
     const { eslintOptions } = options
@@ -159,14 +182,18 @@ describe('utils', () => {
     })
     expect(mergedOptions).toStrictEqual(eslintOptionsCopy)
   })
+})
 
+describe('getCacheLocation', () => {
   it('should return cache location string', () => {
     const cachePath = getCacheLocation(DEFAULT_VERSION, DEFAULT_CMD)
     expect(cachePath).toBe(
       `${CACHE_HOME}/${DEFAULT_CMD}/v${DEFAULT_VERSION.substring(0, 1)}/`
     )
   })
+})
 
+describe('string utils', () => {
   it('should return headline string', () => {
     const headline = getHeadline(DEFAULT_CMD, DEFAULT_TAGLINE, DEFAULT_HOMEPAGE)
     expect(headline).toBe(
