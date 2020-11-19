@@ -15,7 +15,13 @@ import {
 type NonNullableESLintOptions = Required<
   Pick<
     ESLint.Options,
-    'extensions' | 'baseConfig' | 'useEslintrc' | 'cache' | 'cacheLocation'
+    | 'extensions'
+    | 'baseConfig'
+    | 'resolvePluginsRelativeTo'
+    | 'useEslintrc'
+    | 'fix'
+    | 'cache'
+    | 'cacheLocation'
   >
 >
 
@@ -67,7 +73,7 @@ export class Options implements LinterOptions {
     extensions = [],
     eslintOptions,
     configFile,
-    fix,
+    fix = false,
     ignore = DEFAULT_IGNORE,
     useGitIgnore = false,
     gitIgnoreFiles = []
