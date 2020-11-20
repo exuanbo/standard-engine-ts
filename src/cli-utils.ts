@@ -3,6 +3,8 @@ import { ESLintOptions, LinterOptions } from './options'
 import { mergeObj } from './utils'
 import { DEFAULT_IGNORE } from './constants'
 
+const literalArray = <T extends string>(arr: T[]): T[] => arr
+
 export const MINIMIST_OPTS = {
   alias: {
     env: 'envs',
@@ -11,16 +13,16 @@ export const MINIMIST_OPTS = {
     help: 'h',
     version: 'v'
   },
-  boolean: ['fix', 'verbose', 'version', 'help', 'stdin'],
-  string: ['env', 'globals', 'plugins', 'parser', 'ext']
+  boolean: literalArray(['fix', 'verbose', 'version', 'help', 'stdin']),
+  string: literalArray(['env', 'globals', 'plugins', 'parser', 'ext'])
 }
 
 type BooleanArgs = {
-  [b in 'fix' | 'verbose' | 'version' | 'help' | 'stdin']?: boolean
+  [b in typeof MINIMIST_OPTS.boolean[number]]?: boolean
 }
 
 type StringArgs = {
-  [s in 'ext' | 'env' | 'globals' | 'parser' | 'plugins']?: string
+  [s in typeof MINIMIST_OPTS.string[number]]?: string
 }
 
 interface DefaultArgs {
