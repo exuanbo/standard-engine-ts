@@ -13,8 +13,8 @@
     "dts": "tsc -d --emitDeclarationOnly --declarationDir .cache",
     "bundle": "rollup -c",
     "build": "yarn clean && yarn dts && yarn bundle",
-    "lint": "./test/cmd.js",
-    "lint:fix": "./test/cmd.js --fix",
+    "lint": "./scripts/cmd.js",
+    "lint:fix": "./scripts/cmd.js --fix",
     "test": "yarn build && yarn lint && jest"
   },
   "repository": {
