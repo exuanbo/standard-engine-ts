@@ -1,14 +1,8 @@
 import fs from 'fs'
 import path from 'path'
-import { ESLint } from 'eslint'
 import { lookItUpSync } from 'look-it-up'
-import { ESLintOptions, LinterOptions, ProvidedOptions } from './options'
-import {
-  MAJORVERSION_REGEX,
-  CACHE_HOME,
-  DEFAULT_IGNORE,
-  DEFAULT_GITIGNORE
-} from './constants'
+import { ProvidedOptions } from './options'
+import { MAJORVERSION_REGEX, CACHE_HOME, DEFAULT_GITIGNORE } from './constants'
 
 export const dirHasFile = (dir: string, file: string): boolean =>
   fs.existsSync(path.join(dir, file))
@@ -113,38 +107,6 @@ export const mergeObj = <T>(obj: O, ...args: Array<O | undefined>): T => {
   return objCopy as T
 }
 
-type BooleanArgs = {
-  [b in 'fix' | 'verbose' | 'version' | 'help' | 'stdin']?: boolean
-}
-
-type StringArgs = {
-  [s in 'ext' | 'env' | 'globals' | 'parser' | 'plugins']?: string
-}
-
-interface DefaultArgs {
-  '--'?: string[]
-  _: string[]
-}
-
-export interface ParsedArgs extends BooleanArgs, StringArgs, DefaultArgs {}
-
-export const mergeESLintOpsFromArgv = (
-  { eslintOptions }: LinterOptions,
-  { ext, env, globals, parser, plugins, fix }: ParsedArgs
-): ESLintOptions => {
-  const optionsFromArgs: Partial<ESLint.Options> = {
-    extensions: (ext !== undefined && [ext]) || [],
-    baseConfig: {
-      env: (env !== undefined && { [env]: true }) || undefined,
-      globals: (globals !== undefined && { [globals]: true }) || undefined,
-      parser,
-      plugins: (plugins !== undefined && [plugins]) || undefined
-    },
-    fix
-  }
-  return mergeObj(eslintOptions, optionsFromArgs)
-}
-
 export const getCacheLocation = (version: string, cmd: string): string => {
   const versionMatch = version.match(MAJORVERSION_REGEX)
   const majorVersion =
@@ -156,39 +118,4 @@ export const getCacheLocation = (version: string, cmd: string): string => {
     majorVersion !== undefined ? `v${majorVersion}/` : ''
   )
   return cacheLocation
-}
-
-export const getHeadline = (
-  cmd: string,
-  tagline: string,
-  homepage: string
-): string => `\n${cmd}: ${tagline} (${homepage})`
-
-export const getHelp = (cmd: string, extensions: string[]): string => {
-  const extPatterns = extensions.map(ext => `*${ext}`).join(', ')
-  const pathPatterns = DEFAULT_IGNORE.join(', ')
-
-  return `
-usage: ${cmd} <flags> [FILES...]
-
-  If FILES is omitted, all source files (${extPatterns})
-  in the current working directory will be checked recursively.
-
-  Certain paths ${pathPatterns}, files/folders that begin with '.'
-  like .git/ and paths in the project's root .gitignore are ignored by default.
-
-Basic:
-  --fix          Automatically fix problems
-  --verbose      Show rule names for errors (to ignore specific rules)
-  -v, --version  Show current version
-  -h, --help     Show usage information
-
-Advanced:
-  --stdin        Read file text from stdin
-  --ext          Specify JavaScript file extensions
-  --global       Declare global variable
-  --plugin       Use custom eslint plugin
-  --env          Use custom eslint environment
-  --parser       Use custom js parser (e.g. babel-eslint)
-`
 }

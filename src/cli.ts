@@ -4,12 +4,12 @@ import { ESLint, Linter as ESLinter } from 'eslint'
 import { LintCallback, Linter } from './linter'
 import { LinterOptions, ProvidedOptions } from './options'
 import {
+  MINIMIST_OPTS,
   ParsedArgs,
   mergeESLintOpsFromArgv,
   getHeadline,
   getHelp
-} from './utils'
-import { MINIMIST_OPTS } from './constants'
+} from './cli-utils'
 
 export abstract class CLIEngine<T> {
   abstract linter: Linter
