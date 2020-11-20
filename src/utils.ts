@@ -163,7 +163,7 @@ export const getHeadline = (
   cmd: string,
   tagline: string,
   homepage: string
-): string => `${cmd}: ${tagline} (${homepage})`
+): string => `\n${cmd}: ${tagline} (${homepage})`
 
 export const getHelp = (cmd: string, extensions: string[]): string => {
   const extPatterns = extensions.map(ext => `*${ext}`).join(', ')

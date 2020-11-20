@@ -197,7 +197,7 @@ describe('string utils', () => {
   it('should return headline string', () => {
     const headline = getHeadline(DEFAULT_CMD, DEFAULT_TAGLINE, DEFAULT_HOMEPAGE)
     expect(headline).toBe(
-      `${DEFAULT_CMD}: ${DEFAULT_TAGLINE} (${DEFAULT_HOMEPAGE})`
+      `\n${DEFAULT_CMD}: ${DEFAULT_TAGLINE} (${DEFAULT_HOMEPAGE})`
     )
   })
 
