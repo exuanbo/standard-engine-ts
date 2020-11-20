@@ -108,7 +108,7 @@ export const mergeObj = <T>(obj: O, ...args: Array<O | undefined>): T => {
 }
 
 export const getCacheLocation = (version: string, cmd: string): string => {
-  const versionMatch = version.match(MAJORVERSION_REGEX)
+  const versionMatch = MAJORVERSION_REGEX.exec(version)
   const majorVersion =
     (versionMatch !== null && `${versionMatch[1]}`) || undefined
 
