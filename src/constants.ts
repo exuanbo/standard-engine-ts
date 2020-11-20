@@ -21,3 +21,15 @@ export const CACHE_HOME = xdgBasedir.cache ?? os.tmpdir()
 export const DEFAULT_IGNORE = ['dist/', 'coverage/']
 
 export const DEFAULT_GITIGNORE = ['.gitignore', '.git/info/exclude']
+
+export const MINIMIST_OPTS = {
+  alias: {
+    env: 'envs',
+    globals: 'global',
+    plugins: 'plugin',
+    help: 'h',
+    version: 'v'
+  },
+  boolean: ['fix', 'verbose', 'version', 'help', 'stdin'],
+  string: ['env', 'globals', 'plugins', 'parser', 'ext']
+}

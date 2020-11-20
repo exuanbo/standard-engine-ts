@@ -27,12 +27,8 @@ type NonNullableESLintOptions = Required<
 
 export type ESLintOptions = Assign<ESLint.Options, NonNullableESLintOptions>
 
-interface SharedOptions {
-  cmd: string
-  version: string
-  tagline: string
-  homepage: string
-  bugs: string
+type SharedOptions = {
+  [key in 'cmd' | 'version' | 'tagline' | 'homepage' | 'bugs']: string
 }
 
 export interface LinterOptions extends SharedOptions {

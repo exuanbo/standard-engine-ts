@@ -9,6 +9,7 @@ import {
   getHeadline,
   getHelp
 } from './utils'
+import { MINIMIST_OPTS } from './constants'
 
 export abstract class CLIEngine<T> {
   abstract linter: Linter
@@ -29,17 +30,7 @@ export class CLI extends CLIEngine<Required<ParsedArgs>> {
     const linter = new Linter(opts)
     const { options } = linter
 
-    const minimistOpts = {
-      alias: {
-        env: 'envs',
-        globals: 'global',
-        plugins: 'plugin',
-        help: 'h',
-        version: 'v'
-      },
-      boolean: ['fix', 'verbose', 'version', 'help', 'stdin'],
-      string: ['env', 'globals', 'plugins', 'parser', 'ext']
-    }
+    const minimistOpts = MINIMIST_OPTS
 
     const argv = minimist(process.argv.slice(2), minimistOpts)
 

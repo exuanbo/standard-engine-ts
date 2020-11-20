@@ -113,21 +113,20 @@ export const mergeObj = <T>(obj: O, ...args: Array<O | undefined>): T => {
   return objCopy as T
 }
 
-export interface ParsedArgs {
-  [arg: string]: boolean | string | string[] | undefined
-  fix?: boolean
-  verbose?: boolean
-  version?: boolean
-  help?: boolean
-  stdin?: boolean
-  ext?: string
-  env?: string
-  globals?: string
-  parser?: string
-  plugins?: string
+type BooleanArgs = {
+  [b in 'fix' | 'verbose' | 'version' | 'help' | 'stdin']?: boolean
+}
+
+type StringArgs = {
+  [s in 'ext' | 'env' | 'globals' | 'parser' | 'plugins']?: string
+}
+
+interface DefaultArgs {
   '--'?: string[]
   _: string[]
 }
+
+export interface ParsedArgs extends BooleanArgs, StringArgs, DefaultArgs {}
 
 export const mergeESLintOpsFromArgv = (
   { eslintOptions }: LinterOptions,
