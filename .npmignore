@@ -1,0 +1,9 @@
+.cache/
+.eslintignore
+.github/
+.vscode/
+jest.config.js
+rollup.config.js
+src/
+scripts/
+tsconfig.json
