@@ -1,18 +1,22 @@
 module.exports = {
   extends: ['standard', 'plugin:prettier/recommended', 'prettier/standard'],
-  parser: '@typescript-eslint/parser',
-  plugins: ['prettier'],
-  rules: {
-    'prettier/prettier': ['error', require('./.prettierrc.js')]
-  },
   ignorePatterns: ['dist'],
   overrides: [
     {
       files: ['**/*.ts'],
-      extends: ['standard-with-typescript', 'prettier/@typescript-eslint'],
+      extends: [
+        'standard-with-typescript',
+        'plugin:@typescript-eslint/recommended-requiring-type-checking',
+        'prettier/@typescript-eslint'
+      ],
+      parser: '@typescript-eslint/parser',
       parserOptions: {
         project: './tsconfig.json'
       }
     }
-  ]
+  ],
+  plugins: ['prettier'],
+  rules: {
+    'prettier/prettier': ['error', require('./.prettierrc.js')]
+  }
 }
