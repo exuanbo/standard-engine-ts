@@ -12,33 +12,31 @@ import {
 } from './cli-utils'
 
 export abstract class CLIEngine<T> {
-  abstract linter: Linter
-  abstract onFinish: LintCallback
+  options: LinterOptions
 
   protected abstract onError(err: Error): void
   protected abstract onResult(res: ESLint.LintResult[], code?: string): void
   protected abstract report(...args: unknown[]): void
 
-  constructor(public options: LinterOptions, public argv: T) {}
+  constructor(public argv: T, public linter: Linter) {
+    this.options = linter.options
+  }
 }
 
 export class CLI extends CLIEngine<Required<ParsedArgs>> {
-  linter: Linter
   onFinish: LintCallback
 
   constructor(opts: ProvidedOptions) {
+    const minimistOpts = MINIMIST_OPTS
+    const argv = minimist(process.argv.slice(2), minimistOpts)
+
     const linter = new Linter(opts)
     const { options } = linter
 
-    const minimistOpts = MINIMIST_OPTS
-
-    const argv = minimist(process.argv.slice(2), minimistOpts)
-
     options.eslintOptions = mergeESLintOpsFromArgv(options, argv)
 
-    super(options, argv as Required<ParsedArgs>)
+    super(argv as Required<ParsedArgs>, linter)
 
-    this.linter = linter
     this.onFinish = (
       err: Error | null,
       lintResults: ESLint.LintResult[] | null,
@@ -135,7 +133,7 @@ export class CLI extends CLIEngine<Required<ParsedArgs>> {
 
 export const run = (opts: ProvidedOptions): void => {
   const cli = new CLI(opts)
-  const { options, argv, linter, onFinish } = cli
+  const { argv, options, linter, onFinish } = cli
   const { cmd, tagline, homepage, eslintOptions } = options
 
   // Unix convention: Command line argument `-` is a shorthand for `--stdin`
