@@ -2,9 +2,8 @@
 
 > Yet another ESLint wrapper written in TypeScript.
 
-[![npm](https://img.shields.io/npm/v/standard-engine-ts?style=flat-square)](https://www.npmjs.com/package/standard-engine-ts)
-[![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/standard-engine-ts?style=flat-square)](https://libraries.io/npm/standard-engine-ts)
-[![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen?style=flat-square)](https://renovatebot.com/)
+[![npm](https://img.shields.io/npm/v/standard-engine-ts)](https://www.npmjs.com/package/standard-engine-ts)
+[![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/standard-engine-ts?label=deps)](https://libraries.io/npm/standard-engine-ts)
 
 Inspired by [standard-engine](https://github.com/standard/standard-engine).
 
@@ -14,11 +13,7 @@ Inspired by [standard-engine](https://github.com/standard/standard-engine).
 npm install standard-engine-ts
 ```
 
-## API
-
-See bundled [index.d.ts](https://gist.github.com/exuanbo/79d6fcd2c617f03ec530106bfe46d7a4).
-
-### Example
+## Usage
 
 ```js
 #!/usr/bin/env node
@@ -47,6 +42,10 @@ run({
   useGitIgnore: true
 })
 ```
+
+## API
+
+See bundled [index.d.ts](https://gist.github.com/exuanbo/79d6fcd2c617f03ec530106bfe46d7a4).
 
 ## Todo
 
