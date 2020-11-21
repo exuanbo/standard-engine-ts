@@ -47,10 +47,12 @@ export class Linter {
     files: string | string[],
     cb?: LintCallback
   ): Promise<ESLint.LintResult[] | undefined> => {
+    const { eslintOptions } = this.options
+
     try {
       const results = await this.ESLint.lintFiles(files)
 
-      if (this.options.eslintOptions.fix !== undefined) {
+      if (eslintOptions.fix === true) {
         await this.eslint.ESLint.outputFixes(results)
       }
 
