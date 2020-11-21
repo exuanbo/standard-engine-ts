@@ -142,14 +142,14 @@ export const run = (opts: ProvidedOptions): void => {
     argv._.shift()
   }
 
-  if (argv.help) {
-    console.log(getHeadline(cmd, tagline, homepage))
-    console.log(getHelp(cmd, eslintOptions.extensions))
+  if (argv.version) {
+    console.log(`${options.cmd}: v${options.version}`)
     return
   }
 
-  if (argv.version) {
-    console.log(`${options.cmd}: v${options.version}`)
+  if (argv.help) {
+    console.log(getHeadline(cmd, tagline, homepage))
+    console.log(getHelp(cmd, eslintOptions.extensions))
     return
   }
 
