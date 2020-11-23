@@ -36,7 +36,8 @@ export const getReadFileFromRootFn = (): ((
   }
 }
 
-const excludeUndefined = <T>(item: T | undefined): item is T => Boolean(item)
+const excludeUndefined = <T>(item: T | undefined): item is T =>
+  item !== undefined
 
 export const getIgnore = ({
   ignore,
