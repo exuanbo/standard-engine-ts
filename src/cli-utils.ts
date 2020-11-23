@@ -15,12 +15,12 @@ export const MINIMIST_OPTS = {
   boolean: literalArray([
     'fix',
     'verbose',
-    'no-gitignore',
+    'disable-gitignore',
     'help',
     'version',
     'stdin'
   ]),
-  string: literalArray(['ext', 'env', 'globals', 'parser', 'plugins'])
+  string: literalArray(['env', 'ext', 'globals', 'parser', 'plugins'])
 }
 
 type BooleanArgs = {
@@ -32,7 +32,6 @@ type StringArgs = {
 }
 
 interface DefaultArgs {
-  '--'?: string[]
   _: string[]
 }
 
@@ -42,9 +41,9 @@ export const mergeESLintOpsFromArgv = (
   { eslintOptions }: LinterOptions,
   {
     fix,
-    'no-gitignore': noGitignore,
-    ext,
+    'disable-gitignore': disableGitignore,
     env,
+    ext,
     globals,
     parser,
     plugins
@@ -55,7 +54,7 @@ export const mergeESLintOpsFromArgv = (
     baseConfig: {
       env: (env !== undefined && { [env]: true }) || undefined,
       ignorePatterns:
-        noGitignore === true ? [] : getIgnoreFromFile('.gitignore'),
+        disableGitignore === true ? [] : getIgnoreFromFile('.gitignore'),
       globals: (globals !== undefined && { [globals]: true }) || undefined,
       parser,
       plugins: (plugins !== undefined && [plugins]) || undefined
