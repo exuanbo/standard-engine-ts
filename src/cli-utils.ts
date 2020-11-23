@@ -83,18 +83,22 @@ Usage: ${cmd} <flags> [FILES...]
   and paths in the project's root .gitignore are automatically ignored.
 
 Basic:
-  --fix           Automatically fix problems
-  --verbose       Show rule names for errors (to ignore specific rules)
-  --no-gitignore  Disable use of .gitignore
-  -h, --help      Show usage information
-  -v, --version   Show current version
+  --fix                Automatically fix problems
+  --verbose            Show rule names for errors (to ignore specific rules)
 
-Advanced:
-  --stdin         Read file text from stdin
-  --ext           Specify file extensions
-  --env           Use custom eslint environment
-  --global        Declare global variable
-  --parser        Use custom parser (e.g. babel-eslint)
-  --plugin        Use custom eslint plugin
+Config:
+  --env                Use custom eslint environment
+  --ext                Specify file extensions
+  --global             Declare global variable
+  --parser             Use custom parser (e.g. babel-eslint)
+  --plugin             Use custom eslint plugin
+
+Input:
+  --stdin              Read file text from stdin
+  --disable-gitignore  Disable use of .gitignore by default
+
+Misc:
+  -h, --help           Show usage information
+  -v, --version        Show current version
 `
 }
