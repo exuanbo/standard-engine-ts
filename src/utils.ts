@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { lookItUpSync } from 'look-it-up'
 import { ProvidedOptions } from './options'
-import { MAJORVERSION_REGEX, CACHE_HOME, DEFAULT_GITIGNORE } from './constants'
+import { MAJORVERSION_REGEX, CACHE_HOME } from './constants'
 
 export const dirHasFile = (dir: string, file: string): boolean =>
   fs.existsSync(path.join(dir, file))
@@ -36,30 +36,18 @@ export const getReadFileFromRootFn = (): ((
   }
 }
 
-const excludeUndefined = <T>(item: T | undefined): item is T =>
-  item !== undefined
-
-export const getIgnore = ({
-  ignore,
-  useGitIgnore,
-  gitIgnoreFiles
-}: Required<
-  Pick<ProvidedOptions, 'ignore' | 'useGitIgnore' | 'gitIgnoreFiles'>
->): string[] => {
+export const getIgnoreFromFile = (file: string): string[] => {
   const readFile = getReadFileFromRootFn()
-
-  const ignoreFromFiles = [
-    '.eslintignore',
-    ...(useGitIgnore ? [...DEFAULT_GITIGNORE, ...gitIgnoreFiles] : [])
-  ]
-    .map(file => readFile(file))
-    .filter(excludeUndefined)
-    .map(text => text.split(/\r?\n/))
-    .flat()
-    .filter(filePath => !filePath.startsWith('#') && filePath !== '')
-
-  return [...ignore, ...ignoreFromFiles]
+  return (
+    readFile(file)
+      ?.split('\n')
+      .filter(filePath => !filePath.startsWith('#') && filePath !== '') ?? []
+  )
 }
+
+export const getIgnore = (
+  ignore: NonNullable<ProvidedOptions['ignore']>
+): string[] => [...ignore, ...getIgnoreFromFile('.eslintignore')]
 
 type O = Record<string, unknown>
 

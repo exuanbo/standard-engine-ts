@@ -1,7 +1,6 @@
 import { ESLint } from 'eslint'
 import { ESLintOptions, LinterOptions } from './options'
-import { mergeObj } from './utils'
-import { DEFAULT_IGNORE } from './constants'
+import { getIgnoreFromFile, mergeObj } from './utils'
 
 const literalArray = <T extends string>(arr: T[]): T[] => arr
 
@@ -9,12 +8,19 @@ export const MINIMIST_OPTS = {
   alias: {
     env: 'envs',
     globals: 'global',
-    plugins: 'plugin',
     help: 'h',
+    plugins: 'plugin',
     version: 'v'
   },
-  boolean: literalArray(['fix', 'verbose', 'version', 'help', 'stdin']),
-  string: literalArray(['env', 'globals', 'plugins', 'parser', 'ext'])
+  boolean: literalArray([
+    'fix',
+    'verbose',
+    'no-gitignore',
+    'help',
+    'version',
+    'stdin'
+  ]),
+  string: literalArray(['ext', 'env', 'globals', 'parser', 'plugins'])
 }
 
 type BooleanArgs = {
@@ -34,12 +40,22 @@ export interface ParsedArgs extends BooleanArgs, StringArgs, DefaultArgs {}
 
 export const mergeESLintOpsFromArgv = (
   { eslintOptions }: LinterOptions,
-  { ext, env, globals, parser, plugins, fix }: ParsedArgs
+  {
+    fix,
+    'no-gitignore': noGitignore,
+    ext,
+    env,
+    globals,
+    parser,
+    plugins
+  }: ParsedArgs
 ): ESLintOptions => {
   const optionsFromArgs: Partial<ESLint.Options> = {
     extensions: (ext !== undefined && [ext]) || [],
     baseConfig: {
       env: (env !== undefined && { [env]: true }) || undefined,
+      ignorePatterns:
+        noGitignore === true ? [] : getIgnoreFromFile('.gitignore'),
       globals: (globals !== undefined && { [globals]: true }) || undefined,
       parser,
       plugins: (plugins !== undefined && [plugins]) || undefined
@@ -57,7 +73,6 @@ export const getHeadline = (
 
 export const getHelp = (cmd: string, extensions: string[]): string => {
   const extPatterns = extensions.map(ext => `*${ext}`).join(', ')
-  const pathPatterns = DEFAULT_IGNORE.join(', ')
 
   return `
 usage: ${cmd} <flags> [FILES...]
@@ -65,21 +80,22 @@ usage: ${cmd} <flags> [FILES...]
   If FILES is omitted, all source files (${extPatterns})
   in the current working directory will be checked recursively.
 
-  Certain paths ${pathPatterns}, files/folders that begin with '.'
-  like .git/ and paths in the project's root .gitignore are ignored by default.
+  By default, files/folders that begin with '.' like .eslintrc .cache/
+  and paths in the project's root .gitignore are automatically ignored.
 
 Basic:
-  --fix          Automatically fix problems
-  --verbose      Show rule names for errors (to ignore specific rules)
-  -v, --version  Show current version
-  -h, --help     Show usage information
+  --fix           Automatically fix problems
+  --verbose       Show rule names for errors (to ignore specific rules)
+  --no-gitignore  Disable use of .gitignore
+  -h, --help      Show usage information
+  -v, --version   Show current version
 
 Advanced:
-  --stdin        Read file text from stdin
-  --ext          Specify JavaScript file extensions
-  --global       Declare global variable
-  --plugin       Use custom eslint plugin
-  --env          Use custom eslint environment
-  --parser       Use custom js parser (e.g. babel-eslint)
+  --stdin         Read file text from stdin
+  --ext           Specify file extensions
+  --env           Use custom eslint environment
+  --global        Declare global variable
+  --parser        Use custom parser (e.g. babel-eslint)
+  --plugin        Use custom eslint plugin
 `
 }

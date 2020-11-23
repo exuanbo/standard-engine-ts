@@ -18,6 +18,4 @@ export const MAJORVERSION_REGEX = /^(\d+)\./
 
 export const CACHE_HOME = xdgBasedir.cache ?? os.tmpdir()
 
-export const DEFAULT_IGNORE = ['dist/', 'coverage/']
-
-export const DEFAULT_GITIGNORE = ['.gitignore', '.git/info/exclude']
+export const GITIGNORE = ['.gitignore', '.git/info/exclude']

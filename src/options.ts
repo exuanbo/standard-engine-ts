@@ -8,8 +8,7 @@ import {
   DEFAULT_TAGLINE,
   DEFAULT_HOMEPAGE,
   DEFAULT_BUGS,
-  DEFAULT_EXTENSIONS,
-  DEFAULT_IGNORE
+  DEFAULT_EXTENSIONS
 } from './constants'
 
 type NonNullableESLintOptions = Required<
@@ -42,8 +41,6 @@ export interface ProvidedOptions extends Partial<SharedOptions> {
   cwd?: string
   extensions?: string[]
   ignore?: string[]
-  useGitIgnore?: boolean
-  gitIgnoreFiles?: string[]
 
   configFile?: string
 
@@ -70,9 +67,7 @@ export class Options implements LinterOptions {
     eslintOptions,
     configFile,
     fix = false,
-    ignore = DEFAULT_IGNORE,
-    useGitIgnore = false,
-    gitIgnoreFiles = []
+    ignore = []
   }: ProvidedOptions) {
     this.cmd = cmd
     this.version = version
@@ -88,7 +83,7 @@ export class Options implements LinterOptions {
         baseConfig: mergeObj(
           (configFile !== undefined && require(configFile)) || {},
           {
-            ignorePatterns: getIgnore({ ignore, useGitIgnore, gitIgnoreFiles })
+            ignorePatterns: getIgnore(ignore)
           }
         ),
         resolvePluginsRelativeTo:

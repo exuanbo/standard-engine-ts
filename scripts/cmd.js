@@ -8,6 +8,5 @@ const { run } = require('..')
 run({
   eslint,
   extensions: ['.ts'],
-  configFile: path.join(__dirname, '../.eslintrc.js'),
-  useGitIgnore: true
+  configFile: path.join(__dirname, '../.eslintrc.js')
 })

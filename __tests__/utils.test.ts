@@ -5,6 +5,7 @@ import {
   isRoot,
   getRootPath,
   getReadFileFromRootFn,
+  getIgnoreFromFile,
   getIgnore,
   compare,
   mergeObj,
@@ -53,22 +54,16 @@ describe('getReadFileFromRootFn', () => {
   })
 })
 
-describe('getIgnore', () => {
-  it('should return an array of ignored files if `useGitIgnore` is true', () => {
-    const files = getIgnore({
-      ignore: [],
-      useGitIgnore: true,
-      gitIgnoreFiles: []
-    })
-    expect(files).toStrictEqual(['.cache', '*.tgz', 'coverage/', 'dist/'])
+describe('getIgnoreFromFiles', () => {
+  it('should get paths in files', () => {
+    const res = getIgnoreFromFile('.gitignore')
+    expect(res).toStrictEqual(['.cache', '*.tgz', 'coverage/', 'dist/'])
   })
+})
 
+describe('getIgnore', () => {
   it('should return an array of ignored files if `ignore` is provided', () => {
-    const files = getIgnore({
-      ignore: ['public/'],
-      useGitIgnore: false,
-      gitIgnoreFiles: []
-    })
+    const files = getIgnore(['public/'])
     expect(files).toStrictEqual(['public/'])
   })
 
@@ -76,11 +71,7 @@ describe('getIgnore', () => {
     const eslintignorePath = path.join(cwd, '.eslintignore')
     fs.writeFileSync(eslintignorePath, 'coverage/\ndist/')
 
-    const files = getIgnore({
-      ignore: [],
-      useGitIgnore: false,
-      gitIgnoreFiles: []
-    })
+    const files = getIgnore([])
     expect(files).toStrictEqual(['coverage/', 'dist/'])
 
     fs.writeFileSync(eslintignorePath, '')

@@ -20,6 +20,7 @@ describe('mergeESLintOpsFromArgv', () => {
     const mergedOptions = mergeESLintOpsFromArgv(options, {
       ext: '.ts',
       globals: 'jest',
+      'no-gitignore': true,
       _: []
     })
     expect(mergedOptions).toStrictEqual(eslintOptionsCopy)
