@@ -5,7 +5,9 @@
 [![npm](https://img.shields.io/npm/v/standard-engine-ts)](https://www.npmjs.com/package/standard-engine-ts)
 [![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/standard-engine-ts?label=deps)](https://libraries.io/npm/standard-engine-ts)
 
-Inspired by [standard-engine](https://github.com/standard/standard-engine).
+## Features
+
+Todo
 
 ## Install
 
@@ -38,8 +40,7 @@ run({
   bugs: bugs.url,
   eslint,
   extensions: ['.ts'],
-  configFile: path.join(__dirname, '../.eslintrc.js'),
-  useGitIgnore: true
+  configFile: path.join(__dirname, '../.eslintrc.js')
 })
 ```
 
@@ -51,6 +52,10 @@ See bundled [index.d.ts](https://gist.github.com/exuanbo/79d6fcd2c617f03ec530106
 
 - [ ] Unit testing
 - [ ] Documentation
+
+## Credits
+
+[standard/standard-engine](https://github.com/standard/standard-engine)
 
 ## License
 
