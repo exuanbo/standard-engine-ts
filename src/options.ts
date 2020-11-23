@@ -78,7 +78,7 @@ export class Options implements LinterOptions {
     this.eslintOptions = mergeObj(
       {
         cwd,
-        extensions: DEFAULT_EXTENSIONS.concat(extensions),
+        extensions: extensions.concat(DEFAULT_EXTENSIONS),
 
         baseConfig: mergeObj(
           (configFile !== undefined && require(configFile)) || {},
