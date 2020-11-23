@@ -69,13 +69,13 @@ export const getHeadline = (
   cmd: string,
   tagline: string,
   homepage: string
-): string => `\n${cmd}: ${tagline} (${homepage})`
+): string => `${cmd}: ${tagline} (${homepage})`
 
 export const getHelp = (cmd: string, extensions: string[]): string => {
   const extPatterns = extensions.map(ext => `*${ext}`).join(', ')
 
   return `
-usage: ${cmd} <flags> [FILES...]
+Usage: ${cmd} <flags> [FILES...]
 
   If FILES is omitted, all source files (${extPatterns})
   in the current working directory will be checked recursively.

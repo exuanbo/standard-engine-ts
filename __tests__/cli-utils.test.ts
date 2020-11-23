@@ -31,14 +31,14 @@ describe('string utils', () => {
   it('should return headline string', () => {
     const headline = getHeadline(DEFAULT_CMD, DEFAULT_TAGLINE, DEFAULT_HOMEPAGE)
     expect(headline).toBe(
-      `\n${DEFAULT_CMD}: ${DEFAULT_TAGLINE} (${DEFAULT_HOMEPAGE})`
+      `${DEFAULT_CMD}: ${DEFAULT_TAGLINE} (${DEFAULT_HOMEPAGE})`
     )
   })
 
   it('should return help message', () => {
     const help = getHelp(DEFAULT_CMD, DEFAULT_EXTENSIONS)
     expect(help).toStrictEqual(
-      expect.stringMatching(/^usage: standard-engine-ts/m)
+      expect.stringMatching(/^Usage: standard-engine-ts/m)
     )
   })
 })

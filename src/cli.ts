@@ -63,7 +63,7 @@ export class CLI extends CLIEngine<Required<ParsedArgs>> {
   }
 
   protected onResult(lintResults: ESLint.LintResult[], code?: string): void {
-    const { cmd, tagline, homepage } = this.options
+    const { cmd } = this.options
 
     if (this.argv.stdin && this.argv.fix && code !== undefined) {
       const [{ output }] = lintResults
@@ -85,17 +85,6 @@ export class CLI extends CLIEngine<Required<ParsedArgs>> {
       return
     }
 
-    console.log(`${getHeadline(cmd, tagline, homepage)}\n`)
-
-    const isFixable = lintResults.some(res =>
-      res.messages.some(msg => Boolean(msg.fix))
-    )
-    if (isFixable) {
-      console.log(
-        `  Run \`${cmd} --fix\` to automatically fix some problems.\n`
-      )
-    }
-
     lintResults.forEach(
       ({
         messages,
@@ -106,7 +95,7 @@ export class CLI extends CLIEngine<Required<ParsedArgs>> {
             const isLast = index === messages.length - 1
             this.report(
               isLast,
-              '  %s:%d:%d: %s%s',
+              '%s:%d:%d: %s%s',
               filePath,
               line,
               column,
@@ -116,6 +105,13 @@ export class CLI extends CLIEngine<Required<ParsedArgs>> {
           }
         )
     )
+
+    const isFixable = lintResults.some(res =>
+      res.messages.some(msg => Boolean(msg.fix))
+    )
+    if (isFixable) {
+      console.log(`Run \`${cmd} --fix\` to automatically fix some problems.\n`)
+    }
 
     process.exitCode = errorCount > 0 ? 1 : 0
   }
