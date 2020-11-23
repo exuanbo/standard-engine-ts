@@ -1,6 +1,5 @@
 module.exports = {
   extends: ['standard', 'plugin:prettier/recommended', 'prettier/standard'],
-  ignorePatterns: ['dist'],
   overrides: [
     {
       files: ['**/*.ts'],
