@@ -10,12 +10,10 @@ export type LintCallback = <T extends Error | null>(
 export class Linter {
   options: LinterOptions
   private readonly eslint: typeof eslint
-  private readonly ESLint: InstanceType<typeof ESLint>
 
   constructor(opts: ProvidedOptions) {
     this.options = new Options(opts)
     this.eslint = opts.eslint
-    this.ESLint = new opts.eslint.ESLint(this.options.eslintOptions)
   }
 
   lintText = async (
@@ -28,7 +26,9 @@ export class Linter {
     }
 
     try {
-      const results = await this.ESLint.lintText(code, { filePath })
+      const results = await new this.eslint.ESLint(
+        this.options.eslintOptions
+      ).lintText(code, { filePath })
       if (cb !== undefined) {
         cb(null, results, code)
         return
@@ -50,7 +50,9 @@ export class Linter {
     const { eslintOptions } = this.options
 
     try {
-      const results = await this.ESLint.lintFiles(files)
+      const results = await new this.eslint.ESLint(
+        this.options.eslintOptions
+      ).lintFiles(files)
 
       if (eslintOptions.fix === true) {
         await this.eslint.ESLint.outputFixes(results)
