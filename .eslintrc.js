@@ -6,6 +6,7 @@ module.exports = {
       files: ['**/*.ts'],
       extends: [
         'standard-with-typescript',
+        'plugin:@typescript-eslint/recommended',
         'plugin:@typescript-eslint/recommended-requiring-type-checking',
         'prettier/@typescript-eslint'
       ],
