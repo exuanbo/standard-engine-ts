@@ -14,13 +14,18 @@ describe('mergeESLintOpsFromArgv', () => {
     const { eslintOptions } = options
 
     const eslintOptionsCopy = Object.assign({}, eslintOptions)
-    eslintOptionsCopy.baseConfig.globals = { jest: true }
     eslintOptionsCopy.extensions = eslintOptionsCopy.extensions.concat('.ts')
+    eslintOptionsCopy.baseConfig.globals = { jest: true }
+    eslintOptionsCopy.baseConfig.ignorePatterns = [
+      '.cache',
+      '*.tgz',
+      'coverage/',
+      'dist/'
+    ]
 
     const mergedOptions = mergeESLintOpsFromArgv(options, {
       ext: '.ts',
       globals: 'jest',
-      'no-gitignore': true,
       _: []
     })
     expect(mergedOptions).toStrictEqual(eslintOptionsCopy)
