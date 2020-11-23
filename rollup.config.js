@@ -15,7 +15,7 @@ export default [
       typescript(),
       nodeResolve(),
       commonjs(),
-      json({ compact: true }),
+      json({ compact: true, preferConst: true }),
       cleanup()
     ],
     output: [
