@@ -17,6 +17,7 @@ module.exports = {
   ],
   plugins: ['prettier'],
   rules: {
+    'no-void': ['error', { allowAsStatement: true }],
     'prettier/prettier': ['error', require('./.prettierrc.js')]
   }
 }

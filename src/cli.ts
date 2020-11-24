@@ -132,12 +132,6 @@ export const run = (opts: ProvidedOptions): void => {
   const { argv, options, linter, onFinish } = cli
   const { cmd, tagline, homepage, eslintOptions } = options
 
-  // Unix convention: Command line argument `-` is a shorthand for `--stdin`
-  if (argv._[0] === '-') {
-    argv.stdin = true
-    argv._.shift()
-  }
-
   if (argv.help) {
     console.log(getHeadline(cmd, tagline, homepage))
     console.log(getHelp(cmd, eslintOptions.extensions))
@@ -149,7 +143,11 @@ export const run = (opts: ProvidedOptions): void => {
     return
   }
 
-  /* eslint no-void: ["error", { "allowAsStatement": true }] */
+  // Unix convention: Command line argument `-` is a shorthand for `--stdin`
+  if (argv._[0] === '-') {
+    argv.stdin = true
+    argv._.shift()
+  }
 
   if (argv.stdin) {
     void getStdin().then(async text => await linter.lintText(text, onFinish))
