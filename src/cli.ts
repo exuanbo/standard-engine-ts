@@ -111,7 +111,7 @@ export class CLI extends CLIEngine<Required<ParsedArgs>> {
   }
 }
 
-export const run = (opts: ProvidedOptions): void => {
+export const run = async (opts: ProvidedOptions): Promise<void> => {
   const cli = new CLI(opts)
   const { argv, options, linter, onFinish } = cli
   const { cmd, tagline, homepage, eslintOptions } = options
@@ -134,9 +134,10 @@ export const run = (opts: ProvidedOptions): void => {
   }
 
   if (argv.stdin) {
-    void getStdin().then(async text => await linter.lintText(text, onFinish))
+    const stdin = await getStdin()
+    await linter.lintText(stdin, onFinish)
     return
   }
 
-  void linter.lintFiles(argv._.length > 0 ? argv._ : ['.'], onFinish)
+  await linter.lintFiles(argv._.length > 0 ? argv._ : ['.'], onFinish)
 }
