@@ -16,7 +16,6 @@ export abstract class CLIEngine<T> {
 
   protected abstract onError(err: Error): void
   protected abstract onResult(res: ESLint.LintResult[], code?: string): void
-  protected abstract report(...args: unknown[]): void
 
   constructor(public argv: T, public linter: Linter) {
     this.options = linter.options
@@ -93,15 +92,10 @@ export class CLI extends CLIEngine<Required<ParsedArgs>> {
         messages.forEach(
           ({ line, column, message, ruleId }: ESLinter.LintMessage, index) => {
             const isLast = index === messages.length - 1
-            this.report(
-              isLast,
-              '%s:%d:%d: %s%s',
-              filePath,
-              line,
-              column,
-              message,
+            const report = `${filePath}:${line}:${column}: ${message}${
               this.argv.verbose && ruleId !== null ? ` (${ruleId})` : ''
-            )
+            }${isLast ? '\n' : ''}`
+            console.log(report)
           }
         )
     )
@@ -114,16 +108,6 @@ export class CLI extends CLIEngine<Required<ParsedArgs>> {
     }
 
     process.exitCode = errorCount > 0 ? 1 : 0
-  }
-
-  protected report(
-    isLast: boolean,
-    ...args: [string, string, number, number, string, string]
-  ): void {
-    if (this.argv.stdin && this.argv.fix) {
-      args[0] = `${this.options.cmd}: ${args[0]}`
-    }
-    console.error(...args, isLast ? '\n' : '')
   }
 }
 
