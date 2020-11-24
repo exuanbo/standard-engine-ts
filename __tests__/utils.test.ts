@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import {
-  dirHasFile,
+  isDirHasFile,
   isRoot,
   getRootPath,
   getReadFileFromRootFn,
@@ -17,11 +17,11 @@ const cwd = process.cwd()
 
 describe('dirHasFile', () => {
   it('should return true if dir has file', () => {
-    expect(dirHasFile('.', 'package.json')).toBe(true)
+    expect(isDirHasFile('.', 'package.json')).toBe(true)
   })
 
   it('should return false if dir does not have file', () => {
-    expect(dirHasFile('.', 'package-log.json')).toBe(false)
+    expect(isDirHasFile('.', 'package-log.json')).toBe(false)
   })
 })
 

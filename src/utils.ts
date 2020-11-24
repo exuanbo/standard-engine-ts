@@ -4,12 +4,12 @@ import { lookItUpSync } from 'look-it-up'
 import { ProvidedOptions } from './options'
 import { MAJORVERSION_REGEX, CACHE_HOME } from './constants'
 
-export const dirHasFile = (dir: string, file: string): boolean =>
+export const isDirHasFile = (dir: string, file: string): boolean =>
   fs.existsSync(path.join(dir, file))
 
 export const isRoot = (dir: string): string | undefined => {
-  const hasPkgJson = dirHasFile(dir, 'package.json')
-  const isSubModule = dirHasFile(path.join(dir, '../..'), 'node_modules')
+  const hasPkgJson = isDirHasFile(dir, 'package.json')
+  const isSubModule = isDirHasFile(path.join(dir, '../..'), 'node_modules')
   return (hasPkgJson && !isSubModule && dir) || undefined
 }
 
