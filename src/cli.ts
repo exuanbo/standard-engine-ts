@@ -36,12 +36,8 @@ export class CLI extends CLIEngine<Required<ParsedArgs>> {
 
     super(argv as Required<ParsedArgs>, linter)
 
-    this.onFinish = (
-      err: Error | null,
-      lintResults: ESLint.LintResult[] | null,
-      code?: string
-    ): void => {
-      if (err !== null) {
+    this.onFinish = (err, lintResults, code): void => {
+      if (err instanceof Error) {
         this.onError(err)
         return
       }
