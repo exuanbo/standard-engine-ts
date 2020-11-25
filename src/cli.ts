@@ -22,19 +22,19 @@ export abstract class CLIEngine<T> {
   }
 }
 
-export class CLI extends CLIEngine<Required<ParsedArgs>> {
+export class CLI extends CLIEngine<ParsedArgs> {
   onFinish: LintCallback
 
   constructor(opts: ProvidedOptions) {
     const minimistOpts = MINIMIST_OPTS
-    const argv = minimist(process.argv.slice(2), minimistOpts)
+    const argv = minimist(process.argv.slice(2), minimistOpts) as ParsedArgs
 
     const linter = new Linter(opts)
     const { options } = linter
 
     options.eslintOptions = mergeESLintOpsFromArgv(options, argv)
 
-    super(argv as Required<ParsedArgs>, linter)
+    super(argv, linter)
 
     this.onFinish = (err, lintResults, code): void => {
       if (err instanceof Error) {
@@ -60,7 +60,11 @@ export class CLI extends CLIEngine<Required<ParsedArgs>> {
   protected onResult(lintResults: ESLint.LintResult[], code?: string): void {
     const { cmd } = this.options
 
-    if (this.argv.stdin && this.argv.fix && code !== undefined) {
+    if (
+      this.argv.stdin === true &&
+      this.argv.fix === true &&
+      code !== undefined
+    ) {
       const [{ output }] = lintResults
       process.stdout.write(output ?? code)
       return
@@ -89,7 +93,9 @@ export class CLI extends CLIEngine<Required<ParsedArgs>> {
           ({ line, column, message, ruleId }: ESLinter.LintMessage, index) => {
             const isLast = index === messages.length - 1
             const report = `${filePath}:${line}:${column}: ${message}${
-              this.argv.verbose && ruleId !== null ? ` (${ruleId})` : ''
+              this.argv.verbose === true && ruleId !== null
+                ? ` (${ruleId})`
+                : ''
             }${isLast ? '\n' : ''}`
             console.log(report)
           }
@@ -112,13 +118,13 @@ export const run = async (opts: ProvidedOptions): Promise<void> => {
   const { argv, options, linter, onFinish } = cli
   const { cmd, tagline, homepage, eslintOptions } = options
 
-  if (argv.help) {
+  if (argv.help === true) {
     console.log(getHeadline(cmd, tagline, homepage))
     console.log(getHelp(cmd, eslintOptions.extensions))
     return
   }
 
-  if (argv.version) {
+  if (argv.version === true) {
     console.log(`${options.cmd}: v${options.version}`)
     return
   }
@@ -129,7 +135,7 @@ export const run = async (opts: ProvidedOptions): Promise<void> => {
     argv._.shift()
   }
 
-  if (argv.stdin) {
+  if (argv.stdin === true) {
     const stdin = await getStdin()
     await linter.lintText(stdin, onFinish)
     return
