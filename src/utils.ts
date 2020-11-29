@@ -57,6 +57,9 @@ const getType = (val: unknown): string =>
 const isArr = (val: unknown): val is unknown[] => getType(val) === 'Array'
 const isObj = (val: unknown): val is O => getType(val) === 'Object'
 
+const isRule = (arr: unknown[]): boolean =>
+  /^(?:off|warn|error|0|1|2)$/.test(String(arr[0]))
+
 export const compare = (obj: unknown, src: unknown): boolean => {
   if (isArr(obj) && isArr(src)) {
     return src.every(srcItem => obj.some(objItem => compare(objItem, srcItem)))
@@ -71,7 +74,7 @@ export const compare = (obj: unknown, src: unknown): boolean => {
   return obj === src
 }
 
-export const mergeObj = <T>(obj: O, ...args: Array<O | undefined>): T => {
+export const mergeConfig = <T>(obj: O, ...args: Array<O | undefined>): T => {
   const objCopy = Object.assign({}, obj)
   args.forEach(
     src =>
@@ -81,7 +84,7 @@ export const mergeObj = <T>(obj: O, ...args: Array<O | undefined>): T => {
           return
         }
         const objVal = objCopy[srcKey]
-        if (isArr(objVal) && isArr(srcVal)) {
+        if (isArr(objVal) && !isRule(objVal) && isArr(srcVal)) {
           const filteredArr = srcVal.filter(
             val => !objVal.some(item => compare(item, val))
           )
@@ -89,7 +92,7 @@ export const mergeObj = <T>(obj: O, ...args: Array<O | undefined>): T => {
           return
         }
         if (isObj(objVal) && isObj(srcVal)) {
-          objCopy[srcKey] = mergeObj(objVal, srcVal)
+          objCopy[srcKey] = mergeConfig(objVal, srcVal)
           return
         }
         objCopy[srcKey] = srcVal

@@ -1,6 +1,6 @@
 import { ESLint } from 'eslint'
 import { ESLintOptions, LinterOptions } from './options'
-import { getIgnoreFromFile, mergeObj } from './utils'
+import { getIgnoreFromFile, mergeConfig } from './utils'
 
 const literalArray = <T extends string>(arr: T[]): T[] => arr
 
@@ -61,7 +61,7 @@ export const mergeESLintOpsFromArgv = (
     },
     fix
   }
-  return mergeObj(eslintOptions, optionsFromArgs)
+  return mergeConfig(eslintOptions, optionsFromArgs)
 }
 
 export const getHeadline = (

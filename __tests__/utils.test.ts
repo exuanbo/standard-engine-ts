@@ -8,7 +8,7 @@ import {
   getIgnoreFromFile,
   getIgnore,
   compare,
-  mergeObj,
+  mergeConfig,
   getCacheLocation
 } from '../src/utils'
 import { DEFAULT_CMD, DEFAULT_VERSION, CACHE_HOME } from '../src/constants'
@@ -138,19 +138,19 @@ describe('mergeObj', () => {
         ignorePatterns: ['dist/'],
         env: { jest: true },
         noInlineConfig: undefined,
-        rules: { 'object-shorthand': 'off' },
+        rules: { 'object-shorthand': ['warn', 'always'] },
         settings: { react: { version: 'detect' } }
       },
       useEslintrc: true
     }
-    expect(mergeObj(obj, src)).toStrictEqual({
+    expect(mergeConfig(obj, src)).toStrictEqual({
       cwd: '..',
       extensions: ['.js', '.ts'],
       baseConfig: {
         ignorePatterns: ['dist/'],
         env: { browser: true, jest: true },
         noInlineConfig: false,
-        rules: { 'object-shorthand': 'off' },
+        rules: { 'object-shorthand': ['warn', 'always'] },
         settings: { react: { version: 'detect' } }
       },
       useEslintrc: true
@@ -167,7 +167,7 @@ describe('mergeObj', () => {
         noInlineConfig: true
       }
     }
-    expect(mergeObj(obj, src)).toStrictEqual(src)
+    expect(mergeConfig(obj, src)).toStrictEqual(src)
   })
 })
 
