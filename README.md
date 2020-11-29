@@ -50,7 +50,7 @@ See bundled [index.d.ts](https://gist.github.com/exuanbo/79d6fcd2c617f03ec530106
 
 ## Todo
 
-- [ ] Unit testing
+- [ ] Full unit testing
 - [ ] Documentation
 
 ## Credits
