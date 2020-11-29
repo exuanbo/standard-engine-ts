@@ -51,15 +51,17 @@ export const getIgnore = (
 
 type O = Record<string, unknown>
 
-const isArray = (val: unknown): val is unknown[] => Array.isArray(val)
-const isObject = (val: unknown): val is O =>
-  Object.prototype.toString.call(val) === '[object Object]'
+const getType = (val: unknown): string =>
+  Object.prototype.toString.call(val).slice(8, -1)
+
+const isArr = (val: unknown): val is unknown[] => getType(val) === 'Array'
+const isObj = (val: unknown): val is O => getType(val) === 'Object'
 
 export const compare = (obj: unknown, src: unknown): boolean => {
-  if (isArray(obj) && isArray(src)) {
+  if (isArr(obj) && isArr(src)) {
     return src.every(srcItem => obj.some(objItem => compare(objItem, srcItem)))
   }
-  if (isObject(obj) && isObject(src)) {
+  if (isObj(obj) && isObj(src)) {
     return Object.entries(src).every(([srcKey, srcVal]) =>
       Object.entries(obj).some(
         ([objKey, objVal]) => objKey === srcKey && compare(objVal, srcVal)
@@ -79,14 +81,14 @@ export const mergeObj = <T>(obj: O, ...args: Array<O | undefined>): T => {
           return
         }
         const objVal = objCopy[srcKey]
-        if (isArray(objVal) && isArray(srcVal)) {
+        if (isArr(objVal) && isArr(srcVal)) {
           const filteredArr = srcVal.filter(
             val => !objVal.some(item => compare(item, val))
           )
           objCopy[srcKey] = objVal.concat(filteredArr)
           return
         }
-        if (isObject(objVal) && isObject(srcVal)) {
+        if (isObj(objVal) && isObj(srcVal)) {
           objCopy[srcKey] = mergeObj(objVal, srcVal)
           return
         }
