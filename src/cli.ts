@@ -6,7 +6,7 @@ import { LinterOptions, ProvidedOptions } from './options'
 import {
   MINIMIST_OPTS,
   ParsedArgs,
-  mergeESLintOpsFromArgv,
+  mergeOptionsFromArgv,
   getHeadline,
   getHelp
 } from './cli-utils'
@@ -32,7 +32,7 @@ export class CLI extends CLIEngine<ParsedArgs> {
     const linter = new Linter(opts)
     const { options } = linter
 
-    options.eslintOptions = mergeESLintOpsFromArgv(options, argv)
+    options.eslintOptions = mergeOptionsFromArgv(options, argv)
 
     super(argv, linter)
 

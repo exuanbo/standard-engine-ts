@@ -1,6 +1,6 @@
 import eslint from 'eslint'
 import { Options } from '../src/options'
-import { mergeESLintOpsFromArgv, getHeadline, getHelp } from '../src/cli-utils'
+import { mergeOptionsFromArgv, getHeadline, getHelp } from '../src/cli-utils'
 import {
   DEFAULT_CMD,
   DEFAULT_TAGLINE,
@@ -23,7 +23,7 @@ describe('mergeESLintOpsFromArgv', () => {
       'dist/'
     ]
 
-    const mergedOptions = mergeESLintOpsFromArgv(options, {
+    const mergedOptions = mergeOptionsFromArgv(options, {
       ext: '.ts',
       globals: 'jest',
       _: []

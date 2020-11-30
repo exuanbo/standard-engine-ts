@@ -37,7 +37,7 @@ interface DefaultArgs {
 
 export interface ParsedArgs extends BooleanArgs, StringArgs, DefaultArgs {}
 
-export const mergeESLintOpsFromArgv = (
+export const mergeOptionsFromArgv = (
   { eslintOptions }: LinterOptions,
   {
     fix,
