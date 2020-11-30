@@ -17,5 +17,3 @@ export const DEFAULT_EXTENSIONS = ['.js', '.jsx', '.mjs', '.cjs']
 export const MAJORVERSION_REGEX = /^(\d+)\./
 
 export const CACHE_HOME = xdgBasedir.cache ?? os.tmpdir()
-
-export const GITIGNORE = ['.gitignore', '.git/info/exclude']

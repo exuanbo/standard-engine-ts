@@ -1,7 +1,6 @@
 import fs from 'fs'
 import path from 'path'
 import { lookItUpSync } from 'look-it-up'
-import { ProvidedOptions } from './options'
 import { MAJORVERSION_REGEX, CACHE_HOME } from './constants'
 
 export const isDirHasFile = (dir: string, file: string): boolean =>
@@ -35,9 +34,10 @@ export const getIgnoreFromFile = (file: string): string[] =>
     ?.split('\n')
     .filter(filePath => !filePath.startsWith('#') && filePath !== '') ?? []
 
-export const getIgnore = (
-  ignore: NonNullable<ProvidedOptions['ignore']>
-): string[] => [...ignore, ...getIgnoreFromFile('.eslintignore')]
+export const getIgnore = (ignore: string[]): string[] => [
+  ...ignore,
+  ...getIgnoreFromFile('.eslintignore')
+]
 
 type O = Record<string, unknown>
 
