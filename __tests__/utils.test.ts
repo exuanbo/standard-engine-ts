@@ -4,7 +4,7 @@ import {
   isDirHasFile,
   isRoot,
   getRootPath,
-  getReadFileFromRootFn,
+  readFileFromRoot,
   getIgnoreFromFile,
   getIgnore,
   compare,
@@ -43,14 +43,14 @@ describe('getRootPath', () => {
 
 describe('getReadFileFromRootFn', () => {
   it('should read files from the repository root path', () => {
-    const readFile = getReadFileFromRootFn()
-    const licenseContents = fs.readFileSync(path.join(cwd, 'LICENSE'), 'utf-8')
-    expect(readFile('LICENSE')).toBe(licenseContents)
+    const res = readFileFromRoot('LICENSE')
+    const expected = fs.readFileSync(path.join(cwd, 'LICENSE'), 'utf-8')
+    expect(res).toBe(expected)
   })
 
   it('should return undefined if no such file exists', () => {
-    const readFile = getReadFileFromRootFn()
-    expect(readFile('foo_bar')).toBe(undefined)
+    const res = readFileFromRoot('foo_bar')
+    expect(res).toBe(undefined)
   })
 })
 

@@ -18,32 +18,22 @@ export const getRootPath = (): string => {
   if (isRoot(cwd) === cwd) {
     return cwd
   }
-  return lookItUpSync(isRoot, path.dirname(cwd)) as string
+  return lookItUpSync(isRoot, path.dirname(cwd)) ?? cwd
 }
 
-export const getReadFileFromRootFn = (): ((
-  file: string
-) => string | undefined) => {
-  const rootPath = getRootPath()
-
-  return file => {
-    const filePath = path.isAbsolute(file) ? file : path.join(rootPath, file)
-    try {
-      return fs.readFileSync(filePath, 'utf-8')
-    } catch {
-      return undefined
-    }
+export const readFileFromRoot = (file: string): string | undefined => {
+  const filePath = path.isAbsolute(file) ? file : path.join(getRootPath(), file)
+  try {
+    return fs.readFileSync(filePath, 'utf-8')
+  } catch {
+    return undefined
   }
 }
 
-export const getIgnoreFromFile = (file: string): string[] => {
-  const readFile = getReadFileFromRootFn()
-  return (
-    readFile(file)
-      ?.split('\n')
-      .filter(filePath => !filePath.startsWith('#') && filePath !== '') ?? []
-  )
-}
+export const getIgnoreFromFile = (file: string): string[] =>
+  readFileFromRoot(file)
+    ?.split('\n')
+    .filter(filePath => !filePath.startsWith('#') && filePath !== '') ?? []
 
 export const getIgnore = (
   ignore: NonNullable<ProvidedOptions['ignore']>
