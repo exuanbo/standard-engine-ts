@@ -1,7 +1,7 @@
 import path from 'path'
 import eslint, { ESLint } from 'eslint'
 import { Assign } from 'utility-types'
-import { getIgnore, mergeConfig, getCacheLocation } from './utils'
+import { mergeConfig, getCacheLocation } from './utils'
 import {
   DEFAULT_CMD,
   DEFAULT_VERSION,
@@ -83,7 +83,7 @@ export class Options implements LinterOptions {
         baseConfig: mergeConfig(
           configFile !== undefined ? require(configFile) : {},
           {
-            ignorePatterns: getIgnore(ignore)
+            ignorePatterns: ignore
           }
         ),
         resolvePluginsRelativeTo:

@@ -6,7 +6,6 @@ import {
   getRootPath,
   readFileFromRoot,
   getIgnoreFromFile,
-  getIgnore,
   compare,
   mergeConfig,
   getCacheLocation
@@ -58,23 +57,6 @@ describe('getIgnoreFromFiles', () => {
   it('should get paths in files', () => {
     const res = getIgnoreFromFile('.gitignore')
     expect(res).toStrictEqual(['.cache', '*.tgz', 'coverage/', 'dist/'])
-  })
-})
-
-describe('getIgnore', () => {
-  it('should return an array of ignored files if `ignore` is provided', () => {
-    const files = getIgnore(['public/'])
-    expect(files).toStrictEqual(['public/'])
-  })
-
-  it('should return an array of ignored files if `.eslintignore` exists', () => {
-    const eslintignorePath = path.join(cwd, '.eslintignore')
-    fs.writeFileSync(eslintignorePath, 'coverage/\ndist/')
-
-    const files = getIgnore([])
-    expect(files).toStrictEqual(['coverage/', 'dist/'])
-
-    fs.writeFileSync(eslintignorePath, '')
   })
 })
 

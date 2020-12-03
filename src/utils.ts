@@ -34,11 +34,6 @@ export const getIgnoreFromFile = (file: string): string[] =>
     ?.split('\n')
     .filter(filePath => !filePath.startsWith('#') && filePath !== '') ?? []
 
-export const getIgnore = (ignore: string[]): string[] => [
-  ...ignore,
-  ...getIgnoreFromFile('.eslintignore')
-]
-
 type O = Record<string, unknown>
 
 const getType = (val: unknown): string =>
