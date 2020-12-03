@@ -81,13 +81,13 @@ export class Options implements LinterOptions {
         extensions: extensions.concat(DEFAULT_EXTENSIONS),
 
         baseConfig: mergeConfig(
-          (configFile !== undefined && require(configFile)) || {},
+          configFile !== undefined ? require(configFile) : {},
           {
             ignorePatterns: getIgnore(ignore)
           }
         ),
         resolvePluginsRelativeTo:
-          (configFile !== undefined && path.dirname(configFile)) || cwd,
+          configFile !== undefined ? path.dirname(configFile) : cwd,
         useEslintrc: Boolean(configFile),
 
         fix,

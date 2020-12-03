@@ -50,14 +50,14 @@ export const mergeOptionsFromArgv = (
   }: ParsedArgs
 ): ESLintOptions => {
   const optionsFromArgs: Partial<ESLint.Options> = {
-    extensions: (ext !== undefined && [ext]) || [],
+    extensions: ext !== undefined ? [ext] : [],
     baseConfig: {
-      env: (env !== undefined && { [env]: true }) || undefined,
+      env: env !== undefined ? { [env]: true } : undefined,
       ignorePatterns:
         disableGitignore === true ? [] : getIgnoreFromFile('.gitignore'),
-      globals: (globals !== undefined && { [globals]: true }) || undefined,
+      globals: globals !== undefined ? { [globals]: true } : undefined,
       parser,
-      plugins: (plugins !== undefined && [plugins]) || undefined
+      plugins: plugins !== undefined ? [plugins] : undefined
     },
     fix
   }

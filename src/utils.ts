@@ -9,7 +9,7 @@ export const isDirHasFile = (dir: string, file: string): boolean =>
 export const isRoot = (dir: string): string | undefined => {
   const hasPkgJson = isDirHasFile(dir, 'package.json')
   const isSubModule = isDirHasFile(path.join(dir, '../..'), 'node_modules')
-  return (hasPkgJson && !isSubModule && dir) || undefined
+  return hasPkgJson && !isSubModule ? dir : undefined
 }
 
 export const getRootPath = (): string => {
@@ -93,8 +93,7 @@ export const mergeConfig = <T>(obj: O, ...args: Array<O | undefined>): T => {
 
 export const getCacheLocation = (version: string, cmd: string): string => {
   const versionMatch = MAJORVERSION_REGEX.exec(version)
-  const majorVersion =
-    (versionMatch !== null && `${versionMatch[1]}`) || undefined
+  const majorVersion = versionMatch !== null ? `${versionMatch[1]}` : undefined
 
   const cacheLocation = path.join(
     CACHE_HOME,
