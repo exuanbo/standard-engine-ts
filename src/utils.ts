@@ -8,8 +8,8 @@ export const isDirHasFile = (dir: string, file: string): boolean =>
 
 export const isRoot = (dir: string): string | undefined => {
   const hasPkgJson = isDirHasFile(dir, 'package.json')
-  const isSubModule = isDirHasFile(path.join(dir, '../..'), 'node_modules')
-  return hasPkgJson && !isSubModule ? dir : undefined
+  const hasNodeModules = isDirHasFile(dir, 'node_modules')
+  return hasPkgJson && hasNodeModules ? dir : undefined
 }
 
 export const getRootPath = (): string => {
