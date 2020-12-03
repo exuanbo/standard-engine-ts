@@ -2,7 +2,7 @@ import { ESLint } from 'eslint'
 import { ESLintOptions, LinterOptions } from './options'
 import { getIgnoreFromFile, mergeConfig } from './utils'
 
-const literalArray = <T extends string>(arr: T[]): T[] => arr
+const arrayWithTypes = <T extends string>(arr: T[]): T[] => arr
 
 export const MINIMIST_OPTS = {
   alias: {
@@ -12,7 +12,7 @@ export const MINIMIST_OPTS = {
     plugins: 'plugin',
     version: 'v'
   },
-  boolean: literalArray([
+  boolean: arrayWithTypes([
     'fix',
     'verbose',
     'disable-gitignore',
@@ -20,7 +20,7 @@ export const MINIMIST_OPTS = {
     'version',
     'stdin'
   ]),
-  string: literalArray(['env', 'ext', 'globals', 'parser', 'plugins'])
+  string: arrayWithTypes(['env', 'ext', 'globals', 'parser', 'plugins'])
 }
 
 type BooleanArgs = {
