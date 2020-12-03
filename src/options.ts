@@ -88,7 +88,7 @@ export class Options implements LinterOptions {
         ),
         resolvePluginsRelativeTo:
           configFile !== undefined ? path.dirname(configFile) : cwd,
-        useEslintrc: Boolean(configFile),
+        useEslintrc: true,
 
         fix,
 
