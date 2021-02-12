@@ -1,7 +1,7 @@
 import fs from 'fs'
+import os from 'os'
 import path from 'path'
 import { lookItUpSync } from 'look-it-up'
-import { MAJORVERSION_REGEX, CACHE_HOME } from './constants'
 
 export const isDirHasFile = (dir: string, file: string): boolean =>
   fs.existsSync(path.join(dir, file))
@@ -87,13 +87,15 @@ export const mergeConfig = <T>(obj: O, ...args: Array<O | undefined>): T => {
 }
 
 export const getCacheLocation = (version: string, cmd: string): string => {
-  const versionMatch = MAJORVERSION_REGEX.exec(version)
+  const cacheDirectory =
+    process.env.XDG_CACHE_HOME ?? path.join(os.homedir(), '.cache')
+
+  const versionMatch = /^(\d+)\./.exec(version)
   const majorVersion = versionMatch !== null ? `${versionMatch[1]}` : undefined
 
-  const cacheLocation = path.join(
-    CACHE_HOME,
+  return path.join(
+    cacheDirectory,
     cmd,
     majorVersion !== undefined ? `v${majorVersion}/` : ''
   )
-  return cacheLocation
 }

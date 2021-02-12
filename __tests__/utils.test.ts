@@ -1,4 +1,5 @@
 import fs from 'fs'
+import os from 'os'
 import path from 'path'
 import {
   isDirHasFile,
@@ -10,7 +11,7 @@ import {
   mergeConfig,
   getCacheLocation
 } from '../src/utils'
-import { DEFAULT_CMD, DEFAULT_VERSION, CACHE_HOME } from '../src/constants'
+import { DEFAULT_CMD, DEFAULT_VERSION } from '../src/constants'
 
 const cwd = process.cwd()
 
@@ -157,7 +158,7 @@ describe('getCacheLocation', () => {
   it('should return cache location string', () => {
     const cachePath = getCacheLocation(DEFAULT_VERSION, DEFAULT_CMD)
     expect(cachePath).toBe(
-      `${CACHE_HOME}/${DEFAULT_CMD}/v${DEFAULT_VERSION.substring(0, 1)}/`
+      `${os.homedir()}/.cache/${DEFAULT_CMD}/v${DEFAULT_VERSION[0]}/`
     )
   })
 })
