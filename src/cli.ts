@@ -1,5 +1,4 @@
 import minimist from 'minimist'
-import getStdin from 'get-stdin'
 import { ESLint, Linter as ESLinter } from 'eslint'
 import { LintCallback, Linter } from './linter'
 import { LinterOptions, ProvidedOptions } from './options'
@@ -8,7 +7,8 @@ import {
   ParsedArgs,
   mergeOptionsFromArgv,
   getHeadline,
-  getHelp
+  getHelp,
+  readStdin
 } from './cli-utils'
 
 export abstract class CLIEngine<T> {
@@ -136,7 +136,7 @@ export const run = async (opts: ProvidedOptions): Promise<void> => {
   }
 
   if (argv.stdin === true) {
-    const stdin = await getStdin()
+    const stdin = await readStdin()
     await linter.lintText(stdin, onFinish)
     return
   }

@@ -102,3 +102,22 @@ Misc:
   -v, --version        Show current version
 `
 }
+
+/**
+ * @link https://github.com/eslint/eslint/blob/master/bin/eslint.js#L45
+ */
+export const readStdin = async (): Promise<string> =>
+  await new Promise((resolve, reject) => {
+    let content = ''
+    let chunk: string
+
+    process.stdin
+      .setEncoding('utf8')
+      .on('readable', () => {
+        while ((chunk = process.stdin.read()) !== null) {
+          content += chunk
+        }
+      })
+      .on('end', () => resolve(content))
+      .on('error', reject)
+  })

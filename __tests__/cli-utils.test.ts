@@ -1,6 +1,11 @@
 import eslint from 'eslint'
 import { Options } from '../src/options'
-import { mergeOptionsFromArgv, getHeadline, getHelp } from '../src/cli-utils'
+import {
+  mergeOptionsFromArgv,
+  getHeadline,
+  getHelp,
+  readStdin
+} from '../src/cli-utils'
 import {
   DEFAULT_CMD,
   DEFAULT_TAGLINE,
@@ -45,5 +50,18 @@ describe('string utils', () => {
     expect(help).toStrictEqual(
       expect.stringMatching(/^Usage: standard-engine-ts/m)
     )
+  })
+})
+
+describe('readStdin', () => {
+  it('should read stdin', async () => {
+    const stdin = readStdin()
+
+    process.stdin.push('std')
+    process.stdin.push('in')
+    await new Promise(resolve => setTimeout(resolve, 1))
+    process.stdin.emit('end')
+
+    expect(await stdin).toBe('stdin')
   })
 })
