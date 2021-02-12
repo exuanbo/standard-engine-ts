@@ -12,16 +12,20 @@ export const isRoot = (dir: string): string | undefined => {
   return hasPkgJson && hasNodeModules ? dir : undefined
 }
 
-export const getRootPath = (): string => {
+export const getRootPath = (): string | undefined => {
   const cwd = process.cwd()
   if (isRoot(cwd) === cwd) {
     return cwd
   }
-  return lookItUpSync(isRoot, path.dirname(cwd)) ?? cwd
+  return lookItUpSync(isRoot, path.dirname(cwd))
 }
 
 export const readFileFromRoot = (file: string): string | undefined => {
-  const filePath = path.isAbsolute(file) ? file : path.join(getRootPath(), file)
+  const rootPath = getRootPath()
+  if (rootPath === undefined) {
+    return undefined
+  }
+  const filePath = path.isAbsolute(file) ? file : path.join(rootPath, file)
   try {
     return fs.readFileSync(filePath, 'utf-8')
   } catch {
