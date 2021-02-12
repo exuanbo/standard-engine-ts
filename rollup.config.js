@@ -1,23 +1,13 @@
-import builtins from 'builtin-modules'
 import typescript from '@rollup/plugin-typescript'
-import { nodeResolve } from '@rollup/plugin-node-resolve'
-import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
-import cleanup from 'rollup-plugin-cleanup'
 import dts from 'rollup-plugin-dts'
 import pkg from './package.json'
 
 export default [
   {
-    external: [...builtins, ...Object.keys(pkg.dependencies)],
+    external: ['fs', 'os', 'path', ...Object.keys(pkg.dependencies)],
     input: 'src/index.ts',
-    plugins: [
-      typescript(),
-      nodeResolve(),
-      commonjs(),
-      json({ compact: true, preferConst: true }),
-      cleanup()
-    ],
+    plugins: [typescript(), json({ preferConst: true })],
     output: [
       {
         file: pkg.main,
