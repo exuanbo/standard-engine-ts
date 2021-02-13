@@ -62,9 +62,8 @@ export const compare = (obj: unknown, src: unknown): boolean => {
 }
 
 export const mergeConfig = (obj: O, ...args: Array<O | undefined>): any => {
-  args.forEach(
-    src =>
-      src !== undefined &&
+  args.forEach(src => {
+    if (src !== undefined) {
       Object.entries(src).forEach(([srcKey, srcVal]) => {
         if (srcVal === undefined) {
           return
@@ -83,7 +82,8 @@ export const mergeConfig = (obj: O, ...args: Array<O | undefined>): any => {
         }
         obj[srcKey] = srcVal
       })
-  )
+    }
+  })
   return obj
 }
 
