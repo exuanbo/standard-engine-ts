@@ -23,13 +23,11 @@ export const getRootPath = (): string | undefined => {
 export const readFileFromRoot = (file: string): string | undefined => {
   const rootPath = getRootPath()
   if (rootPath === undefined) {
-    return undefined
+    return
   }
   const filePath = path.isAbsolute(file) ? file : path.join(rootPath, file)
-  try {
+  if (fs.existsSync(filePath)) {
     return fs.readFileSync(filePath, 'utf-8')
-  } catch {
-    return undefined
   }
 }
 
