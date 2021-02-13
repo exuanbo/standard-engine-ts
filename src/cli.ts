@@ -1,7 +1,7 @@
 import minimist from 'minimist'
 import { ESLint, Linter as ESLinter } from 'eslint'
 import { LintCallback, Linter } from './linter'
-import { LinterOptions, ProvidedOptions } from './options'
+import { ProvidedOptions } from './options'
 import {
   MINIMIST_OPTS,
   ParsedArgs,
@@ -12,19 +12,22 @@ import {
 } from './cli-utils'
 
 export abstract class CLIEngine<T> {
-  options: LinterOptions
-
+  onFinish: LintCallback
   protected abstract onError(err: Error): void
   protected abstract onResult(res: ESLint.LintResult[], code?: string): void
 
   constructor(public argv: T, public linter: Linter) {
-    this.options = linter.options
+    this.onFinish = (err, lintResults, code): void => {
+      if (err instanceof Error) {
+        this.onError(err)
+        return
+      }
+      this.onResult(lintResults as ESLint.LintResult[], code)
+    }
   }
 }
 
 export class CLI extends CLIEngine<ParsedArgs> {
-  onFinish: LintCallback
-
   constructor(opts: ProvidedOptions) {
     const minimistOpts = MINIMIST_OPTS
     const argv = minimist(process.argv.slice(2), minimistOpts) as ParsedArgs
@@ -35,18 +38,10 @@ export class CLI extends CLIEngine<ParsedArgs> {
     options.eslintOptions = mergeOptionsFromArgv(options, argv)
 
     super(argv, linter)
-
-    this.onFinish = (err, lintResults, code): void => {
-      if (err instanceof Error) {
-        this.onError(err)
-        return
-      }
-      this.onResult(lintResults as ESLint.LintResult[], code)
-    }
   }
 
   protected onError(err: Error): void {
-    const { cmd, bugs } = this.options
+    const { cmd, bugs } = this.linter.options
     const { stack, message } = err
 
     console.error(`${cmd}: Unexpected linter output:\n`)
@@ -58,7 +53,7 @@ export class CLI extends CLIEngine<ParsedArgs> {
   }
 
   protected onResult(lintResults: ESLint.LintResult[], code?: string): void {
-    const { cmd } = this.options
+    const { cmd } = this.linter.options
 
     if (
       this.argv.stdin === true &&
@@ -114,9 +109,8 @@ export class CLI extends CLIEngine<ParsedArgs> {
 }
 
 export const run = async (opts: ProvidedOptions): Promise<void> => {
-  const cli = new CLI(opts)
-  const { argv, options, linter, onFinish } = cli
-  const { cmd, tagline, homepage, eslintOptions } = options
+  const { argv, linter, onFinish } = new CLI(opts)
+  const { cmd, version, tagline, homepage, eslintOptions } = linter.options
 
   if (argv.help === true) {
     console.log(getHeadline(cmd, tagline, homepage))
@@ -125,7 +119,7 @@ export const run = async (opts: ProvidedOptions): Promise<void> => {
   }
 
   if (argv.version === true) {
-    console.log(`${options.cmd}: v${options.version}`)
+    console.log(`${cmd}: v${version}`)
     return
   }
 
