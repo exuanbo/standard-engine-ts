@@ -6,8 +6,6 @@ import {
   MINIMIST_OPTS,
   ParsedArgs,
   mergeOptionsFromArgv,
-  getHeadline,
-  getHelp,
   readStdin
 } from './cli-utils'
 
@@ -113,8 +111,36 @@ export const run = async (opts: ProvidedOptions): Promise<void> => {
   const { cmd, version, tagline, homepage, eslintOptions } = linter.options
 
   if (argv.help === true) {
-    console.log(getHeadline(cmd, tagline, homepage))
-    console.log(getHelp(cmd, eslintOptions.extensions))
+    console.log(`${cmd}: ${tagline} (${homepage})`)
+    console.log(`
+Usage: ${cmd} <flags> [FILES...]
+
+  If FILES is omitted, all source files (${eslintOptions.extensions
+    .map(ext => `*${ext}`)
+    .join(', ')})
+  in the current working directory will be checked recursively.
+
+  By default, files/folders that begin with '.' like .eslintrc .cache/ and
+  paths in .gitignore are automatically ignored.
+
+Basic:
+  --fix                Automatically fix problems
+  --verbose            Show rule names for errors (to ignore specific rules)
+
+Config:
+  --env                Use custom eslint environment
+  --ext                Specify file extensions
+  --global             Declare global variable
+  --parser             Use custom parser (e.g. babel-eslint)
+  --plugin             Use custom eslint plugin
+
+Input:
+  --stdin              Read file text from stdin
+  --disable-gitignore  Disable use of .gitignore by default
+
+Misc:
+  -h, --help           Show usage information
+  -v, --version        Show current version`)
     return
   }
 
