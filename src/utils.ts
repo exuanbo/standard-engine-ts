@@ -63,8 +63,7 @@ export const compare = (obj: unknown, src: unknown): boolean => {
   return obj === src
 }
 
-export const mergeConfig = <T>(obj: O, ...args: Array<O | undefined>): T => {
-  const objCopy = Object.assign({}, obj)
+export const mergeConfig = (obj: O, ...args: Array<O | undefined>): any => {
   args.forEach(
     src =>
       src !== undefined &&
@@ -72,22 +71,22 @@ export const mergeConfig = <T>(obj: O, ...args: Array<O | undefined>): T => {
         if (srcVal === undefined) {
           return
         }
-        const objVal = objCopy[srcKey]
+        const objVal = obj[srcKey]
         if (isArr(objVal) && !isRule(objVal) && isArr(srcVal)) {
           const filteredArr = srcVal.filter(
             val => !objVal.some(item => compare(item, val))
           )
-          objCopy[srcKey] = objVal.concat(filteredArr)
+          obj[srcKey] = objVal.concat(filteredArr)
           return
         }
         if (isObj(objVal) && isObj(srcVal)) {
-          objCopy[srcKey] = mergeConfig(objVal, srcVal)
+          obj[srcKey] = mergeConfig(objVal, srcVal)
           return
         }
-        objCopy[srcKey] = srcVal
+        obj[srcKey] = srcVal
       })
   )
-  return objCopy as T
+  return obj
 }
 
 export const getCacheLocation = (version: string, cmd: string): string => {
