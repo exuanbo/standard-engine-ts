@@ -35,6 +35,8 @@ export interface LinterOptions extends SharedOptions {
 }
 
 export interface ProvidedOptions extends Partial<SharedOptions> {
+  [key: string]: unknown
+
   eslint: typeof eslint
   eslintOptions?: Partial<ESLint.Options>
 
