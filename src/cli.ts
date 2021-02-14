@@ -86,9 +86,7 @@ export class CLI extends CLIEngine<ParsedArgs> {
           ({ line, column, message, ruleId }: ESLinter.LintMessage, index) => {
             const isLast = index === messages.length - 1
             const report = `${filePath}:${line}:${column}: ${message}${
-              this.argv.verbose === true && ruleId !== null
-                ? ` (${ruleId})`
-                : ''
+              ruleId !== null ? ` (${ruleId})` : ''
             }${isLast ? '\n' : ''}`
             console.log(report)
           }
@@ -125,7 +123,6 @@ Usage: ${cmd} <flags> [FILES...]
 
 Basic:
   --fix                Automatically fix problems
-  --verbose            Show rule names for errors (to ignore specific rules)
 
 Config:
   --env                Use custom eslint environment

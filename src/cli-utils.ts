@@ -14,7 +14,6 @@ export const MINIMIST_OPTS = {
   },
   boolean: arrayWithTypes([
     'fix',
-    'verbose',
     'disable-gitignore',
     'help',
     'version',
