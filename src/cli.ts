@@ -1,5 +1,6 @@
+import path from 'path'
 import minimist from 'minimist'
-import { ESLint, Linter as ESLinter } from 'eslint'
+import { ESLint } from 'eslint'
 import { LintCallback, Linter } from './linter'
 import { ProvidedOptions } from './options'
 import {
@@ -77,21 +78,24 @@ export class CLI extends CLIEngine<ParsedArgs> {
       return
     }
 
-    lintResults.forEach(
-      ({
-        messages,
-        filePath
-      }: Pick<ESLint.LintResult, 'messages' | 'filePath'>) =>
-        messages.forEach(
-          ({ line, column, message, ruleId }: ESLinter.LintMessage, index) => {
-            const isLast = index === messages.length - 1
-            const report = `${filePath}:${line}:${column}: ${message}${
-              ruleId !== null ? ` (${ruleId})` : ''
-            }${isLast ? '\n' : ''}`
-            console.log(report)
-          }
-        )
-    )
+    lintResults.forEach(({ messages: lintMessage, filePath }) => {
+      lintMessage.forEach(
+        ({ column, line, ruleId, message, fatal, severity }) => {
+          const report = `\u001b[4m${path.relative(
+            process.cwd(),
+            filePath
+          )}:${line}:${column}\u001b[0m\n ${
+            fatal === true || severity === 2
+              ? '\u001b[31m error \u001b[0m'
+              : '\u001b[33m warning \u001b[0m'
+          } ${message} ${
+            ruleId !== null ? `\u001b[30;1m ${ruleId} \u001b[0m` : ''
+          }\n`
+
+          console.log(report)
+        }
+      )
+    })
 
     const isFixable = lintResults.some(res =>
       res.messages.some(msg => Boolean(msg.fix))
