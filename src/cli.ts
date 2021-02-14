@@ -141,7 +141,8 @@ Input:
 
 Misc:
   -h, --help           Show usage information
-  -v, --version        Show current version`)
+  -v, --version        Show current version
+`)
     return
   }
 
