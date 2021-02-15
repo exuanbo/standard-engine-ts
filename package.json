@@ -36,19 +36,19 @@
   "homepage": "https://github.com/exuanbo/standard-engine-ts#readme",
   "dependencies": {
     "@types/eslint": "7.2.6",
-    "look-it-up": "1.1.2",
+    "look-it-up": "1.2.0",
     "minimist": "1.2.5",
     "utility-types": "3.10.0"
   },
   "devDependencies": {
     "@rollup/plugin-json": "4.1.0",
-    "@rollup/plugin-typescript": "8.1.1",
+    "@rollup/plugin-typescript": "8.2.0",
     "@types/jest": "26.0.20",
     "@types/minimist": "1.2.1",
-    "@types/node": "14.14.27",
+    "@types/node": "14.14.28",
     "@typescript-eslint/eslint-plugin": "4.15.0",
     "@typescript-eslint/parser": "4.15.0",
-    "eslint": "7.19.0",
+    "eslint": "7.20.0",
     "eslint-config-prettier": "7.2.0",
     "eslint-config-standard": "16.0.2",
     "eslint-config-standard-with-typescript": "20.0.0",
