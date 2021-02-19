@@ -41,7 +41,7 @@ describe('getRootPath', () => {
   })
 })
 
-describe('getReadFileFromRootFn', () => {
+describe('readFileFromRoot', () => {
   it('should read files from the repository root path', () => {
     const res = readFileFromRoot('LICENSE')
     const expected = fs.readFileSync(path.join(cwd, 'LICENSE'), 'utf-8')
@@ -63,7 +63,7 @@ describe('getIgnoreFromFiles', () => {
 
 describe('compare', () => {
   it('should compare deeply and return true', () => {
-    const obj = {
+    const target = {
       0: [
         1,
         { a: [1, 2], b: [true, 2, 1], c: { d: [3, 4, { e: 5, f: [6, 7] }] } }
@@ -77,11 +77,11 @@ describe('compare', () => {
         1
       ]
     }
-    expect(compare(obj, src)).toBe(true)
+    expect(compare(target, src)).toBe(true)
   })
 
   it('should compare deeply and return false', () => {
-    const obj = {
+    const target = {
       0: [
         1,
         { a: [1, 2], b: [true, 2, 1], c: { d: [3, 4, { e: 5, f: [666, 7] }] } }
@@ -95,13 +95,13 @@ describe('compare', () => {
         1
       ]
     }
-    expect(compare(obj, src)).toBe(false)
+    expect(compare(target, src)).toBe(false)
   })
 })
 
 describe('mergeObj', () => {
   it('should merge objects recursively', () => {
-    const obj = {
+    const target = {
       cwd: '.',
       extensions: ['.js'],
       baseConfig: {
@@ -126,7 +126,7 @@ describe('mergeObj', () => {
       },
       useEslintrc: true
     }
-    expect(mergeConfig(obj, src)).toStrictEqual({
+    expect(mergeConfig(target, src)).toStrictEqual({
       cwd: '..',
       extensions: ['.js', '.ts'],
       baseConfig: {
@@ -141,7 +141,7 @@ describe('mergeObj', () => {
   })
 
   it('should merge objects recursively with empty obj', () => {
-    const obj = {}
+    const target = {}
     const src = {
       cwd: '.',
       extensions: ['.ts', '.tsx'],
@@ -150,7 +150,7 @@ describe('mergeObj', () => {
         noInlineConfig: true
       }
     }
-    expect(mergeConfig(obj, src)).toStrictEqual(src)
+    expect(mergeConfig(target, src)).toStrictEqual(src)
   })
 })
 
