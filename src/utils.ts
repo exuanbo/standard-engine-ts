@@ -73,30 +73,34 @@ export const compare = (target: unknown, src: unknown): boolean => {
   return false
 }
 
-export const mergeConfig = (obj: O, ...args: Array<O | undefined>): any => {
+export const mergeConfig = (target: O, ...args: Array<O | undefined>): any => {
   args.forEach(src => {
     if (src !== undefined) {
       Object.entries(src).forEach(([srcKey, srcVal]) => {
         if (srcVal === undefined) {
           return
         }
-        const objVal = obj[srcKey]
-        if (isArr(objVal) && !isRule(objVal) && isArr(srcVal)) {
+        const targetVal = target[srcKey]
+        if (compare(targetVal, srcVal)) {
+          return
+        }
+        if (isArr(targetVal) && !isRule(targetVal) && isArr(srcVal)) {
           const filteredArr = srcVal.filter(
-            val => !objVal.some(item => compare(item, val))
+            srcItem =>
+              !targetVal.some(targetItem => compare(targetItem, srcItem))
           )
-          obj[srcKey] = objVal.concat(filteredArr)
+          target[srcKey] = targetVal.concat(filteredArr)
           return
         }
-        if (isObj(objVal) && isObj(srcVal)) {
-          obj[srcKey] = mergeConfig(objVal, srcVal)
+        if (isObj(targetVal) && isObj(srcVal)) {
+          target[srcKey] = mergeConfig(targetVal, srcVal)
           return
         }
-        obj[srcKey] = srcVal
+        target[srcKey] = srcVal
       })
     }
   })
-  return obj
+  return target
 }
 
 export const getCacheLocation = (version: string, cmd: string): string => {
