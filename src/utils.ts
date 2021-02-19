@@ -47,18 +47,30 @@ const isObj = (val: unknown): val is O => getType(val) === 'Object'
 const isRule = (arr: unknown[]): boolean =>
   /^(?:off|warn|error|0|1|2)$/.test(String(arr[0]))
 
-export const compare = (obj: unknown, src: unknown): boolean => {
-  if (isArr(obj) && isArr(src)) {
-    return src.every(srcItem => obj.some(objItem => compare(objItem, srcItem)))
+export const compare = (target: unknown, src: unknown): boolean => {
+  if (Object.is(target, src)) {
+    return true
   }
-  if (isObj(obj) && isObj(src)) {
+  if (isArr(target) && isArr(src)) {
+    if (target.length !== src.length) {
+      return false
+    }
+    return src.every(srcItem =>
+      target.some(targetItem => compare(targetItem, srcItem))
+    )
+  }
+  if (isObj(target) && isObj(src)) {
+    if (Object.keys(target).length !== Object.keys(src).length) {
+      return false
+    }
     return Object.entries(src).every(([srcKey, srcVal]) =>
-      Object.entries(obj).some(
-        ([objKey, objVal]) => objKey === srcKey && compare(objVal, srcVal)
+      Object.entries(target).some(
+        ([targetKey, targetVal]) =>
+          targetKey === srcKey && compare(targetVal, srcVal)
       )
     )
   }
-  return obj === src
+  return false
 }
 
 export const mergeConfig = (obj: O, ...args: Array<O | undefined>): any => {
