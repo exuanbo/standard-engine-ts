@@ -2,8 +2,8 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 import {
-  isDirHasFile,
-  isRoot,
+  isFileInDir,
+  findPkgJson,
   getRootPath,
   readFileFromRoot,
   getIgnoreFromFile,
@@ -15,23 +15,23 @@ import { DEFAULT_CMD, DEFAULT_VERSION } from '../src/constants'
 
 const cwd = process.cwd()
 
-describe('dirHasFile', () => {
+describe('isFileInDir', () => {
   it('should return true if dir has file', () => {
-    expect(isDirHasFile('.', 'package.json')).toBe(true)
+    expect(isFileInDir('package.json', '.')).toBe(true)
   })
 
   it('should return false if dir does not have file', () => {
-    expect(isDirHasFile('.', 'package-log.json')).toBe(false)
+    expect(isFileInDir('package-lock.json', '.')).toBe(false)
   })
 })
 
-describe('isRoot', () => {
+describe('findPkgJson', () => {
   it('should return cwd as matcher result', () => {
-    expect(isRoot(cwd)).toBe(cwd)
+    expect(findPkgJson(cwd)).toBe(cwd)
   })
 
   it('should return undefined as matcher result', () => {
-    expect(isRoot(path.dirname(cwd))).toBe(undefined)
+    expect(findPkgJson(path.dirname(cwd))).toBe(null)
   })
 })
 
@@ -50,7 +50,7 @@ describe('readFileFromRoot', () => {
 
   it('should return undefined if no such file exists', () => {
     const res = readFileFromRoot('foo_bar')
-    expect(res).toBe(undefined)
+    expect(res).toBe(null)
   })
 })
 

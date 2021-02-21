@@ -3,32 +3,27 @@ import os from 'os'
 import path from 'path'
 import { lookItUpSync } from 'look-it-up'
 
-export const isDirHasFile = (dir: string, file: string): boolean =>
+export const isFileInDir = (file: string, dir: string): boolean =>
   fs.existsSync(path.join(dir, file))
 
-export const isRoot = (dir: string): string | undefined => {
-  const hasPkgJson = isDirHasFile(dir, 'package.json')
-  const hasNodeModules = isDirHasFile(dir, 'node_modules')
-  return hasPkgJson && hasNodeModules ? dir : undefined
-}
+export const findPkgJson = (dir: string): string | null =>
+  isFileInDir('package.json', dir) ? dir : null
 
-export const getRootPath = (): string | undefined => {
+export const getRootPath = (): string | null => {
   const cwd = process.cwd()
-  if (isRoot(cwd) === cwd) {
+  if (findPkgJson(cwd) === cwd) {
     return cwd
   }
-  return lookItUpSync(isRoot, path.dirname(cwd))
+  return lookItUpSync(findPkgJson, path.dirname(cwd))
 }
 
-export const readFileFromRoot = (file: string): string | undefined => {
+export const readFileFromRoot = (file: string): string | null => {
   const rootPath = getRootPath()
-  if (rootPath === undefined) {
-    return
+  if (rootPath === null) {
+    return null
   }
   const filePath = path.isAbsolute(file) ? file : path.join(rootPath, file)
-  if (fs.existsSync(filePath)) {
-    return fs.readFileSync(filePath, 'utf-8')
-  }
+  return fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf-8') : null
 }
 
 export const getIgnoreFromFile = (file: string): string[] =>
