@@ -6,8 +6,8 @@ import {
   DEFAULT_CMD,
   DEFAULT_VERSION,
   DEFAULT_TAGLINE,
-  DEFAULT_HOMEPAGE,
   DEFAULT_BUGS,
+  DEFAULT_HOMEPAGE,
   DEFAULT_EXTENSIONS
 } from './constants'
 
@@ -27,7 +27,7 @@ type NonNullableESLintOptions = Required<
 export type ESLintOptions = Assign<ESLint.Options, NonNullableESLintOptions>
 
 type SharedOptions = {
-  [key in 'cmd' | 'version' | 'tagline' | 'homepage' | 'bugs']: string
+  [key in 'cmd' | 'version' | 'tagline' | 'bugs' | 'homepage']: string
 }
 
 export interface LinterOptions extends SharedOptions {
@@ -53,8 +53,8 @@ export class Options implements LinterOptions {
   cmd: string
   version: string
   tagline: string
-  homepage: string
   bugs: string
+  homepage: string
 
   eslintOptions: ESLintOptions
 
@@ -62,8 +62,8 @@ export class Options implements LinterOptions {
     cmd = DEFAULT_CMD,
     version = DEFAULT_VERSION,
     tagline = DEFAULT_TAGLINE,
-    homepage = DEFAULT_HOMEPAGE,
     bugs = DEFAULT_BUGS,
+    homepage = DEFAULT_HOMEPAGE,
     cwd,
     extensions = [],
     eslintOptions,
@@ -74,8 +74,8 @@ export class Options implements LinterOptions {
     this.cmd = cmd
     this.version = version
     this.tagline = tagline
-    this.homepage = homepage
     this.bugs = bugs
+    this.homepage = homepage
 
     this.eslintOptions = mergeConfig(
       {
