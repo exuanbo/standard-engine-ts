@@ -57,4 +57,4 @@ See bundled [index.d.ts](https://gist.github.com/exuanbo/79d6fcd2c617f03ec530106
 
 ## License
 
-[MIT License](https://github.com/exuanbo/standard-engine-ts/blob/main/LICENSE) © 2020 [Exuanbo](https://github.com/exuanbo)
+[MIT License](https://github.com/exuanbo/standard-engine-ts/blob/main/LICENSE) © 2021 [Exuanbo](https://github.com/exuanbo)
