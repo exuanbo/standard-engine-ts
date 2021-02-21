@@ -81,3 +81,11 @@ export const readStdin = async (): Promise<string> =>
       .on('end', () => resolve(content))
       .on('error', reject)
   })
+
+export const enum TerminalStyle {
+  Underline = '\u001b[4m',
+  Red = '\u001b[31m',
+  Yellow = '\u001b[33m',
+  BrightBlack = '\u001b[30;1m',
+  Reset = '\u001b[0m'
+}

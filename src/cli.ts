@@ -7,7 +7,8 @@ import {
   MINIMIST_OPTS,
   ParsedArgs,
   mergeOptionsFromArgv,
-  readStdin
+  readStdin,
+  TerminalStyle
 } from './cli-utils'
 
 export abstract class CLIEngine<T> {
@@ -81,15 +82,17 @@ export class CLI extends CLIEngine<ParsedArgs> {
     lintResults.forEach(({ messages: lintMessage, filePath }) => {
       lintMessage.forEach(
         ({ column, line, ruleId, message, fatal, severity }) => {
-          const report = `\u001b[4m${path.relative(
+          const report = `${TerminalStyle.Underline}${path.relative(
             process.cwd(),
             filePath
-          )}:${line}:${column}\u001b[0m\n ${
+          )}:${line}:${column}${TerminalStyle.Reset}\n  ${
             fatal === true || severity === 2
-              ? '\u001b[31m error \u001b[0m'
-              : '\u001b[33m warning \u001b[0m'
-          } ${message} ${
-            ruleId !== null ? `\u001b[30;1m ${ruleId} \u001b[0m` : ''
+              ? `${TerminalStyle.Red}error${TerminalStyle.Reset}`
+              : `${TerminalStyle.Yellow}warning${TerminalStyle.Reset}`
+          }  ${message}  ${
+            ruleId !== null
+              ? `${TerminalStyle.BrightBlack}${ruleId}${TerminalStyle.Reset}`
+              : ''
           }\n`
 
           console.log(report)
