@@ -31,16 +31,16 @@ const {
   name,
   version,
   description,
-  homepage,
-  bugs
+  bugs,
+  homepage
 } = require('../package.json')
 
 run({
   cmd: name,
   version,
   tagline: description,
-  homepage,
   bugs: bugs.url,
+  homepage,
   eslint,
   extensions: ['.ts'],
   configFile: path.join(__dirname, '../.eslintrc.js')
@@ -50,11 +50,6 @@ run({
 ## API
 
 See bundled [index.d.ts](https://gist.github.com/exuanbo/79d6fcd2c617f03ec530106bfe46d7a4).
-
-## Todo
-
-- [ ] Full unit test
-- [ ] Document
 
 ## Credits
 
