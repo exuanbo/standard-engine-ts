@@ -1,4 +1,5 @@
 import eslint from 'eslint'
+import { copy } from 'copy-anything'
 import { Options } from '../src/options'
 import { mergeOptionsFromArgv, readStdin } from '../src/cli-utils'
 
@@ -6,8 +7,8 @@ describe('mergeESLintOpsFromArgv', () => {
   it('should merge eslintOptions from parsed argv', () => {
     const options = new Options({ eslint })
 
-    const eslintOptionsCopy = Object.assign({}, options.eslintOptions)
-    eslintOptionsCopy.extensions = eslintOptionsCopy.extensions.concat('.ts')
+    const eslintOptionsCopy = copy(options.eslintOptions)
+    eslintOptionsCopy.extensions.push('.ts')
     eslintOptionsCopy.baseConfig.globals = { jest: true }
     eslintOptionsCopy.baseConfig.ignorePatterns = [
       '.cache',
