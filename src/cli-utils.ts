@@ -49,11 +49,11 @@ export const mergeOptionsFromArgv = (
   }: ParsedArgs
 ): void => {
   const optionsFromArgs: Partial<ESLint.Options> = {
-    extensions: ext !== undefined ? [ext] : [],
+    extensions: ext !== undefined ? [ext] : undefined,
     baseConfig: {
       env: env !== undefined ? { [env]: true } : undefined,
       ignorePatterns:
-        disableGitignore === true ? [] : getIgnoreFromFile('.gitignore'),
+        disableGitignore === true ? undefined : getIgnoreFromFile('.gitignore'),
       globals: globals !== undefined ? { [globals]: true } : undefined,
       parser,
       plugins: plugins !== undefined ? [plugins] : undefined
