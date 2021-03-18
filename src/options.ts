@@ -35,8 +35,6 @@ export interface LinterOptions extends SharedOptions {
 }
 
 export interface ProvidedOptions extends Partial<SharedOptions> {
-  [key: string]: unknown
-
   eslint: typeof eslint
   eslintOptions?: Partial<ESLint.Options>
 
@@ -64,7 +62,7 @@ export class Options implements LinterOptions {
     tagline = DEFAULT_TAGLINE,
     bugs = DEFAULT_BUGS,
     homepage = DEFAULT_HOMEPAGE,
-    cwd,
+    cwd = process.cwd(),
     extensions = [],
     eslintOptions,
     configFile,
