@@ -7,6 +7,29 @@ export type LintCallback = <T extends Error | null>(
   code?: string
 ) => void
 
+const handleResults = (
+  cb: LintCallback | undefined,
+  results: ESLint.LintResult[],
+  code?: string
+): undefined | typeof results => {
+  if (cb !== undefined) {
+    cb(null, results, code)
+    return
+  }
+  return results
+}
+
+const handleError = (
+  cb: LintCallback | undefined,
+  err: Error
+): void | never => {
+  if (cb !== undefined) {
+    cb(err, null)
+    return
+  }
+  throw err
+}
+
 export class Linter {
   options: LinterOptions
   private readonly eslint: typeof eslint
@@ -29,17 +52,9 @@ export class Linter {
       const results = await new this.eslint.ESLint(
         this.options.eslintOptions
       ).lintText(code, { filePath })
-      if (cb !== undefined) {
-        cb(null, results, code)
-        return
-      }
-      return results
+      return handleResults(cb, results, code)
     } catch (err) {
-      if (cb !== undefined && typeof cb === 'function') {
-        cb(err, null)
-        return
-      }
-      throw err
+      handleError(cb, err)
     }
   }
 
@@ -58,17 +73,9 @@ export class Linter {
         await this.eslint.ESLint.outputFixes(results)
       }
 
-      if (cb !== undefined) {
-        cb(null, results)
-        return
-      }
-      return results
+      return handleResults(cb, results)
     } catch (err) {
-      if (cb !== undefined) {
-        cb(err, null)
-        return
-      }
-      throw err
+      handleError(cb, err)
     }
   }
 }
