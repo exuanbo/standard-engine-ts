@@ -33,10 +33,12 @@ const handleError = (
 export class Linter {
   options: LinterOptions
   private readonly eslint: typeof eslint
+  private readonly ESLint: ESLint
 
   constructor(opts: ProvidedOptions) {
     this.options = new Options(opts)
     this.eslint = opts.eslint
+    this.ESLint = new opts.eslint.ESLint(this.options.eslintOptions)
   }
 
   lintText = async (
@@ -49,9 +51,7 @@ export class Linter {
     }
 
     try {
-      const results = await new this.eslint.ESLint(
-        this.options.eslintOptions
-      ).lintText(code, { filePath })
+      const results = await this.ESLint.lintText(code, { filePath })
       return handleResults(cb, results, code)
     } catch (err) {
       handleError(cb, err)
@@ -62,14 +62,10 @@ export class Linter {
     files: string | string[],
     cb?: LintCallback
   ): Promise<ESLint.LintResult[] | undefined> => {
-    const { eslintOptions } = this.options
-
     try {
-      const results = await new this.eslint.ESLint(
-        this.options.eslintOptions
-      ).lintFiles(files)
+      const results = await this.ESLint.lintFiles(files)
 
-      if (eslintOptions.fix === true) {
+      if (this.options.eslintOptions.fix === true) {
         await this.eslint.ESLint.outputFixes(results)
       }
 
