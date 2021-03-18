@@ -99,7 +99,7 @@ describe('compare', () => {
   })
 })
 
-describe('mergeObj', () => {
+describe('mergeConfig', () => {
   it('should merge objects recursively', () => {
     const target = {
       cwd: '.',
@@ -126,7 +126,8 @@ describe('mergeObj', () => {
       },
       useEslintrc: true
     }
-    expect(mergeConfig(target, src)).toStrictEqual({
+    mergeConfig(target, src)
+    expect(target).toStrictEqual({
       cwd: '..',
       extensions: ['.js', '.ts'],
       baseConfig: {
@@ -150,7 +151,8 @@ describe('mergeObj', () => {
         noInlineConfig: true
       }
     }
-    expect(mergeConfig(target, src)).toStrictEqual(src)
+    mergeConfig(target, src)
+    expect(target).toStrictEqual(src)
   })
 })
 
