@@ -1,5 +1,5 @@
 import { ESLint } from 'eslint'
-import { ESLintOptions, LinterOptions } from './options'
+import { LinterOptions } from './options'
 import { getIgnoreFromFile, mergeConfig } from './utils'
 
 const arrayWithTypes = <T extends string>(arr: T[]): T[] => arr
@@ -47,7 +47,7 @@ export const mergeOptionsFromArgv = (
     parser,
     plugins
   }: ParsedArgs
-): ESLintOptions => {
+): void => {
   const optionsFromArgs: Partial<ESLint.Options> = {
     extensions: ext !== undefined ? [ext] : [],
     baseConfig: {
@@ -60,7 +60,7 @@ export const mergeOptionsFromArgv = (
     },
     fix
   }
-  return mergeConfig(eslintOptions, optionsFromArgs)
+  mergeConfig(eslintOptions, optionsFromArgs)
 }
 
 /**

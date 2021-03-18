@@ -5,9 +5,8 @@ import { mergeOptionsFromArgv, readStdin } from '../src/cli-utils'
 describe('mergeESLintOpsFromArgv', () => {
   it('should merge eslintOptions from parsed argv', () => {
     const options = new Options({ eslint })
-    const { eslintOptions } = options
 
-    const eslintOptionsCopy = Object.assign({}, eslintOptions)
+    const eslintOptionsCopy = Object.assign({}, options.eslintOptions)
     eslintOptionsCopy.extensions = eslintOptionsCopy.extensions.concat('.ts')
     eslintOptionsCopy.baseConfig.globals = { jest: true }
     eslintOptionsCopy.baseConfig.ignorePatterns = [
@@ -17,12 +16,12 @@ describe('mergeESLintOpsFromArgv', () => {
       'dist/'
     ]
 
-    const mergedOptions = mergeOptionsFromArgv(options, {
+    mergeOptionsFromArgv(options, {
       ext: '.ts',
       globals: 'jest',
       _: []
     })
-    expect(mergedOptions).toStrictEqual(eslintOptionsCopy)
+    expect(options.eslintOptions).toStrictEqual(eslintOptionsCopy)
   })
 })
 

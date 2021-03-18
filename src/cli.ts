@@ -29,13 +29,10 @@ export abstract class CLIEngine<T> {
 
 export class CLI extends CLIEngine<ParsedArgs> {
   constructor(opts: ProvidedOptions) {
-    const minimistOpts = MINIMIST_OPTS
-    const argv = minimist(process.argv.slice(2), minimistOpts) as ParsedArgs
+    const argv = minimist(process.argv.slice(2), MINIMIST_OPTS)
 
     const linter = new Linter(opts)
-    const { options } = linter
-
-    options.eslintOptions = mergeOptionsFromArgv(options, argv)
+    mergeOptionsFromArgv(linter.options, argv)
 
     super(argv, linter)
   }
