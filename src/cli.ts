@@ -50,8 +50,6 @@ export class CLI extends CLIEngine<ParsedArgs> {
   }
 
   protected onResult(lintResults: ESLint.LintResult[], code?: string): void {
-    const { cmd } = this.linter.options
-
     if (
       this.argv.stdin === true &&
       this.argv.fix === true &&
@@ -101,7 +99,9 @@ export class CLI extends CLIEngine<ParsedArgs> {
       res.messages.some(msg => Boolean(msg.fix))
     )
     if (isFixable) {
-      console.log(`Run \`${cmd} --fix\` to automatically fix some problems.\n`)
+      console.log(
+        `Run \`${this.linter.options.cmd} --fix\` to automatically fix some problems.\n`
+      )
     }
 
     process.exitCode = errorCount > 0 ? 1 : 0

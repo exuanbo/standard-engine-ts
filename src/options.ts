@@ -64,12 +64,12 @@ export class Options implements LinterOptions {
     tagline = DEFAULT_TAGLINE,
     bugs = DEFAULT_BUGS,
     homepage = DEFAULT_HOMEPAGE,
+    eslintOptions,
     cwd = process.cwd(),
     extensions = [],
-    eslintOptions,
+    ignore = [],
     configFile,
-    fix = false,
-    ignore = []
+    fix = false
   }: ProvidedOptions) {
     this.cmd = cmd
     this.version = version
