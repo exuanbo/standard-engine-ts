@@ -1,6 +1,5 @@
 import path from 'path'
 import eslint, { ESLint } from 'eslint'
-import { Assign } from 'utility-types'
 import { mergeConfig, getCacheLocation } from './utils'
 import {
   DEFAULT_CMD,
@@ -11,20 +10,18 @@ import {
   DEFAULT_EXTENSIONS
 } from './constants'
 
-type NonNullableESLintOptions = Required<
-  Pick<
-    ESLint.Options,
-    | 'extensions'
-    | 'baseConfig'
-    | 'resolvePluginsRelativeTo'
-    | 'useEslintrc'
-    | 'fix'
-    | 'cache'
-    | 'cacheLocation'
-  >
->
+type AtLeast<T, K extends keyof T> = Partial<T> & Pick<Required<T>, K>
 
-export type ESLintOptions = Assign<ESLint.Options, NonNullableESLintOptions>
+export type ESLintOptions = AtLeast<
+  ESLint.Options,
+  | 'extensions'
+  | 'baseConfig'
+  | 'resolvePluginsRelativeTo'
+  | 'useEslintrc'
+  | 'fix'
+  | 'cache'
+  | 'cacheLocation'
+>
 
 type SharedOptions = {
   [key in 'cmd' | 'version' | 'tagline' | 'bugs' | 'homepage']: string
