@@ -37,8 +37,7 @@
   "dependencies": {
     "@types/eslint": "7.2.7",
     "look-it-up": "2.0.0",
-    "minimist": "1.2.5",
-    "utility-types": "3.10.0"
+    "minimist": "1.2.5"
   },
   "devDependencies": {
     "@rollup/plugin-json": "4.1.0",
