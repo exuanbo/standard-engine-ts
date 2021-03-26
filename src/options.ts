@@ -10,9 +10,9 @@ import {
   DEFAULT_EXTENSIONS
 } from './constants'
 
-type AtLeast<T, K extends keyof T> = Partial<T> & Pick<Required<T>, K>
+type PartiallyRequired<T, K extends keyof T> = Omit<T, K> & Pick<Required<T>, K>
 
-export type ESLintOptions = AtLeast<
+export type ESLintOptions = PartiallyRequired<
   ESLint.Options,
   | 'extensions'
   | 'baseConfig'
