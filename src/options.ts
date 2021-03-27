@@ -14,6 +14,7 @@ type PartiallyRequired<T, K extends keyof T> = Omit<T, K> & Pick<Required<T>, K>
 
 export type ESLintOptions = PartiallyRequired<
   ESLint.Options,
+  | 'cwd'
   | 'extensions'
   | 'baseConfig'
   | 'resolvePluginsRelativeTo'
