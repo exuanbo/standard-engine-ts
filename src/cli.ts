@@ -1,10 +1,10 @@
 import path from 'path'
 import minimist from 'minimist'
 import type { ESLint } from 'eslint'
-import { Linter } from './linter'
 import type { LintCallback } from './linter'
-import { Options } from './options'
+import { Linter } from './linter'
 import type { ProvidedOptions } from './options'
+import { Options } from './options'
 import {
   MINIMIST_OPTS,
   mergeOptionsFromArgv,

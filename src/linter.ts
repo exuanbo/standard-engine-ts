@@ -1,5 +1,5 @@
-import eslint from 'eslint'
 import type { ESLint } from 'eslint'
+import eslint from 'eslint'
 import type { ESLintOptions } from './options'
 
 export type LintCallback = <T extends Error | null>(
