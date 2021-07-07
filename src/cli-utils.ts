@@ -1,5 +1,5 @@
-import { ESLint } from 'eslint'
-import { LinterOptions } from './options'
+import type { ESLint } from 'eslint'
+import type { Options } from './options'
 import { getIgnoreFromFile, mergeConfig } from './utils'
 
 const arrayWithTypes = <T extends string>(arr: T[]): T[] => arr
@@ -37,7 +37,7 @@ interface DefaultArgs {
 export interface ParsedArgs extends BooleanArgs, StringArgs, DefaultArgs {}
 
 export const mergeOptionsFromArgv = (
-  { eslintOptions }: LinterOptions,
+  { eslintOptions }: Options,
   {
     fix,
     'disable-gitignore': disableGitignore,

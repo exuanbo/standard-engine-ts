@@ -1,5 +1,6 @@
-import { ESLint } from 'eslint'
-import { Options, LinterOptions, ProvidedOptions } from './options'
+import eslint from 'eslint'
+import type { ESLint } from 'eslint'
+import type { ESLintOptions } from './options'
 
 export type LintCallback = <T extends Error | null>(
   err: T,
@@ -31,12 +32,13 @@ const handleError = (
 }
 
 export class Linter {
-  options: LinterOptions
-  private readonly ESLint: typeof ESLint
+  private readonly eslint: ESLint
 
-  constructor(opts: ProvidedOptions) {
-    this.options = new Options(opts)
-    this.ESLint = opts.eslint.ESLint
+  constructor(
+    private readonly ESLint: typeof eslint.ESLint,
+    public options: ESLintOptions
+  ) {
+    this.eslint = new ESLint(options)
   }
 
   lintText = async (
@@ -49,9 +51,7 @@ export class Linter {
     }
 
     try {
-      const results = await new this.ESLint(
-        this.options.eslintOptions
-      ).lintText(code, { filePath })
+      const results = await this.eslint.lintText(code, { filePath })
 
       return handleResults(cb, results, code)
     } catch (err) {
@@ -63,12 +63,10 @@ export class Linter {
     files: string | string[],
     cb?: LintCallback
   ): Promise<ESLint.LintResult[] | undefined> => {
-    const { eslintOptions } = this.options
-
     try {
-      const results = await new this.ESLint(eslintOptions).lintFiles(files)
+      const results = await this.eslint.lintFiles(files)
 
-      if (eslintOptions.fix === true) {
+      if (this.options.fix === true) {
         await this.ESLint.outputFixes(results)
       }
 

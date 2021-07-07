@@ -2,11 +2,11 @@
 'use strict'
 
 const path = require('path')
-const eslint = require('eslint')
+const { ESLint } = require('eslint')
 const { run } = require('..')
 
 run({
-  eslint,
+  ESLint,
   extensions: ['.ts'],
   configFile: path.join(__dirname, '../.eslintrc.js')
 })

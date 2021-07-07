@@ -1,5 +1,5 @@
 import path from 'path'
-import eslint, { ESLint } from 'eslint'
+import type { ESLint } from 'eslint'
 import { mergeConfig, getCacheLocation } from './utils'
 import {
   DEFAULT_CMD,
@@ -24,18 +24,12 @@ export type ESLintOptions = PartiallyRequired<
   | 'cacheLocation'
 >
 
-type SharedOptions = {
+type CLIOptions = {
   [key in 'cmd' | 'version' | 'tagline' | 'bugs' | 'homepage']: string
 }
 
-export interface LinterOptions extends SharedOptions {
-  eslintOptions: ESLintOptions
-}
-
-export interface ProvidedOptions extends Partial<SharedOptions> {
-  [key: string]: unknown
-
-  eslint: typeof eslint
+export interface ProvidedOptions extends Partial<CLIOptions> {
+  ESLint: typeof ESLint
   eslintOptions?: Partial<ESLint.Options>
 
   cwd?: string
@@ -47,13 +41,14 @@ export interface ProvidedOptions extends Partial<SharedOptions> {
   fix?: boolean
 }
 
-export class Options implements LinterOptions {
+export class Options {
   cmd: string
   version: string
   tagline: string
   bugs: string
   homepage: string
 
+  ESLint: ProvidedOptions['ESLint']
   eslintOptions: ESLintOptions
 
   constructor({
@@ -62,6 +57,7 @@ export class Options implements LinterOptions {
     tagline = DEFAULT_TAGLINE,
     bugs = DEFAULT_BUGS,
     homepage = DEFAULT_HOMEPAGE,
+    ESLint,
     eslintOptions,
     cwd = process.cwd(),
     extensions = [],
@@ -75,6 +71,7 @@ export class Options implements LinterOptions {
     this.bugs = bugs
     this.homepage = homepage
 
+    this.ESLint = ESLint
     this.eslintOptions = mergeConfig(
       {
         cwd,

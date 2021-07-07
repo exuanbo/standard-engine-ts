@@ -1,44 +1,50 @@
 import path from 'path'
 import minimist from 'minimist'
-import { ESLint } from 'eslint'
-import { LintCallback, Linter } from './linter'
-import { ProvidedOptions } from './options'
+import type { ESLint } from 'eslint'
+import { Linter } from './linter'
+import type { LintCallback } from './linter'
+import { Options } from './options'
+import type { ProvidedOptions } from './options'
 import {
   MINIMIST_OPTS,
-  ParsedArgs,
   mergeOptionsFromArgv,
   readStdin,
   TerminalStyle
 } from './cli-utils'
+import type { ParsedArgs } from './cli-utils'
 
-export abstract class CLIEngine<T> {
-  onFinish: LintCallback
+export abstract class CLIEngine {
+  onFinish: LintCallback = (err, lintResults, code): void => {
+    if (err instanceof Error) {
+      this.onError(err)
+      return
+    }
+    this.onResult(lintResults as ESLint.LintResult[], code)
+  }
+
   protected abstract onError(err: Error): void
   protected abstract onResult(res: ESLint.LintResult[], code?: string): void
 
-  constructor(public argv: T, public linter: Linter) {
-    this.onFinish = (err, lintResults, code): void => {
-      if (err instanceof Error) {
-        this.onError(err)
-        return
-      }
-      this.onResult(lintResults as ESLint.LintResult[], code)
-    }
-  }
+  constructor(public linter: Linter, public options: Options) {}
 }
 
-export class CLI extends CLIEngine<ParsedArgs> {
-  constructor(opts: ProvidedOptions) {
+export class CLI extends CLIEngine {
+  argv: ParsedArgs
+
+  constructor(providedOptions: ProvidedOptions) {
+    const options = new Options(providedOptions)
+
     const argv = minimist(process.argv.slice(2), MINIMIST_OPTS)
+    mergeOptionsFromArgv(options, argv)
 
-    const linter = new Linter(opts)
-    mergeOptionsFromArgv(linter.options, argv)
+    const linter = new Linter(options.ESLint, options.eslintOptions)
 
-    super(argv, linter)
+    super(linter, options)
+    this.argv = argv
   }
 
   protected onError(err: Error): void {
-    const { cmd, bugs } = this.linter.options
+    const { cmd, bugs } = this.options
     const { stack, message } = err
 
     console.error(`${cmd}: Unexpected linter output:\n`)
@@ -100,7 +106,7 @@ export class CLI extends CLIEngine<ParsedArgs> {
     )
     if (isFixable) {
       console.log(
-        `Run \`${this.linter.options.cmd} --fix\` to automatically fix some problems.\n`
+        `Run \`${this.options.cmd} --fix\` to automatically fix some problems.\n`
       )
     }
 
@@ -108,9 +114,9 @@ export class CLI extends CLIEngine<ParsedArgs> {
   }
 }
 
-export const run = async (opts: ProvidedOptions): Promise<void> => {
-  const { argv, linter, onFinish } = new CLI(opts)
-  const { cmd, version, tagline, homepage, eslintOptions } = linter.options
+export const run = async (providedOptions: ProvidedOptions): Promise<void> => {
+  const { argv, onFinish, linter, options } = new CLI(providedOptions)
+  const { cmd, version, tagline, homepage, eslintOptions } = options
 
   if (argv.help === true) {
     console.log(`${cmd}: ${tagline} (${homepage})`)
