@@ -25,7 +25,7 @@ npm install standard-engine-ts
 'use strict'
 
 const path = require('path')
-const eslint = require('eslint')
+const { ESLint } = require('eslint')
 const { run } = require('standard-engine-ts')
 const {
   name,
@@ -41,7 +41,7 @@ run({
   tagline: description,
   bugs: bugs.url,
   homepage,
-  eslint,
+  ESLint,
   extensions: ['.ts'],
   configFile: path.join(__dirname, '../.eslintrc.js')
 })
