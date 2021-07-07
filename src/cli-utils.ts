@@ -64,7 +64,7 @@ export const mergeOptionsFromArgv = (
 }
 
 /**
- * @link https://github.com/eslint/eslint/blob/master/bin/eslint.js#L45
+ * {@link https://github.com/eslint/eslint/blob/master/bin/eslint.js#L45}
  */
 export const readStdin = async (): Promise<string> =>
   await new Promise((resolve, reject) => {

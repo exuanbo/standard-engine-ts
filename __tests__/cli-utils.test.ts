@@ -32,7 +32,7 @@ describe('readStdin', () => {
 
     process.stdin.push('std')
     process.stdin.push('in')
-    await new Promise(resolve => setTimeout(resolve, 1))
+    await new Promise<void>(resolve => setTimeout(resolve, 0))
     process.stdin.emit('end')
 
     expect(await stdin).toBe('stdin')
