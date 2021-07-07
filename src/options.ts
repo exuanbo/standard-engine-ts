@@ -29,6 +29,8 @@ type CLIOptions = {
 }
 
 export interface ProvidedOptions extends Partial<CLIOptions> {
+  [key: string]: unknown
+
   ESLint: typeof ESLint
   eslintOptions?: Partial<ESLint.Options>
 
