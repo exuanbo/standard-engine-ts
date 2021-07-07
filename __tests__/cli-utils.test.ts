@@ -1,11 +1,11 @@
-import eslint from 'eslint'
+import { ESLint } from 'eslint'
 import { copy } from 'copy-anything'
 import { Options } from '../src/options'
 import { mergeOptionsFromArgv, readStdin } from '../src/cli-utils'
 
 describe('mergeESLintOpsFromArgv', () => {
   it('should merge eslintOptions from parsed argv', () => {
-    const options = new Options({ eslint })
+    const options = new Options({ ESLint })
 
     const eslintOptionsCopy = copy(options.eslintOptions)
     eslintOptionsCopy.extensions.push('.ts')
