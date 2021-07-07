@@ -15,11 +15,11 @@ import type { ParsedArgs } from './cli-utils'
 
 export abstract class CLIEngine {
   onFinish: LintCallback = (err, lintResults, code): void => {
-    if (err instanceof Error) {
-      this.onError(err)
+    if (err === null) {
+      this.onResult(lintResults as ESLint.LintResult[], code)
       return
     }
-    this.onResult(lintResults as ESLint.LintResult[], code)
+    this.onError(err)
   }
 
   protected abstract onError(err: Error): void
