@@ -1,17 +1,15 @@
 import path from 'path'
 import minimist from 'minimist'
 import type { ESLint } from 'eslint'
-import type { LintCallback } from './linter'
-import { Linter } from './linter'
-import type { ProvidedOptions } from './options'
-import { Options } from './options'
+import { LintCallback, Linter } from './linter'
+import { ProvidedOptions, Options } from './options'
 import {
+  ParsedArgs,
   MINIMIST_OPTS,
   mergeOptionsFromArgv,
   readStdin,
   TerminalStyle
 } from './cli-utils'
-import type { ParsedArgs } from './cli-utils'
 
 export abstract class CLIEngine {
   onFinish: LintCallback = (err, lintResults, code): void => {

@@ -1,5 +1,4 @@
-import type { ESLint } from 'eslint'
-import eslint from 'eslint'
+import eslint, { ESLint } from 'eslint'
 import type { ESLintOptions } from './options'
 
 export type LintCallback = <T extends Error | null>(
@@ -20,10 +19,7 @@ const handleResults = (
   return results
 }
 
-const handleError = (
-  cb: LintCallback | undefined,
-  err: Error
-): void | never => {
+const handleError = (cb: LintCallback | undefined, err: Error): void => {
   if (cb !== undefined) {
     cb(err, null)
     return
