@@ -2,8 +2,8 @@
 
 > Yet another ESLint wrapper written in TypeScript.
 
-[![npm](https://img.shields.io/npm/v/standard-engine-ts)](https://www.npmjs.com/package/standard-engine-ts)
-[![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/exuanbo/standard-engine-ts/Node.js%20CI/main)](https://github.com/exuanbo/standard-engine-ts/actions?query=workflow%3A%22Node.js+CI%22)
+[![npm](https://img.shields.io/npm/v/standard-engine-ts.svg)](https://www.npmjs.com/package/standard-engine-ts)
+[![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/exuanbo/standard-engine-ts/Node.js%20CI/main.svg)](https://github.com/exuanbo/standard-engine-ts/actions?query=workflow%3A%22Node.js+CI%22)
 [![libera manifesto](https://img.shields.io/badge/libera-manifesto-lightgrey.svg)](https://liberamanifesto.com)
 
 Used by [ts-standardx](https://github.com/exuanbo/ts-standardx).
