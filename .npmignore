@@ -6,4 +6,4 @@ jest.config.js
 rollup.config.js
 src/
 scripts/
-tsconfig.json
+tsconfig.*json
