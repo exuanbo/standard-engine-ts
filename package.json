@@ -36,6 +36,9 @@
     "url": "https://github.com/exuanbo/standard-engine-ts/issues"
   },
   "homepage": "https://github.com/exuanbo/standard-engine-ts#readme",
+  "peerDependencies": {
+    "eslint": "^7.32.0"
+  },
   "dependencies": {
     "@types/eslint": "^7.28.0",
     "look-it-up": "^2.0.0",
