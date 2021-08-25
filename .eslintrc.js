@@ -3,10 +3,7 @@ module.exports = {
   overrides: [
     {
       files: ['**/*.ts'],
-      extends: [
-        'plugin:@typescript-eslint/recommended',
-        'standard-with-typescript'
-      ],
+      extends: ['plugin:@typescript-eslint/recommended', 'standard-with-typescript'],
       parser: '@typescript-eslint/parser',
       parserOptions: {
         project: './tsconfig.json'

@@ -1,15 +1,15 @@
-import eslint, { ESLint } from 'eslint'
+import { ESLint as _ESLint } from 'eslint'
 import type { ESLintOptions } from './options'
 
 export type LintCallback = <T extends Error | null>(
   err: T,
-  result: T extends Error ? null : ESLint.LintResult[],
+  result: T extends Error ? null : _ESLint.LintResult[],
   code?: string
 ) => void
 
 const handleResults = (
   cb: LintCallback | undefined,
-  results: ESLint.LintResult[],
+  results: _ESLint.LintResult[],
   code?: string
 ): undefined | typeof results => {
   if (cb !== undefined) {
@@ -28,12 +28,13 @@ const handleError = (cb: LintCallback | undefined, err: Error): void => {
 }
 
 export class Linter {
-  private readonly eslint: ESLint
+  private readonly eslint: _ESLint
+  private readonly ESLint: typeof _ESLint
+  public options: ESLintOptions
 
-  constructor(
-    private readonly ESLint: typeof eslint.ESLint,
-    public options: ESLintOptions
-  ) {
+  constructor(ESLint: typeof _ESLint, options: ESLintOptions) {
+    this.ESLint = ESLint
+    this.options = options
     this.eslint = new ESLint(options)
   }
 
@@ -41,7 +42,7 @@ export class Linter {
     code: string,
     cb?: LintCallback | string,
     filePath?: string
-  ): Promise<ESLint.LintResult[] | undefined> => {
+  ): Promise<_ESLint.LintResult[] | undefined> => {
     if (typeof cb === 'string') {
       return await this.lintText(code, undefined, cb)
     }
@@ -58,7 +59,7 @@ export class Linter {
   lintFiles = async (
     files: string | string[],
     cb?: LintCallback
-  ): Promise<ESLint.LintResult[] | undefined> => {
+  ): Promise<_ESLint.LintResult[] | undefined> => {
     try {
       const results = await this.eslint.lintFiles(files)
 

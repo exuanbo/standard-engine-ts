@@ -64,36 +64,24 @@ describe('getIgnoreFromFiles', () => {
 describe('compare', () => {
   it('should compare deeply and return true', () => {
     const target = {
-      0: [
-        1,
-        { a: [1, 2], b: [true, 2, 1], c: { d: [3, 4, { e: 5, f: [6, 7] }] } }
-      ],
+      0: [1, { a: [1, 2], b: [true, 2, 1], c: { d: [3, 4, { e: 5, f: [6, 7] }] } }],
       1: { g: [8, 9, { h: [false, 10] }] }
     }
     const src = {
       1: { g: [{ h: [10, false] }, 9, 8] },
-      0: [
-        { c: { d: [{ f: [7, 6], e: 5 }, 4, 3] }, b: [1, 2, true], a: [2, 1] },
-        1
-      ]
+      0: [{ c: { d: [{ f: [7, 6], e: 5 }, 4, 3] }, b: [1, 2, true], a: [2, 1] }, 1]
     }
     expect(compare(target, src)).toBe(true)
   })
 
   it('should compare deeply and return false', () => {
     const target = {
-      0: [
-        1,
-        { a: [1, 2], b: [true, 2, 1], c: { d: [3, 4, { e: 5, f: [666, 7] }] } }
-      ],
+      0: [1, { a: [1, 2], b: [true, 2, 1], c: { d: [3, 4, { e: 5, f: [666, 7] }] } }],
       1: { g: [8, 9, { h: [false, 10] }] }
     }
     const src = {
       1: { g: [{ h: [10, false] }, 9, 8] },
-      0: [
-        { c: { d: [{ f: [7, 6], e: 5 }, 4, 3] }, b: [1, 2, true], a: [2, 1] },
-        1
-      ]
+      0: [{ c: { d: [{ f: [7, 6], e: 5 }, 4, 3] }, b: [1, 2, true], a: [2, 1] }, 1]
     }
     expect(compare(target, src)).toBe(false)
   })
@@ -159,8 +147,6 @@ describe('mergeConfig', () => {
 describe('getCacheLocation', () => {
   it('should return cache location string', () => {
     const cachePath = getCacheLocation(DEFAULT_VERSION, DEFAULT_CMD)
-    expect(cachePath).toBe(
-      `${os.homedir()}/.cache/${DEFAULT_CMD}/v${DEFAULT_VERSION[0]}/`
-    )
+    expect(cachePath).toBe(`${os.homedir()}/.cache/${DEFAULT_CMD}/v${DEFAULT_VERSION[0]}/`)
   })
 })

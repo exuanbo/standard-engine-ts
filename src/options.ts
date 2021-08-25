@@ -79,14 +79,10 @@ export class Options {
         cwd,
         extensions: extensions.concat(DEFAULT_EXTENSIONS),
 
-        baseConfig: mergeConfig(
-          configFile !== undefined ? require(configFile) : {},
-          {
-            ignorePatterns: ignore
-          }
-        ),
-        resolvePluginsRelativeTo:
-          configFile !== undefined ? path.dirname(configFile) : cwd,
+        baseConfig: mergeConfig(configFile !== undefined ? require(configFile) : {}, {
+          ignorePatterns: ignore
+        }),
+        resolvePluginsRelativeTo: configFile !== undefined ? path.dirname(configFile) : cwd,
         useEslintrc: true,
 
         fix,

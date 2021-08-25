@@ -12,13 +12,7 @@ export const MINIMIST_OPTS = {
     plugins: 'plugin',
     version: 'v'
   },
-  boolean: arrayWithTypes([
-    'fix',
-    'disable-gitignore',
-    'help',
-    'version',
-    'stdin'
-  ]),
+  boolean: arrayWithTypes(['fix', 'disable-gitignore', 'help', 'version', 'stdin']),
   string: arrayWithTypes(['env', 'ext', 'globals', 'parser', 'plugins'])
 }
 
@@ -38,22 +32,13 @@ export interface ParsedArgs extends BooleanArgs, StringArgs, DefaultArgs {}
 
 export const mergeOptionsFromArgv = (
   { eslintOptions }: Options,
-  {
-    fix,
-    'disable-gitignore': disableGitignore,
-    env,
-    ext,
-    globals,
-    parser,
-    plugins
-  }: ParsedArgs
+  { fix, 'disable-gitignore': disableGitignore, env, ext, globals, parser, plugins }: ParsedArgs
 ): void => {
   const optionsFromArgs: Partial<ESLint.Options> = {
     extensions: ext !== undefined ? [ext] : undefined,
     baseConfig: {
       env: env !== undefined ? { [env]: true } : undefined,
-      ignorePatterns:
-        disableGitignore === true ? undefined : getIgnoreFromFile('.gitignore'),
+      ignorePatterns: disableGitignore === true ? undefined : getIgnoreFromFile('.gitignore'),
       globals: globals !== undefined ? { [globals]: true } : undefined,
       parser,
       plugins: plugins !== undefined ? [plugins] : undefined

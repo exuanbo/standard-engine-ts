@@ -10,12 +10,7 @@ describe('mergeESLintOpsFromArgv', () => {
     const eslintOptionsCopy = copy(options.eslintOptions)
     eslintOptionsCopy.extensions.push('.ts')
     eslintOptionsCopy.baseConfig.globals = { jest: true }
-    eslintOptionsCopy.baseConfig.ignorePatterns = [
-      '.cache',
-      '*.tgz',
-      'coverage/',
-      'dist/'
-    ]
+    eslintOptionsCopy.baseConfig.ignorePatterns = ['.cache', '*.tgz', 'coverage/', 'dist/']
 
     mergeOptionsFromArgv(options, {
       ext: '.ts',

@@ -47,65 +47,45 @@ export class CLI extends CLIEngine {
 
     console.error(`${cmd}: Unexpected linter output:\n`)
     console.error(stack ?? message)
-    console.error(
-      `\nIf you think this is a bug in \`${cmd}\`, open an issue: ${bugs}`
-    )
+    console.error(`\nIf you think this is a bug in \`${cmd}\`, open an issue: ${bugs}`)
     process.exitCode = 1
   }
 
   protected onResult(lintResults: ESLint.LintResult[], code?: string): void {
-    if (
-      this.argv.stdin === true &&
-      this.argv.fix === true &&
-      code !== undefined
-    ) {
+    if (this.argv.stdin === true && this.argv.fix === true && code !== undefined) {
       const [{ output }] = lintResults
       process.stdout.write(output ?? code)
       return
     }
 
-    const count = (
-      complainType: Extract<
-        keyof ESLint.LintResult,
-        'errorCount' | 'warningCount'
-      >
-    ): number =>
+    const count = (complainType: 'errorCount' | 'warningCount'): number =>
       lintResults.map(res => res[complainType]).reduce((acc, cur) => acc + cur)
 
     const errorCount = count('errorCount')
-
     if (errorCount + count('warningCount') === 0) {
       return
     }
 
     lintResults.forEach(({ messages: lintMessage, filePath }) => {
-      lintMessage.forEach(
-        ({ column, line, ruleId, message, fatal, severity }) => {
-          const report = `${TerminalStyle.Underline}${path.relative(
-            process.cwd(),
-            filePath
-          )}:${line}:${column}${TerminalStyle.Reset}\n  ${
-            fatal === true || severity === 2
-              ? `${TerminalStyle.Red}error${TerminalStyle.Reset}`
-              : `${TerminalStyle.Yellow}warning${TerminalStyle.Reset}`
-          }  ${message}  ${
-            ruleId !== null
-              ? `${TerminalStyle.BrightBlack}${ruleId}${TerminalStyle.Reset}`
-              : ''
-          }\n`
+      lintMessage.forEach(({ column, line, ruleId, message, fatal, severity }) => {
+        const report = `${TerminalStyle.Underline}${path.relative(
+          process.cwd(),
+          filePath
+        )}:${line}:${column}${TerminalStyle.Reset}\n  ${
+          fatal === true || severity === 2
+            ? `${TerminalStyle.Red}error${TerminalStyle.Reset}`
+            : `${TerminalStyle.Yellow}warning${TerminalStyle.Reset}`
+        }  ${message}  ${
+          ruleId !== null ? `${TerminalStyle.BrightBlack}${ruleId}${TerminalStyle.Reset}` : ''
+        }\n`
 
-          console.log(report)
-        }
-      )
+        console.log(report)
+      })
     })
 
-    const isFixable = lintResults.some(res =>
-      res.messages.some(msg => Boolean(msg.fix))
-    )
+    const isFixable = lintResults.some(res => res.messages.some(msg => Boolean(msg.fix)))
     if (isFixable) {
-      console.log(
-        `Run \`${this.options.cmd} --fix\` to automatically fix some problems.\n`
-      )
+      console.log(`Run \`${this.options.cmd} --fix\` to automatically fix some problems.\n`)
     }
 
     process.exitCode = errorCount > 0 ? 1 : 0
