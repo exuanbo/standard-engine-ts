@@ -5,17 +5,14 @@
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
-  "directories": {
-    "test": "__tests__"
-  },
   "scripts": {
-    "clean": "rimraf dist .cache",
-    "dts": "tsc -d --emitDeclarationOnly --declarationDir .cache",
+    "clean": "rm -rf .cache dist",
+    "dts": "tsc -p tsconfig.dts.json",
     "bundle": "rollup -c",
     "build": "npm run clean && npm run dts && npm run bundle",
     "lint": "./scripts/cmd.js",
     "lint:fix": "./scripts/cmd.js --fix",
-    "test": "npm run build && npm run lint && jest --no-cache"
+    "test": "npm run build && npm run lint && jest"
   },
   "repository": {
     "type": "git",
