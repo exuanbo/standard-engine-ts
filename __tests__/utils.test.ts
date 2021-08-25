@@ -21,7 +21,7 @@ describe('isFileInDir', () => {
   })
 
   it('should return false if dir does not have file', () => {
-    expect(isFileInDir('package-lock.json', '.')).toBe(false)
+    expect(isFileInDir('yarn.lock', '.')).toBe(false)
   })
 })
 
