@@ -49,10 +49,9 @@ export class Linter {
 
     try {
       const results = await this.eslint.lintText(code, { filePath })
-
       return handleResults(cb, results, code)
     } catch (err) {
-      handleError(cb, err)
+      handleError(cb, err as Error)
     }
   }
 
@@ -69,7 +68,7 @@ export class Linter {
 
       return handleResults(cb, results)
     } catch (err) {
-      handleError(cb, err)
+      handleError(cb, err as Error)
     }
   }
 }
