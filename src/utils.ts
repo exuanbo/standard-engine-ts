@@ -40,22 +40,23 @@ const isObj = (val: unknown): val is Obj => getType(val) === 'Object'
 
 const isRule = (arr: unknown[]): boolean => /^(?:off|warn|error|0|1|2)$/.test(String(arr[0]))
 
-export const compare = (target: unknown, src: unknown): boolean => {
-  if (Object.is(target, src)) {
+export const compare = (target: unknown, source: unknown): boolean => {
+  if (target === source) {
     return true
   }
-  if (isArr(target) && isArr(src)) {
-    if (target.length !== src.length) {
+  if (isArr(target) && isArr(source)) {
+    if (target.length !== source.length) {
       return false
     }
-    return src.every(srcItem => target.some(targetItem => compare(targetItem, srcItem)))
+    return source.every(srcItem => target.some(targetItem => compare(targetItem, srcItem)))
   }
-  if (isObj(target) && isObj(src)) {
-    if (Object.keys(target).length !== Object.keys(src).length) {
+  if (isObj(target) && isObj(source)) {
+    if (Object.keys(target).length !== Object.keys(source).length) {
       return false
     }
-    return Object.entries(src).every(([srcKey, srcVal]) =>
-      Object.entries(target).some(
+    const targetObjectEntries = Object.entries(target)
+    return Object.entries(source).every(([srcKey, srcVal]) =>
+      targetObjectEntries.some(
         ([targetKey, targetVal]) => targetKey === srcKey && compare(targetVal, srcVal)
       )
     )
@@ -64,12 +65,12 @@ export const compare = (target: unknown, src: unknown): boolean => {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const mergeConfig = (target: Obj, ...args: Array<Obj | undefined>): any => {
-  args.forEach(src => {
-    if (src === undefined) {
+export const mergeConfig = (target: Obj, ...sources: Array<Obj | undefined>): any => {
+  sources.forEach(source => {
+    if (source === undefined) {
       return
     }
-    Object.entries(src).forEach(([srcKey, srcVal]) => {
+    Object.entries(source).forEach(([srcKey, srcVal]) => {
       if (srcVal === undefined) {
         return
       }
