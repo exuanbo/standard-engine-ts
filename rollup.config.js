@@ -13,20 +13,14 @@ export default [
         },
         {
           loader: 'ts',
-          target: 'es2019'
+          target: 'node12.22.0'
         }
       ])
     ],
-    output: [
-      {
-        file: pkg.main,
-        format: 'cjs'
-      },
-      {
-        file: pkg.module,
-        format: 'es'
-      }
-    ]
+    output: {
+      file: pkg.main,
+      format: 'cjs'
+    }
   },
   {
     input: '.cache/src/index.d.ts',
