@@ -10,29 +10,17 @@ import {
   DEFAULT_EXTENSIONS
 } from './constants'
 
-type PartiallyRequired<T, K extends keyof T> = Omit<T, K> & Pick<Required<T>, K>
-
-export type ESLintOptions = PartiallyRequired<
-  ESLint.Options,
-  | 'cwd'
-  | 'extensions'
-  | 'baseConfig'
-  | 'resolvePluginsRelativeTo'
-  | 'useEslintrc'
-  | 'fix'
-  | 'cache'
-  | 'cacheLocation'
->
-
-type CLIOptions = {
+type CLIOptions = Partial<{
   [key in 'cmd' | 'version' | 'tagline' | 'bugs' | 'homepage']: string
-}
+}>
 
-export interface ProvidedOptions extends Partial<CLIOptions> {
+type ProvidedESLintOptions = Omit<ESLint.Options, 'cwd' | 'resolvePluginsRelativeTo'>
+
+export interface ProvidedOptions extends CLIOptions {
   [key: string]: unknown
 
   ESLint: typeof ESLint
-  eslintOptions?: Partial<ESLint.Options>
+  eslintOptions?: Partial<ProvidedESLintOptions>
 
   cwd?: string
   extensions?: string[]
@@ -43,6 +31,13 @@ export interface ProvidedOptions extends Partial<CLIOptions> {
   fix?: boolean
 }
 
+type PartiallyRequired<T, K extends keyof T> = Omit<T, K> & Pick<Required<T>, K>
+
+export type ESLintOptions = PartiallyRequired<
+  ProvidedESLintOptions,
+  'extensions' | 'baseConfig' | 'useEslintrc' | 'fix' | 'cache' | 'cacheLocation'
+>
+
 export class Options {
   cmd: string
   version: string
@@ -52,6 +47,8 @@ export class Options {
 
   ESLint: ProvidedOptions['ESLint']
   eslintOptions: ESLintOptions
+
+  cwd: string
 
   constructor({
     cmd = DEFAULT_CMD,
@@ -74,15 +71,18 @@ export class Options {
     this.homepage = homepage
 
     this.ESLint = ESLint
+
+    const configFileDirname = configFile === undefined ? undefined : path.dirname(configFile)
+
     this.eslintOptions = mergeConfig(
       {
-        cwd,
+        cwd: configFileDirname,
         extensions: extensions.concat(DEFAULT_EXTENSIONS),
 
-        baseConfig: mergeConfig(configFile !== undefined ? require(configFile) : {}, {
+        baseConfig: mergeConfig(configFile === undefined ? {} : require(configFile), {
           ignorePatterns: ignore
         }),
-        resolvePluginsRelativeTo: configFile !== undefined ? path.dirname(configFile) : cwd,
+        resolvePluginsRelativeTo: configFileDirname,
         useEslintrc: true,
 
         fix,
@@ -92,5 +92,7 @@ export class Options {
       },
       eslintOptions
     )
+
+    this.cwd = cwd
   }
 }

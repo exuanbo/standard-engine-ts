@@ -1,3 +1,4 @@
+import path from 'path'
 import { ESLint as _ESLint } from 'eslint'
 import type { ESLintOptions } from './options'
 
@@ -12,30 +13,30 @@ const handleResults = (
   results: _ESLint.LintResult[],
   code?: string
 ): undefined | typeof results => {
-  if (cb !== undefined) {
-    cb(null, results, code)
-    return
+  if (cb === undefined) {
+    return results
   }
-  return results
+  cb(null, results, code)
 }
 
 const handleError = (cb: LintCallback | undefined, err: Error): void => {
-  if (cb !== undefined) {
-    cb(err, null)
-    return
+  if (cb === undefined) {
+    throw err
   }
-  throw err
+  cb(err, null)
 }
 
 export class Linter {
-  private readonly eslint: _ESLint
   private readonly ESLint: typeof _ESLint
+  private readonly eslint: _ESLint
   public options: ESLintOptions
+  public cwd: string
 
-  constructor(ESLint: typeof _ESLint, options: ESLintOptions) {
+  constructor(ESLint: typeof _ESLint, options: ESLintOptions, cwd = process.cwd()) {
     this.ESLint = ESLint
-    this.options = options
     this.eslint = new ESLint(options)
+    this.options = options
+    this.cwd = cwd
   }
 
   lintText = async (
@@ -60,7 +61,10 @@ export class Linter {
     cb?: LintCallback
   ): Promise<_ESLint.LintResult[] | undefined> => {
     try {
-      const results = await this.eslint.lintFiles(files)
+      const patterns = (typeof files === 'string' ? [files] : files).map(filePath =>
+        path.resolve(this.cwd, filePath)
+      )
+      const results = await this.eslint.lintFiles(patterns)
 
       if (this.options.fix === true) {
         await this.ESLint.outputFixes(results)
