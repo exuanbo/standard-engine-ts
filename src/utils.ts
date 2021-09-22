@@ -63,6 +63,7 @@ export const compare = (target: unknown, src: unknown): boolean => {
   return false
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const mergeConfig = (target: Obj, ...args: Array<Obj | undefined>): any => {
   args.forEach(src => {
     if (src === undefined) {
@@ -93,11 +94,11 @@ export const mergeConfig = (target: Obj, ...args: Array<Obj | undefined>): any =
   return target
 }
 
+const MAJOR_VERSION_REGEXP = /^(\d+)\./
+
 export const getCacheLocation = (version: string, cmd: string): string => {
   const cacheDirectory = process.env.XDG_CACHE_HOME ?? path.join(os.homedir(), '.cache')
+  const majorVersion = MAJOR_VERSION_REGEXP.exec(version)?.[1]
 
-  const versionMatch = /^(\d+)\./.exec(version)
-  const majorVersion = versionMatch !== null ? `${versionMatch[1]}` : undefined
-
-  return path.join(cacheDirectory, cmd, majorVersion !== undefined ? `v${majorVersion}/` : '')
+  return path.join(cacheDirectory, cmd, majorVersion === undefined ? '' : `v${majorVersion}/`)
 }
