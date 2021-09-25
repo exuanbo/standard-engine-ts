@@ -1,4 +1,3 @@
-import path from 'path'
 import { ESLint as _ESLint } from 'eslint'
 import type { ESLintOptions } from './options'
 
@@ -30,13 +29,11 @@ export class Linter {
   private readonly ESLint: typeof _ESLint
   private readonly eslint: _ESLint
   public options: ESLintOptions
-  public cwd: string
 
-  constructor(ESLint: typeof _ESLint, options: ESLintOptions, cwd = process.cwd()) {
+  constructor(ESLint: typeof _ESLint, options: ESLintOptions) {
     this.ESLint = ESLint
     this.eslint = new ESLint(options)
     this.options = options
-    this.cwd = cwd
   }
 
   lintText = async (
@@ -61,10 +58,7 @@ export class Linter {
     cb?: LintCallback
   ): Promise<_ESLint.LintResult[] | undefined> => {
     try {
-      const patterns = (typeof files === 'string' ? [files] : files).map(filePath =>
-        path.resolve(this.cwd, filePath)
-      )
-      const results = await this.eslint.lintFiles(patterns)
+      const results = await this.eslint.lintFiles(typeof files === 'string' ? [files] : files)
 
       if (this.options.fix === true) {
         await this.ESLint.outputFixes(results)

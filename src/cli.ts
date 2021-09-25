@@ -35,7 +35,7 @@ export class CLI extends CLIEngine {
     const argv = minimist(process.argv.slice(2), MINIMIST_OPTS)
     mergeOptionsFromArgv(options, argv)
 
-    const linter = new Linter(options.ESLint, options.eslintOptions, options.cwd)
+    const linter = new Linter(options.ESLint, options.eslintOptions)
 
     super(linter, options)
     this.argv = argv

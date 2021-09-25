@@ -48,8 +48,6 @@ export class Options {
   ESLint: ProvidedOptions['ESLint']
   eslintOptions: ESLintOptions
 
-  cwd: string
-
   constructor({
     cmd = DEFAULT_CMD,
     version = DEFAULT_VERSION,
@@ -72,17 +70,15 @@ export class Options {
 
     this.ESLint = ESLint
 
-    const configFileDirname = configFile === undefined ? undefined : path.dirname(configFile)
-
     this.eslintOptions = mergeConfig(
       {
-        cwd: configFileDirname,
+        cwd,
         extensions: extensions.concat(DEFAULT_EXTENSIONS),
 
         baseConfig: mergeConfig(configFile === undefined ? {} : require(configFile), {
           ignorePatterns: ignore
         }),
-        resolvePluginsRelativeTo: configFileDirname,
+        resolvePluginsRelativeTo: configFile === undefined ? cwd : path.dirname(configFile),
         useEslintrc: true,
 
         fix,
@@ -92,7 +88,5 @@ export class Options {
       },
       eslintOptions
     )
-
-    this.cwd = cwd
   }
 }
