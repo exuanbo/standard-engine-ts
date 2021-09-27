@@ -1,28 +1,11 @@
 import { ESLint as _ESLint } from 'eslint'
 import type { ESLintOptions } from './options'
 
-export interface LintCallback {
-  (err: null, result: _ESLint.LintResult[], code?: string): void
-  (err: Error, result: null, code?: string): void
-}
-
-const handleResults = (
-  cb: LintCallback | undefined,
-  results: _ESLint.LintResult[],
+export type LintCallback = (
+  err: unknown,
+  result: _ESLint.LintResult[] | null,
   code?: string
-): undefined | typeof results => {
-  if (cb === undefined) {
-    return results
-  }
-  cb(null, results, code)
-}
-
-const handleError = (cb: LintCallback | undefined, err: Error): void => {
-  if (cb === undefined) {
-    throw err
-  }
-  cb(err, null)
-}
+) => void
 
 export class Linter {
   private readonly ESLint: typeof _ESLint
@@ -35,37 +18,27 @@ export class Linter {
     this.options = options
   }
 
-  lintText = async (
-    code: string,
-    cb?: LintCallback | string,
-    filePath?: string
-  ): Promise<_ESLint.LintResult[] | undefined> => {
+  lintText = async (code: string, cb?: LintCallback | string, filePath?: string): Promise<void> => {
     if (typeof cb === 'string') {
       return await this.lintText(code, undefined, cb)
     }
-
     try {
       const results = await this.eslint.lintText(code, { filePath })
-      return handleResults(cb, results, code)
+      cb?.(null, results, code)
     } catch (err) {
-      handleError(cb, err as Error)
+      cb?.(err, null, code)
     }
   }
 
-  lintFiles = async (
-    files: string | string[],
-    cb?: LintCallback
-  ): Promise<_ESLint.LintResult[] | undefined> => {
+  lintFiles = async (files: string | string[], cb?: LintCallback): Promise<void> => {
     try {
       const results = await this.eslint.lintFiles(typeof files === 'string' ? [files] : files)
-
       if (this.options.fix === true) {
         await this.ESLint.outputFixes(results)
       }
-
-      return handleResults(cb, results)
+      cb?.(null, results)
     } catch (err) {
-      handleError(cb, err as Error)
+      cb?.(err, null)
     }
   }
 }

@@ -20,7 +20,7 @@ export abstract class CLIEngine {
     this.onError(err)
   }
 
-  protected abstract onError(err: Error): void
+  protected abstract onError(err: unknown): void
   protected abstract onResult(res: ESLint.LintResult[], code?: string): void
 
   constructor(public linter: Linter, public options: Options) {}
@@ -41,13 +41,15 @@ export class CLI extends CLIEngine {
     this.argv = argv
   }
 
-  protected onError(err: Error): void {
+  protected onError(err: unknown): void {
     const { cmd, bugs } = this.options
-    const { stack, message } = err
+    console.error(
+      `${cmd}: Unexpected linter output:
 
-    console.error(`${cmd}: Unexpected linter output:\n`)
-    console.error(stack ?? message)
-    console.error(`\nIf you think this is a bug in \`${cmd}\`, open an issue: ${bugs}`)
+${err instanceof Error ? err.stack ?? err.message : err}
+
+If you think this is a bug in \`${cmd}\`, open an issue: ${bugs}`
+    )
     process.exitCode = 1
   }
 
