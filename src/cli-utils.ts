@@ -2,7 +2,7 @@ import type { ESLint } from 'eslint'
 import type { Options } from './options'
 import { getIgnoreFromFile, mergeConfig } from './utils'
 
-const arrayWithTypes = <T extends string>(arr: T[]): T[] => arr
+const unionArray = <T extends string>(arr: T[]): T[] => arr
 
 export const MINIMIST_OPTS = {
   alias: {
@@ -12,8 +12,8 @@ export const MINIMIST_OPTS = {
     plugins: 'plugin',
     version: 'v'
   },
-  boolean: arrayWithTypes(['fix', 'disable-gitignore', 'help', 'version', 'stdin']),
-  string: arrayWithTypes(['env', 'ext', 'globals', 'parser', 'plugins'])
+  boolean: unionArray(['fix', 'disable-gitignore', 'help', 'version', 'stdin']),
+  string: unionArray(['env', 'ext', 'globals', 'parser', 'plugins'])
 }
 
 type BooleanArgs = {
@@ -35,13 +35,13 @@ export const mergeOptionsFromArgv = (
   { fix, 'disable-gitignore': disableGitignore, env, ext, globals, parser, plugins }: ParsedArgs
 ): void => {
   const optionsFromArgs: Partial<ESLint.Options> = {
-    extensions: ext !== undefined ? [ext] : undefined,
+    extensions: ext === undefined ? undefined : [ext],
     baseConfig: {
-      env: env !== undefined ? { [env]: true } : undefined,
+      env: env === undefined ? undefined : { [env]: true },
       ignorePatterns: disableGitignore === true ? undefined : getIgnoreFromFile('.gitignore'),
-      globals: globals !== undefined ? { [globals]: true } : undefined,
+      globals: globals === undefined ? undefined : { [globals]: true },
       parser,
-      plugins: plugins !== undefined ? [plugins] : undefined
+      plugins: plugins === undefined ? undefined : [plugins]
     },
     fix
   }
@@ -63,7 +63,9 @@ export const readStdin = async (): Promise<string> =>
           content += chunk
         }
       })
-      .on('end', () => resolve(content))
+      .on('end', () => {
+        resolve(content)
+      })
       .on('error', reject)
   })
 
