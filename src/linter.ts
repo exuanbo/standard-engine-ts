@@ -1,11 +1,10 @@
 import { ESLint as _ESLint } from 'eslint'
 import type { ESLintOptions } from './options'
 
-export type LintCallback = <T extends Error | null>(
-  err: T,
-  result: T extends Error ? null : _ESLint.LintResult[],
-  code?: string
-) => void
+export interface LintCallback {
+  (err: null, result: _ESLint.LintResult[], code?: string): void
+  (err: Error, result: null, code?: string): void
+}
 
 const handleResults = (
   cb: LintCallback | undefined,
