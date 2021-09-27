@@ -54,11 +54,20 @@ If you think this is a bug in \`${cmd}\`, open an issue: ${bugs}`
   }
 
   protected onResult(lintResults: ESLint.LintResult[], code?: string): void {
-    if (this.argv.stdin === true && this.argv.fix === true) {
+    const shouldFixStdin = this.argv.stdin === true && this.argv.fix === true
+
+    if (shouldFixStdin) {
       const [{ output }] = lintResults
       process.stdout.write(output ?? code!)
-      return
     }
+
+    const cwd = process.cwd()
+
+    const log = shouldFixStdin
+      ? (message: string): void => {
+          console.error(`\n${message}`)
+        }
+      : console.log
 
     let isFixable = false
     let totalErrorCount = 0
@@ -66,7 +75,7 @@ If you think this is a bug in \`${cmd}\`, open an issue: ${bugs}`
     lintResults.forEach(({ filePath, messages: lintMessage, errorCount }) => {
       lintMessage.forEach(({ column, line, ruleId, message, fatal, severity, fix }) => {
         const report = `${TerminalStyle.Underline}${path.relative(
-          process.cwd(),
+          cwd,
           filePath
         )}:${line}:${column}${TerminalStyle.Reset}\n  ${
           fatal === true || severity === 2
@@ -76,7 +85,7 @@ If you think this is a bug in \`${cmd}\`, open an issue: ${bugs}`
           ruleId !== null ? `${TerminalStyle.BrightBlack}${ruleId}${TerminalStyle.Reset}` : ''
         }\n`
 
-        console.log(report)
+        log(report)
         if (fix !== undefined) {
           isFixable = true
         }
@@ -85,7 +94,7 @@ If you think this is a bug in \`${cmd}\`, open an issue: ${bugs}`
     })
 
     if (isFixable) {
-      console.log(`Run \`${this.options.cmd} --fix\` to automatically fix some problems.\n`)
+      log(`Run \`${this.options.cmd} --fix\` to automatically fix some problems.\n`)
     }
     process.exitCode = totalErrorCount > 0 ? 1 : 0
   }
