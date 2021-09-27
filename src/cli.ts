@@ -14,7 +14,7 @@ import {
 export abstract class CLIEngine {
   onFinish: LintCallback = (err, lintResults, code): void => {
     if (err === null) {
-      this.onResult(lintResults as ESLint.LintResult[], code)
+      this.onResult(lintResults!, code)
       return
     }
     this.onError(err)
@@ -52,22 +52,17 @@ export class CLI extends CLIEngine {
   }
 
   protected onResult(lintResults: ESLint.LintResult[], code?: string): void {
-    if (this.argv.stdin === true && this.argv.fix === true && code !== undefined) {
+    if (this.argv.stdin === true && this.argv.fix === true) {
       const [{ output }] = lintResults
-      process.stdout.write(output ?? code)
+      process.stdout.write(output ?? code!)
       return
     }
 
-    const count = (complainType: 'errorCount' | 'warningCount'): number =>
-      lintResults.map(res => res[complainType]).reduce((acc, cur) => acc + cur)
+    let isFixable = false
+    let totalErrorCount = 0
 
-    const errorCount = count('errorCount')
-    if (errorCount + count('warningCount') === 0) {
-      return
-    }
-
-    lintResults.forEach(({ messages: lintMessage, filePath }) => {
-      lintMessage.forEach(({ column, line, ruleId, message, fatal, severity }) => {
+    lintResults.forEach(({ filePath, messages: lintMessage, errorCount }) => {
+      lintMessage.forEach(({ column, line, ruleId, message, fatal, severity, fix }) => {
         const report = `${TerminalStyle.Underline}${path.relative(
           process.cwd(),
           filePath
@@ -80,15 +75,17 @@ export class CLI extends CLIEngine {
         }\n`
 
         console.log(report)
+        if (fix !== undefined) {
+          isFixable = true
+        }
       })
+      totalErrorCount += errorCount
     })
 
-    const isFixable = lintResults.some(res => res.messages.some(msg => Boolean(msg.fix)))
     if (isFixable) {
       console.log(`Run \`${this.options.cmd} --fix\` to automatically fix some problems.\n`)
     }
-
-    process.exitCode = errorCount > 0 ? 1 : 0
+    process.exitCode = totalErrorCount > 0 ? 1 : 0
   }
 }
 
